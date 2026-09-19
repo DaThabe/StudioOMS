@@ -2,7 +2,7 @@
 
 namespace StudioOMS.Orders.Timing;
 
-public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, ConsumeId ConsumeId, decimal ConsuemDays) : IRequest<ConsumeResult>
+public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, ConsumeId ConsumeId, decimal ConsuemDays, DateTime Timestamp) : IRequest<ConsumeResult>
 {
     internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest, ConsumeResult>
     {
@@ -14,7 +14,7 @@ public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, 
             if (order is not TimingOrder timingOrder)
                 throw new InvalidOperationException($"订单 {order.Id} 无法扣除天数");
 
-            var result = timingOrder.Consume(TimingConsume.CreateNow(request.ConsumeId, request.EmployeeId, request.ConsuemDays));
+            var result = timingOrder.Consume(TimingConsume.Create(request.ConsumeId, request.EmployeeId, request.ConsuemDays, request.Timestamp));
             await orderRepository.SaveAsync(order, cancellationToken);
 
             return result;

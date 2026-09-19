@@ -31,7 +31,7 @@ public readonly record struct OrderId
     public static OrderId Empty => default;
 
     private readonly Guid _value;
-    private OrderId(Guid value) => _value = value;
+    public OrderId(Guid value) => _value = value;
     public override string ToString() => _value.ToString("N");
 
 

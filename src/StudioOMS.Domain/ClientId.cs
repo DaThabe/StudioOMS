@@ -6,7 +6,7 @@ public readonly record struct ClientId
     public static ClientId Empty => default;
 
     private readonly Guid _value;
-    private ClientId(Guid value) => _value = value;
+    public ClientId(Guid value) => _value = value;
     public override string ToString() => _value.ToString("N");
 
 

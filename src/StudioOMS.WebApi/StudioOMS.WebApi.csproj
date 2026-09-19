@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<RootNamespace>StudioOMS</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Scalar.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\StudioOMS.Application\StudioOMS.Application.csproj" />
+	  <ProjectReference Include="..\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
+	  <ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+	</ItemGroup>
+
+</Project>
