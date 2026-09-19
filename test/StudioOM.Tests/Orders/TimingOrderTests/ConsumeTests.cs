@@ -40,14 +40,14 @@ public sealed class ConsumeTests
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);
 
-        Assert.IsInstanceOfType<ConsumeResult.NotServicingResult>(result);
+        Assert.IsInstanceOfType<ConsumeResult.StateNotAllowedResultResult>(result);
     }
 
     [TestMethod(DisplayName = "未分配的员工无法消耗")]
     public void NotAssigned()
     {
         var markResult = _order.MarkServicingNow();
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(markResult);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(markResult);
 
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);

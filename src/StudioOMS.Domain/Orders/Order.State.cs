@@ -6,8 +6,8 @@
 /// </summary>
 public abstract partial record class Order
 {
-    private static readonly Comparer<OrderStateChangeEvent> _stateChangedsComparer = Comparer<OrderStateChangeEvent>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
-    private readonly SortedSet<OrderStateChangeEvent> _stateChangeds = new(_stateChangedsComparer);
+    private static readonly Comparer<OrderStateChange> _stateChangedsComparer = Comparer<OrderStateChange>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+    private readonly SortedSet<OrderStateChange> _stateChangeds = new(_stateChangedsComparer);
 
 
     /// <summary>
@@ -63,20 +63,20 @@ public abstract partial record class Order
 
     private OrderStateChangeResult MarkState(OrderState state, DateTime timestamp)
     {
-        var newStateChanged = new OrderStateChangeEvent(state, timestamp);
+        var newStateChanged = new OrderStateChange(state, timestamp);
 
         // 已存在的状态变化
         if (_stateChangeds.Contains(newStateChanged))
-            return OrderStateChangeResult.Changed(newStateChanged.State);
+            return OrderStateChangeResult.Success;
 
         // 回放验证
         var currentState = OrderState.Waiting;
-        OrderStateChangeEvent[] allChangeds = [.. _stateChangeds, newStateChanged];
+        OrderStateChange[] allChangeds = [.. _stateChangeds, newStateChanged];
 
         foreach (var e in allChangeds.OrderBy(x => x.Timestamp))
         {
             var result = StateTransition(currentState, e.State);
-            if (result is not OrderStateChangeResult.ChangedResult) return result;
+            if (result is not OrderStateChangeResult.SuccessResult) return result;
 
             currentState = e.State;
         }
@@ -84,7 +84,7 @@ public abstract partial record class Order
         State = newStateChanged.State;
         _stateChangeds.Add(newStateChanged);
 
-        return OrderStateChangeResult.Changed(newStateChanged.State);
+        return OrderStateChangeResult.Success;
     }
 
     private static OrderStateChangeResult StateTransition(OrderState from, OrderState to)
@@ -97,7 +97,7 @@ public abstract partial record class Order
             return OrderStateChangeResult.NotAsExpected(to, allowed);
         }
 
-        return OrderStateChangeResult.Changed(to);
+        return OrderStateChangeResult.Success;
     }
 
     private static readonly Dictionary<OrderState, OrderState[]> AllowedTransitions = new()
@@ -149,9 +149,9 @@ public enum OrderState
 }
 
 /// <summary>
-/// 订单状态已改变事件
+/// 订单状态改变
 /// </summary>
-public record OrderStateChangeEvent(OrderState State, DateTime Timestamp);
+public record OrderStateChange(OrderState State, DateTime Timestamp);
 
 
 /// <summary>
@@ -162,10 +162,7 @@ public abstract record class OrderStateChangeResult
     /// <summary>
     /// 已改变
     /// </summary>
-    internal static ChangedResult Changed(OrderState state) => new()
-    {
-        Marked = state
-    };
+    internal static SuccessResult Success { get; } = new();
     /// <summary>
     /// 不符合预期的状态
     /// </summary>
@@ -179,10 +176,10 @@ public abstract record class OrderStateChangeResult
     /// <summary>
     /// 状态已改变
     /// </summary>
-    public sealed record class ChangedResult : OrderStateChangeResult
+    public sealed record class SuccessResult : OrderStateChangeResult
     {
-        public required OrderState Marked { get; init; }
-        internal ChangedResult() { }
+        internal SuccessResult() { }
+        public override string ToString() => "状态切换成功";
     }
 
     /// <summary>
@@ -192,6 +189,8 @@ public abstract record class OrderStateChangeResult
     {
         public required OrderState Actual { get; init; }
         public required IReadOnlySet<OrderState> Expects { get; init; }
+       
         internal NotAsExpectedResult() { }
+        public override string ToString() => $"状态切换失败, 只能在 [{string.Join(',', Expects)}] 状态下切换, 当前 {Actual}";
     }
 }

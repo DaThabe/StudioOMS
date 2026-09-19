@@ -9,9 +9,9 @@ public sealed partial record class TimingOrder : Order
 
     public ConsumeResult Consume(TimingConsume consume)
     {
-        // 未服务
-        if (State != OrderState.Servicing)
-            return ConsumeResult.NotServicing;
+        // 状态不允许
+        if (State is not OrderState.Servicing)
+            return ConsumeResult.StateNotAllowed(State);
         // 已存在
         if (_consumes.Contains(consume))
             return ConsumeResult.Repeated;
@@ -34,7 +34,7 @@ public sealed partial record class TimingOrder : Order
             // 标记完成
             var markResult = MarkCompleted(consume.Timestamp);
 
-            if (markResult is not OrderStateChangeResult.ChangedResult)
+            if (markResult is not OrderStateChangeResult.SuccessResult)
                 throw new InvalidOperationException("订单状态标记异常");
         }
 
@@ -43,15 +43,33 @@ public sealed partial record class TimingOrder : Order
 }
 
 
-public abstract record class ConsumeResult
+public abstract class ConsumeResult
 {
+    /// <summary>
+    /// 成功
+    /// </summary>
     internal static SuccessResult Success { get; } = new();
-    internal static NotServicingResult NotServicing { get; } = new();
+    /// <summary>
+    /// 状态不允许
+    /// </summary>
+    internal static StateNotAllowedResultResult StateNotAllowed(OrderState state) => new()
+    {
+        State = state
+    };
+    /// <summary>
+    /// 重复消耗
+    /// </summary>
     internal static RepeatedResult Repeated { get; } = new();
+    /// <summary>
+    /// 未分配的员工
+    /// </summary>
     internal static NotAssignedResult NotAssigned(EmployeeId employeeId) => new()
     {
         EmployeeId = employeeId
     };
+    /// <summary>
+    /// 超过上线
+    /// </summary>
     internal static ExceedResult Exceed(decimal currentDays, decimal totalDays) => new()
     {
         CurrentDays = currentDays,
@@ -62,52 +80,63 @@ public abstract record class ConsumeResult
     /// <summary>
     /// 成功
     /// </summary>
-    public sealed record class SuccessResult : ConsumeResult
+    public sealed class SuccessResult : ConsumeResult
     {
         internal SuccessResult() { }
+        public override string ToString() => "划扣成功";
     }
 
     /// <summary>
-    /// 订单未服务
+    /// 状态不允许
     /// </summary>
-    public sealed record class NotServicingResult : ConsumeResult
+    public sealed class StateNotAllowedResultResult : ConsumeResult
     {
-        internal NotServicingResult() { }
+        public required OrderState State { get; init; }
+
+        internal StateNotAllowedResultResult() { }
+        public override string ToString() => ToString(State);
+
+
+        private static string ToString(OrderState state) => state switch
+        {
+            OrderState.Waiting => "订单还未开始服务，无法划扣",
+            OrderState.Paused => "订单已暂停，无法划扣",
+            OrderState.Completed => "订单已完成，无法划扣",
+            OrderState.Terminated => "订单已终止，无法划扣",
+            OrderState.Cancelled => "订单已取消，无法划扣",
+            _ => "订单当前状态不允许划扣"
+        };
     }
 
     /// <summary>
     /// 重复消耗
     /// </summary>
-    public sealed record class RepeatedResult : ConsumeResult
+    public sealed class RepeatedResult : ConsumeResult
     {
         internal RepeatedResult() { }
+        public override string ToString() => "划扣失败, 重复划扣";
     }
 
     /// <summary>
     /// 超过期限
     /// </summary>
-    public sealed record class ExceedResult : ConsumeResult
+    public sealed class ExceedResult : ConsumeResult
     {
         public required decimal CurrentDays { get; init; }
         public required decimal TotalDays { get; init; }
 
         internal ExceedResult() { }
+        public override string ToString() => $"划扣失败, 超过上限, 最大:{TotalDays}, 当前:{CurrentDays}";
     }
 
     /// <summary>
     /// 无权限
     /// </summary>
-    public sealed record class NotAssignedResult : ConsumeResult
+    public sealed class NotAssignedResult : ConsumeResult
     {
         public required EmployeeId EmployeeId { get; init; }
 
         internal NotAssignedResult() { }
-    }
-    /// <summary>
-    /// 标记完成状态失败
-    /// </summary>
-    public sealed record class CompleteFailedResult : ConsumeResult
-    {
-        internal CompleteFailedResult() { }
+        public override string ToString() => $"划扣失败, 员工 [{EmployeeId}] 未服务该订单";
     }
 }

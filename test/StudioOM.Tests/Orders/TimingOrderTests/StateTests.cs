@@ -25,7 +25,7 @@ public sealed class StateTests
     public void MarkServicing_FromWaiting_Succeeds()
     {
         var result = _order.MarkServicing(new DateTime(2026, 1, 1));
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
@@ -36,7 +36,7 @@ public sealed class StateTests
         _order.MarkPaused(new DateTime(2026, 1, 2));
         var result = _order.MarkServicing(new DateTime(2026, 1, 3));
 
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
@@ -46,7 +46,7 @@ public sealed class StateTests
         _order.MarkServicing(new DateTime(2026, 1, 1));
         var result = _order.MarkServicing(new DateTime(2026, 1, 2));
 
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     [TestMethod(DisplayName = "已完成的订单不能转为服务中")]
@@ -73,7 +73,7 @@ public sealed class StateTests
         _order.MarkTerminated(new DateTime(2026, 1, 2));
 
         var result = _order.MarkServicing(new DateTime(2026, 1, 3));
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     #endregion
@@ -86,7 +86,7 @@ public sealed class StateTests
         _order.MarkServicing(new DateTime(2026, 1, 1));
         var result = _order.MarkPaused(new DateTime(2026, 1, 2));
 
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Paused, _order.State);
     }
 
@@ -94,7 +94,7 @@ public sealed class StateTests
     public void MarkPaused_FromWaiting_ReturnsInvalidTransition()
     {
         var result = _order.MarkPaused(new DateTime(2026, 1, 1));
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     [TestMethod(DisplayName = "已终止的订单不能暂停")]
@@ -104,7 +104,7 @@ public sealed class StateTests
         _order.MarkTerminated(new DateTime(2026, 1, 2));
 
         var result = _order.MarkPaused(new DateTime(2026, 1, 3));
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     #endregion
@@ -116,7 +116,7 @@ public sealed class StateTests
     {
         var result = _order.MarkCancelled(new DateTime(2026, 1, 1));
 
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Cancelled, _order.State);
     }
 
@@ -127,7 +127,7 @@ public sealed class StateTests
 
         var result = _order.MarkCancelled(new DateTime(2026, 1, 2));
 
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     [TestMethod(DisplayName = "已取消的订单不能转为服务中")]
@@ -137,7 +137,7 @@ public sealed class StateTests
 
         var result = _order.MarkServicing(new DateTime(2026, 1, 2));
 
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     #endregion
@@ -151,7 +151,7 @@ public sealed class StateTests
         _order.MarkPaused(new DateTime(2026, 1, 2));
         var result = _order.MarkTerminated(new DateTime(2026, 1, 3));
 
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Terminated, _order.State);
     }
 
@@ -161,7 +161,7 @@ public sealed class StateTests
         _order.MarkServicing(new DateTime(2026, 1, 1));
         var result = _order.MarkTerminated(new DateTime(2026, 1, 2));
 
-        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Terminated, _order.State);
     }
 
@@ -170,7 +170,7 @@ public sealed class StateTests
     public void MarkTerminated_FromWaiting_ReturnsNotAsExpected()
     {
         var result = _order.MarkTerminated(new DateTime(2026, 1, 1));
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     [TestMethod(DisplayName = "已终止的订单不能再次终止")]
@@ -180,7 +180,7 @@ public sealed class StateTests
         _order.MarkTerminated(new DateTime(2026, 1, 2));
 
         var result = _order.MarkTerminated(new DateTime(2026, 1, 3));
-        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.SuccessResult>(result);
     }
 
     #endregion

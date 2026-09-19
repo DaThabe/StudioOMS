@@ -1,7 +1,11 @@
 <Solution>
   <Folder Name="/Core/">
-    <Project Path="src/StudioOMS.Abstractions/StudioOMS.Abstractions.csproj" />
-    <Project Path="src/StudioOMS/StudioOMS.csproj" />
+    <Project Path="src/StudioOMS.Application/StudioOMS.Application.csproj" />
+    <Project Path="src/StudioOMS.Domain/StudioOMS.Domain.csproj" />
+    <Project Path="src/StudioOMS.Infrastructure/StudioOMS.Infrastructure.csproj" />
   </Folder>
-  <Project Path="test/StudioOM.Tests/StudioOM.Tests.csproj" Id="c98b6245-4cee-4e8d-a10f-2fb48b5c6c18" />
+  <Folder Name="/Tests/">
+    <Project Path="test/StudioOM.Tests/StudioOM.Tests.csproj" Id="c98b6245-4cee-4e8d-a10f-2fb48b5c6c18" />
+  </Folder>
+  <Project Path="src/StudioOMS.Demo/StudioOMS.Demo.csproj" Id="b7fa9d89-213d-42d3-b7f7-f7dc4810eb5e" />
 </Solution>

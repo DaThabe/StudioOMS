@@ -45,10 +45,12 @@ public abstract record class PropertyChangedResult
     public sealed record class SuccessResult : PropertyChangedResult
     {
         internal SuccessResult() { }
+        public override string ToString() => "属性更改成功";
     }
     public sealed record class InvalidValueResult : PropertyChangedResult
     {
         public required string Reason { get; init; }
         internal InvalidValueResult() { }
+        public override string ToString() => $"属性更改失败: {Reason}";
     }
 }
