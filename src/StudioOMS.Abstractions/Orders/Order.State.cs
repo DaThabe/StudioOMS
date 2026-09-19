@@ -6,6 +6,10 @@
 /// </summary>
 public abstract partial record class Order
 {
+    private static readonly Comparer<OrderStateChanged> _stateChangedsComparer = Comparer<OrderStateChanged>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
+    private readonly SortedSet<OrderStateChanged> _stateChangeds = new(_stateChangedsComparer);
+
+
     /// <summary>
     /// 当前状态
     /// </summary>
@@ -15,32 +19,82 @@ public abstract partial record class Order
     /// <summary>
     /// 开始服务
     /// </summary>
-    public MarkStateResult MarkServicing() =>
-        TransitionTo(OrderState.Servicing, OrderState.Waiting, OrderState.Paused);
-    /// <summary>
-    /// 暂停服务
-    /// </summary>
-    public MarkStateResult MarkPaused() =>
-        TransitionTo(OrderState.Paused, OrderState.Servicing, OrderState.Waiting);
+    public StateChangeResult MarkServicing(DateTime timestamp) =>
+        MarkState(OrderState.Servicing, timestamp);
+    public StateChangeResult MarkServicingNow() =>
+        MarkServicing(DateTime.Now);
+
+
     /// <summary>
     /// 完成服务
     /// </summary>
-    protected MarkStateResult MarkCompleted() =>
-        TransitionTo(OrderState.Completed, OrderState.Servicing);
+    protected StateChangeResult MarkCompleted(DateTime timestamp) =>
+        MarkState(OrderState.Completed, timestamp);
+    public StateChangeResult MarkCompletedNow() =>
+        MarkCompleted(DateTime.Now);
+
+
+    /// <summary>
+    /// 暂停服务
+    /// </summary>
+    public StateChangeResult MarkPaused(DateTime timestamp) =>
+        MarkState(OrderState.Paused, timestamp);
+    public StateChangeResult MarkPausedNow() =>
+        MarkPaused(DateTime.Now);
 
 
 
-    private MarkStateResult TransitionTo(OrderState target, params IEnumerable<OrderState> allowedFrom)
+
+    private StateChangeResult MarkState(OrderState state, DateTime timestamp)
     {
-        if (State == target)
-            return MarkStateResult.Success(State);
+        var newStateChanged = new OrderStateChanged(state, timestamp);
 
-        if (!allowedFrom.Contains(State))
-            return MarkStateResult.NotAsExpected(State, allowedFrom);
+        // 已存在的状态变化
+        if (_stateChangeds.Contains(newStateChanged))
+            return StateChangeResult.Changed(newStateChanged.State);
 
-        State = target;
-        return MarkStateResult.Success(State);
+        // 回放验证
+        var currentState = OrderState.Waiting;
+        OrderStateChanged[] allChangeds = [.. _stateChangeds, newStateChanged];
+
+        foreach (var e in allChangeds.OrderBy(x => x.Timestamp))
+        {
+            var result = StateTransition(currentState, e.State);
+            if (result is not StateChangeResult.SuccessResult) return result;
+
+            currentState = e.State;
+        }
+
+        State = newStateChanged.State;
+        _stateChangeds.Add(newStateChanged);
+
+        return StateChangeResult.Changed(newStateChanged.State);
     }
+
+    private static StateChangeResult StateTransition(OrderState from, OrderState to)
+    {
+        if (!AllowedTransitions.TryGetValue(from, out var allowed))
+        {
+            return StateChangeResult.Unknown(from);
+        }
+
+        if (!allowed.Contains(to))
+        {
+            return StateChangeResult.NotAsExpected(to, allowed);
+        }
+
+        return StateChangeResult.Changed(to);
+    }
+
+    private static readonly Dictionary<OrderState, OrderState[]> AllowedTransitions = new()
+    {
+        [OrderState.Waiting] = [OrderState.Servicing, OrderState.Cancelled],
+        [OrderState.Servicing] = [OrderState.Paused, OrderState.Completed, OrderState.Terminated],
+        [OrderState.Paused] = [OrderState.Servicing, OrderState.Terminated],
+        [OrderState.Completed] = [],  // 终态
+        [OrderState.Terminated] = [],
+        [OrderState.Cancelled] = []
+    };
 }
 
 
@@ -80,14 +134,19 @@ public enum OrderState
     Cancelled
 }
 
+/// <summary>
+/// 订单暂停时段
+/// </summary>
+public record OrderStateChanged(OrderState State, DateTime Timestamp);
+
 
 
 /// <summary>
 /// 订单状态标记结果
 /// </summary>
-public abstract record class MarkStateResult
+public abstract record class StateChangeResult
 {
-    internal static SuccessResult Success(OrderState state) => new()
+    internal static SuccessResult Changed(OrderState state) => new()
     {
         Marked = state
     };
@@ -97,12 +156,16 @@ public abstract record class MarkStateResult
         Actual = actual,
         Expects = expect.ToHashSet()
     };
+    internal static UnknownResult Unknown(OrderState state) => new()
+    {
+        State = state
+    };
 
 
     /// <summary>
     /// 成功
     /// </summary>
-    public sealed record class SuccessResult : MarkStateResult
+    public sealed record class SuccessResult : StateChangeResult
     {
         public required OrderState Marked { get; init; }
         internal SuccessResult() { }
@@ -111,10 +174,19 @@ public abstract record class MarkStateResult
     /// <summary>
     /// 不符合预期
     /// </summary>
-    public sealed record class NotAsExpectedResult : MarkStateResult
+    public sealed record class NotAsExpectedResult : StateChangeResult
     {
         public required OrderState Actual { get; init; }
         public required IReadOnlySet<OrderState> Expects { get; init; }
         internal NotAsExpectedResult() { }
+    }
+
+    /// <summary>
+    /// 未知的状态
+    /// </summary>
+    public sealed record class UnknownResult : StateChangeResult
+    {
+        public required OrderState State { get; init; }
+        internal UnknownResult() { }
     }
 }

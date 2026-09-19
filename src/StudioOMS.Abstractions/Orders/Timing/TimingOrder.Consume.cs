@@ -32,9 +32,9 @@ public sealed partial record class TimingOrder : Order
         if (UsedDays == TotalDays)
         {
             // 标记完成
-            var markResult = MarkCompleted();
+            var markResult = MarkCompleted(consume.Timestamp);
 
-            if (markResult is not MarkStateResult.SuccessResult)
+            if (markResult is not StateChangeResult.SuccessResult)
                 throw new InvalidOperationException("订单状态标记异常");
         }
 
