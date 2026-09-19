@@ -61,7 +61,7 @@ public sealed class StateTests
 
         var result = _order.Consume(consume);
 
-        Assert.IsInstanceOfType<ConsumeResult.SuccessResult>(result);
+        Assert.IsInstanceOfType<TimingOrderConsumeResult.SuccessResult>(result);
         Assert.AreEqual(OrderState.Completed, _order.State);
     }
 

@@ -7,21 +7,21 @@ public sealed partial record class TimingOrder : Order
     public IReadOnlyList<TimingConsume> Consumes => _consumes.AsReadOnly();
 
 
-    public ConsumeResult Consume(TimingConsume consume)
+    public TimingOrderConsumeResult Consume(TimingConsume consume)
     {
         // 状态不允许
         if (State is not OrderState.Servicing)
-            return ConsumeResult.StateNotAllowed(State);
+            return TimingOrderConsumeResult.StateNotAllowed(State);
         // 已存在
         if (_consumes.Contains(consume))
-            return ConsumeResult.Repeated;
+            return TimingOrderConsumeResult.Repeated;
         // 不能操作的员工
         if (!AssignedEmployees.Contains(consume.EmployeeId))
-            return ConsumeResult.NotAssigned(consume.EmployeeId);
+            return TimingOrderConsumeResult.NotAssigned(consume.EmployeeId);
         // 超过订单额度
         var nextUsedDays = UsedDays + consume.Days;
         if (nextUsedDays > TotalDays)
-            return ConsumeResult.Exceed(nextUsedDays, TotalDays);
+            return TimingOrderConsumeResult.Exceed(nextUsedDays, TotalDays);
 
 
         UsedDays = nextUsedDays;
@@ -35,15 +35,15 @@ public sealed partial record class TimingOrder : Order
             var markResult = MarkCompleted(consume.Timestamp);
 
             if (markResult is not OrderStateChangeResult.SuccessResult)
-                throw new InvalidOperationException("订单状态标记异常");
+                throw new InvalidOperationException("订单状态标记异常: {markResult}");
         }
 
-        return ConsumeResult.Success;
+        return TimingOrderConsumeResult.Success;
     }
 }
 
 
-public abstract class ConsumeResult
+public abstract class TimingOrderConsumeResult
 {
     /// <summary>
     /// 成功
@@ -80,7 +80,7 @@ public abstract class ConsumeResult
     /// <summary>
     /// 成功
     /// </summary>
-    public sealed class SuccessResult : ConsumeResult
+    public sealed class SuccessResult : TimingOrderConsumeResult
     {
         internal SuccessResult() { }
         public override string ToString() => "划扣成功";
@@ -89,7 +89,7 @@ public abstract class ConsumeResult
     /// <summary>
     /// 状态不允许
     /// </summary>
-    public sealed class StateNotAllowedResultResult : ConsumeResult
+    public sealed class StateNotAllowedResultResult : TimingOrderConsumeResult
     {
         public required OrderState State { get; init; }
 
@@ -111,7 +111,7 @@ public abstract class ConsumeResult
     /// <summary>
     /// 重复消耗
     /// </summary>
-    public sealed class RepeatedResult : ConsumeResult
+    public sealed class RepeatedResult : TimingOrderConsumeResult
     {
         internal RepeatedResult() { }
         public override string ToString() => "划扣失败, 重复划扣";
@@ -120,7 +120,7 @@ public abstract class ConsumeResult
     /// <summary>
     /// 超过期限
     /// </summary>
-    public sealed class ExceedResult : ConsumeResult
+    public sealed class ExceedResult : TimingOrderConsumeResult
     {
         public required decimal CurrentDays { get; init; }
         public required decimal TotalDays { get; init; }
@@ -132,7 +132,7 @@ public abstract class ConsumeResult
     /// <summary>
     /// 无权限
     /// </summary>
-    public sealed class NotAssignedResult : ConsumeResult
+    public sealed class NotAssignedResult : TimingOrderConsumeResult
     {
         public required EmployeeId EmployeeId { get; init; }
 

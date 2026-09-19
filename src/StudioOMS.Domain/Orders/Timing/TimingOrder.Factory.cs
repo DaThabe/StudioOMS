@@ -4,7 +4,7 @@
 public sealed partial record class TimingOrder : Order
 {
     private TimingOrder() { }
-    public static TimingOrder Create(OrderId orderId, ClientId clientId, EmployeeId salespersonId, decimal totalDays)
+    public static TimingOrder Create(OrderId orderId, ClientId clientId, EmployeeId salespersonId, decimal totalDays, DateTime createTime)
     {
         if (orderId == OrderId.Empty)
             throw new ArgumentException("订单 Id 不可为空", nameof(orderId));
@@ -24,7 +24,10 @@ public sealed partial record class TimingOrder : Order
             Id = orderId,
             ClientId = clientId,
             SalespersonId = salespersonId,
-            TotalDays = totalDays
+            TotalDays = totalDays,
+            CreateAt = createTime
         };
     }
+    public static TimingOrder CreateNow(OrderId orderId, ClientId clientId, EmployeeId salespersonId, decimal totalDays) =>
+        Create(orderId, clientId, salespersonId, totalDays, DateTime.UtcNow);
 }

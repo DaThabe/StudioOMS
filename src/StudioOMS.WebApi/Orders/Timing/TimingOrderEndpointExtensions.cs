@@ -46,7 +46,7 @@ public static class TimingOrderEndpointExtensions
             dto.Days,
             DateTime.UtcNow);
 
-        var result = await sender.SendAsync<TimingOrderConsumeRequest, ConsumeResult>(request, ct);
+        var result = await sender.SendAsync<TimingOrderConsumeRequest, TimingOrderConsumeResult>(request, ct);
         return Results.Ok(result);
     }
 }

@@ -18,7 +18,7 @@ public static class DependencyInjectionExtensions
             services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest, OrderStateChangeResult>();
             //Order-Timing
             services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest, OrderId>();
-            services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest, ConsumeResult>();
+            services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest, TimingOrderConsumeResult>();
         }
 
 

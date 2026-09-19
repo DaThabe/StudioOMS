@@ -29,7 +29,7 @@ public sealed class ConsumeTests
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), employeeId, 1);
         var result = _order.Consume(consume);
 
-        Assert.IsInstanceOfType<ConsumeResult.SuccessResult>(result);
+        Assert.IsInstanceOfType<TimingOrderConsumeResult.SuccessResult>(result);
         Assert.AreEqual(1m, _order.UsedDays);
     }
 
@@ -40,7 +40,7 @@ public sealed class ConsumeTests
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);
 
-        Assert.IsInstanceOfType<ConsumeResult.StateNotAllowedResultResult>(result);
+        Assert.IsInstanceOfType<TimingOrderConsumeResult.StateNotAllowedResultResult>(result);
     }
 
     [TestMethod(DisplayName = "未分配的员工无法消耗")]
@@ -52,6 +52,6 @@ public sealed class ConsumeTests
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);
 
-        Assert.IsInstanceOfType<ConsumeResult.NotAssignedResult>(result);
+        Assert.IsInstanceOfType<TimingOrderConsumeResult.NotAssignedResult>(result);
     }
 }

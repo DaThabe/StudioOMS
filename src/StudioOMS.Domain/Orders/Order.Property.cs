@@ -7,6 +7,11 @@
 public abstract partial record class Order
 {
     /// <summary>
+    /// 创建时间
+    /// </summary>
+    public required DateTime CreateAt { get; init; }
+
+    /// <summary>
     /// 标题
     /// </summary>
     public string Title { get; private set; } = "未命名订单";

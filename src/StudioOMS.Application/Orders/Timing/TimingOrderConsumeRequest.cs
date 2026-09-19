@@ -2,11 +2,11 @@
 
 namespace StudioOMS.Orders.Timing;
 
-public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, ConsumeId ConsumeId, decimal ConsuemDays, DateTime Timestamp) : IRequest<ConsumeResult>
+public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, ConsumeId ConsumeId, decimal ConsuemDays, DateTime Timestamp) : IRequest<TimingOrderConsumeResult>
 {
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest, ConsumeResult>
+    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest, TimingOrderConsumeResult>
     {
-        public async ValueTask<ConsumeResult> HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<TimingOrderConsumeResult> HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");
