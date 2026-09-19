@@ -1,12 +1,10 @@
-﻿using StudioOMS.Result;
-
-namespace StudioOMS.Orders;
+﻿namespace StudioOMS.Orders;
 
 
 /// <summary>
 /// 订单状态标记结果
 /// </summary>
-public abstract record class MarkStateResult : IResult
+public abstract record class MarkStateResult
 {
     internal static SuccessResult Success(OrderState state) => new()
     {

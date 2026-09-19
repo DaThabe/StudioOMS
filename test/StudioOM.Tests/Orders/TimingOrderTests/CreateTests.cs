@@ -12,7 +12,7 @@ public sealed class CreateTests
     public void OrderIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.Create(OrderId.Empty, ClientId.New(), EmployeeId.New(), 10));
+            TimingOrder.Create(OrderId.Empty, ClientId.Create(), EmployeeId.Create(), 10));
 
         Assert.AreEqual("orderId", ex.ParamName);
     }
@@ -21,7 +21,7 @@ public sealed class CreateTests
     public void ClientIdIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.Create(OrderId.New(), ClientId.Empty, EmployeeId.New(), 10));
+            TimingOrder.Create(OrderId.Create(), ClientId.Empty, EmployeeId.Create(), 10));
 
         Assert.AreEqual("clientId", ex.ParamName);
     }
@@ -30,7 +30,7 @@ public sealed class CreateTests
     public void SalespersonIdIdIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.Create(OrderId.New(), ClientId.New(), EmployeeId.Empty, 10));
+            TimingOrder.Create(OrderId.Create(), ClientId.Create(), EmployeeId.Empty, 10));
 
         Assert.AreEqual("salespersonId", ex.ParamName);
     }
@@ -39,7 +39,7 @@ public sealed class CreateTests
     public void TotalDaysNotPositive_ThrowArgumentOutOfRangeException()
     {
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-            TimingOrder.Create(OrderId.New(), ClientId.New(), EmployeeId.New(), 0));
+            TimingOrder.Create(OrderId.Create(), ClientId.Create(), EmployeeId.Create(), 0));
 
         Assert.AreEqual("totalDays", ex.ParamName);
     }

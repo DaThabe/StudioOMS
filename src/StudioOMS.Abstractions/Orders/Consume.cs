@@ -16,5 +16,14 @@ public abstract record class Consume : IEquatable<Consume>
 }
 
 
-[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
-public readonly partial struct ConsumeId;
+public readonly record struct ConsumeId
+{
+    public static ConsumeId Empty => default;
+
+    private readonly Guid _value;
+    private ConsumeId(Guid value) => _value = value;
+    public override string ToString() => _value.ToString("N");
+
+
+    public static ConsumeId New() => new(Guid.CreateVersion7());
+}

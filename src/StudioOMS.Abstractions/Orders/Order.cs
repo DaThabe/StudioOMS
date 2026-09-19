@@ -54,5 +54,14 @@ public abstract record class Order : IEquatable<Order>
 }
 
 
-[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
-public readonly partial struct OrderId;
+public readonly record struct OrderId
+{
+    public static OrderId Empty => default;
+
+    private readonly Guid _value;
+    private OrderId(Guid value) => _value = value;
+    public override string ToString() => _value.ToString("N");
+
+
+    public static OrderId Create() => new(Guid.CreateVersion7());
+}
