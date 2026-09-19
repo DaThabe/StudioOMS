@@ -19,6 +19,9 @@ public abstract partial record class Order
     /// </summary>
     public void AssignEmployees(params IEnumerable<EmployeeId> employees)
     {
+        if (State is OrderState.Completed or OrderState.Terminated or OrderState.Cancelled)
+            throw new InvalidOperationException($"订单状态 {State} 不能派发员工");
+
         _assignedEmployees.UnionWith(employees);
     }
 }

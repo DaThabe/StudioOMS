@@ -43,6 +43,22 @@ public abstract partial record class Order
         MarkPaused(DateTime.Now);
 
 
+    /// <summary>
+    /// 终止服务
+    /// </summary>
+    public OrderStateChangeResult MarkTerminated(DateTime timestamp) =>
+        MarkState(OrderState.Terminated, timestamp);
+    public OrderStateChangeResult MarkTerminatedNow() =>
+        MarkTerminated(DateTime.Now);
+
+    /// <summary>
+    /// 取消服务
+    /// </summary>
+    public OrderStateChangeResult MarkCancelled(DateTime timestamp)
+        => MarkState(OrderState.Cancelled, timestamp);
+    public OrderStateChangeResult MarkCancelledNow()
+       => MarkCancelled(DateTime.Now);
+
 
 
     private OrderStateChangeResult MarkState(OrderState state, DateTime timestamp)
@@ -91,7 +107,7 @@ public abstract partial record class Order
         [OrderState.Paused] = [OrderState.Servicing, OrderState.Terminated],
         [OrderState.Completed] = [],
         [OrderState.Terminated] = [],
-        [OrderState.Cancelled] = []
+        [OrderState.Cancelled] = [OrderState.Waiting]
     };
 }
 
