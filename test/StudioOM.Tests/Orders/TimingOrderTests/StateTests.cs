@@ -23,7 +23,7 @@ public sealed class StateTests
     public void MarkServicing_FromWaiting_Succeeds()
     {
         var result = _order.MarkServicing(new DateTime(2026, 1, 1));
-        Assert.IsInstanceOfType<StateChangeResult.SuccessResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
         Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
@@ -33,7 +33,7 @@ public sealed class StateTests
         _order.MarkServicing(new DateTime(2026, 1, 1));
         var result = _order.MarkPaused(new DateTime(2026, 1, 2));
 
-        Assert.IsInstanceOfType<StateChangeResult.SuccessResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
         Assert.AreEqual(OrderState.Paused, _order.State);
     }
 
@@ -44,7 +44,7 @@ public sealed class StateTests
         _order.MarkPaused(new DateTime(2026, 1, 2));
         var result = _order.MarkServicing(new DateTime(2026, 1, 3));
 
-        Assert.IsInstanceOfType<StateChangeResult.SuccessResult>(result);
+        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
         Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
@@ -55,14 +55,14 @@ public sealed class StateTests
         _order.MarkServicing(new DateTime(2026, 1, 1));
         var result = _order.MarkServicing(new DateTime(2026, 1, 2));
 
-        Assert.IsNotInstanceOfType<StateChangeResult.SuccessResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
     }
 
     [TestMethod(DisplayName = "待派发订单不能直接暂停")]
     public void MarkPaused_FromWaiting_ReturnsInvalidTransition()
     {
         var result = _order.MarkPaused(new DateTime(2026, 1, 1));
-        Assert.IsNotInstanceOfType<StateChangeResult.SuccessResult>(result);
+        Assert.IsNotInstanceOfType<OrderStateChangeResult.ChangedResult>(result);
     }
 
     [TestMethod(DisplayName = "已完成的订单不能转为服务中")]

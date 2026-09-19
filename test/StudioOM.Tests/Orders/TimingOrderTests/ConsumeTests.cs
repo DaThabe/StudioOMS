@@ -47,7 +47,7 @@ public sealed class ConsumeTests
     public void NotAssigned()
     {
         var markResult = _order.MarkServicingNow();
-        Assert.IsInstanceOfType<StateChangeResult.SuccessResult>(markResult);
+        Assert.IsInstanceOfType<OrderStateChangeResult.ChangedResult>(markResult);
 
         var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);

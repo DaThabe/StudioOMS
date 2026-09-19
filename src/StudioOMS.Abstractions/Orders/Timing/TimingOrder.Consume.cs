@@ -34,7 +34,7 @@ public sealed partial record class TimingOrder : Order
             // 标记完成
             var markResult = MarkCompleted(consume.Timestamp);
 
-            if (markResult is not StateChangeResult.SuccessResult)
+            if (markResult is not OrderStateChangeResult.ChangedResult)
                 throw new InvalidOperationException("订单状态标记异常");
         }
 
