@@ -25,5 +25,5 @@ public readonly record struct ConsumeId
     public override string ToString() => _value.ToString("N");
 
 
-    public static ConsumeId New() => new(Guid.CreateVersion7());
+    public static ConsumeId Create() => new(Guid.CreateVersion7());
 }
