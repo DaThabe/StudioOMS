@@ -37,9 +37,8 @@ const string adminPassword = "123456789";
 if (await userRepository.FindByUsername(adminUsername) is null)
 {
     // 员工
-    var employee = Employee.Create();
+    var employee = Employee.Create([EmployeeRole.Admin]);
     employee.Rename("管理员");
-    employee.AddRoles(EmployeeRole.Admin);
     await employeeRepository.SaveAsync(employee);
 
     // 用户
@@ -63,7 +62,8 @@ currentUser.EmployeeId = adminSessionInfo.EmployeeId;
 var designrEmployeeCreateRequest = new EmployeeCreateRequest()
 {
     Id = EmployeeId.Create(),
-    Name = "设计师"
+    Name = "设计师",
+    Roles = [EmployeeRole.Designer]
 };
 await sender.SendAsync(designrEmployeeCreateRequest);
 
@@ -71,7 +71,8 @@ await sender.SendAsync(designrEmployeeCreateRequest);
 var salespersonEmployeeCreateRequest = new EmployeeCreateRequest()
 {
     Id = EmployeeId.Create(),
-    Name = "销售"
+    Name = "销售",
+    Roles = [EmployeeRole.Sales]
 };
 await sender.SendAsync(salespersonEmployeeCreateRequest);
 

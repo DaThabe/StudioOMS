@@ -8,7 +8,7 @@ public sealed class EmployeeCreateRequest : IRequest
 {
     public required EmployeeId Id { get; init; }
     public required string Name { get; init; }
-    public IReadOnlySet<EmployeeRole> Roles { get; init; } = new HashSet<EmployeeRole>();
+    public required EmployeeRole[] Roles { get; init; }
 
 
     public static implicit operator EmployeeCreateRequest(EmployeeCreateDto dto)
@@ -16,7 +16,8 @@ public sealed class EmployeeCreateRequest : IRequest
         return new()
         {
             Id = new EmployeeId(dto.Id),
-            Name = dto.Name
+            Name = dto.Name,
+            Roles = dto.Roles
         };
     }
 
@@ -26,7 +27,7 @@ public sealed class EmployeeCreateRequest : IRequest
 
         public async ValueTask HandleAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = Employee.Create(request.Id);
+            var user = Employee.Create(request.Id, request.Roles);
             user.Rename(request.Name);
 
             await employeeRepository.SaveAsync(user, cancellationToken);

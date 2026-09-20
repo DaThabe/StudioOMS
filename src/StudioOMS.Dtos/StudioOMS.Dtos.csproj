@@ -4,4 +4,8 @@
 		<RootNamespace>StudioOMS</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\StudioOMS.Domain\StudioOMS.Domain.csproj" />
+	</ItemGroup>
+
 </Project>

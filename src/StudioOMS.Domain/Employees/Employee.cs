@@ -3,7 +3,7 @@
 
 public sealed class Employee : Entity<EmployeeId>
 {
-    private readonly HashSet<EmployeeRole> _roles = [];
+    private HashSet<EmployeeRole> _roles = [];
 
     public string Name { get; private set; } = "未命名员工";
     public IReadOnlySet<EmployeeRole> Roles => _roles.AsReadOnly();
@@ -27,20 +27,34 @@ public sealed class Employee : Entity<EmployeeId>
     }
     public void RemoveRoles(params IEnumerable<EmployeeRole> roles)
     {
-        foreach (var i in roles.ToArray()) _roles.Remove(i);
+        var remaining = _roles.Except(roles).ToHashSet();
+
+        if (remaining.Count == 0)
+            throw new InvalidOperationException("员工至少保留一个角色");
+
+        _roles.Clear();
+        foreach (var role in remaining) _roles.Add(role);
     }
 
 
 
     internal Employee() { }
-    public static Employee Create(EmployeeId employeeId)
+    public static Employee Create(EmployeeId employeeId, IEnumerable<EmployeeRole> roles)
     {
         if (employeeId == EmployeeId.Empty)
             throw new ArgumentException("员工 Id 不可为空", nameof(employeeId));
 
+        var roleSet = roles.ToHashSet();
+        if (roleSet.Count == 0)
+            throw new ArgumentException("员工 职位 不可为空", nameof(roles));
 
-        return new() { Id = employeeId };
+
+        return new()
+        {
+            _roles = [.. roleSet],
+            Id = employeeId
+        };
     }
-    public static Employee Create() =>
-        Create(EmployeeId.Create());
+    public static Employee Create(IEnumerable<EmployeeRole> roles) =>
+        Create(EmployeeId.Create(), roles);
 }
