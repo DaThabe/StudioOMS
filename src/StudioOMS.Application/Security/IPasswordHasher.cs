@@ -1,4 +1,4 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.Security;
 
 
 public interface IPasswordHasher

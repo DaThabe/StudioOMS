@@ -16,5 +16,8 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.12" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.6" />
+    <PackageVersion Include="ThabeSoft.Mediator" Version="0.1.0-alpha.2" />
+    <PackageVersion Include="ThabeSoft.Mediator.Abstractions" Version="0.1.0-alpha.2" />
+    <PackageVersion Include="ThabeSoft.Mediator.Contracts" Version="0.1.0-alpha.1" />
   </ItemGroup>
 </Project>

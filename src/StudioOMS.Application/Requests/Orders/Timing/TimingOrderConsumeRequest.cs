@@ -1,7 +1,9 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Messaging;
+using StudioOMS.Orders;
+using StudioOMS.Orders.Timing;
+using StudioOMS.Security.Permission;
 
-namespace StudioOMS.Orders.Timing;
+namespace StudioOMS.Requests.Orders.Timing;
 
 
 public record TimingOrderConsumeRequest : IRequest
@@ -15,8 +17,10 @@ public record TimingOrderConsumeRequest : IRequest
 
 
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest>
+    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest>, IRequirePermissions
     {
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderConsume);
+
         public async ValueTask HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)

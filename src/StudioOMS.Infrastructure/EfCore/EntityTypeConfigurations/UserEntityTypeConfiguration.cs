@@ -21,7 +21,7 @@ internal sealed class UserEntityTypeConfiguration :
             .OnDelete(DeleteBehavior.Restrict);
 
         // Name
-        builder.Property(x => x.Name)
+        builder.Property(x => x.Username)
             .IsRequired();
         // Password
         builder.Property(x => x.PasswordHash)

@@ -1,4 +1,4 @@
-﻿namespace StudioOMS.Messaging;
+﻿namespace StudioOMS.Requests;
 
 
 public interface IRequestHandler<TRequest>

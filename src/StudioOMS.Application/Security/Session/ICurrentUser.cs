@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Employees;
 
-namespace StudioOMS.Users;
+namespace StudioOMS.Security.Session;
 
 
 /// <summary>
@@ -8,5 +8,5 @@ namespace StudioOMS.Users;
 /// </summary>
 public interface ICurrentUser
 {
-    EmployeeId EmployeeId { get; }
+    EmployeeId EmployeeId { get; set; }
 }

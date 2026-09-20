@@ -1,6 +1,7 @@
 ﻿using StudioOMS.Clients;
 using StudioOMS.Employees;
-using StudioOMS.Messaging;
+using StudioOMS.Requests;
+using StudioOMS.Requests.Orders.Timing;
 
 namespace StudioOMS.Orders.Timing;
 

@@ -1,12 +1,14 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Employees;
+using StudioOMS.Security.Permission;
 
-namespace StudioOMS.Employees;
+namespace StudioOMS.Requests.Employees;
 
 
 public sealed class EmployeeCreateRequest : IRequest
 {
     public required EmployeeId Id { get; init; }
     public required string Name { get; init; }
+    public IReadOnlySet<EmployeeRole> Roles { get; init; } = new HashSet<EmployeeRole>();
 
 
     public static implicit operator EmployeeCreateRequest(EmployeeCreateDto dto)
@@ -18,8 +20,10 @@ public sealed class EmployeeCreateRequest : IRequest
         };
     }
 
-    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeCreateRequest>
+    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeCreateRequest>, IRequirePermissions
     {
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.EmployeeCreate);
+
         public async ValueTask HandleAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
         {
             var user = Employee.Create(request.Id);

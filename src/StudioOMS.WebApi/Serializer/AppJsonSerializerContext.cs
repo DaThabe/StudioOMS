@@ -1,5 +1,5 @@
-using StudioOMS.Orders;
-using StudioOMS.Orders.Timing;
+using StudioOMS.Requests.Orders;
+using StudioOMS.Requests.Orders.Timing;
 using System.Text.Json.Serialization;
 
 

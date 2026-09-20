@@ -1,9 +1,11 @@
-﻿using StudioOMS.Clients;
-using StudioOMS.Employees;
-using StudioOMS.Messaging;
-using StudioOMS.Orders;
-using StudioOMS.Orders.Timing;
-using StudioOMS.Users;
+﻿using StudioOMS.Requests;
+using StudioOMS.Requests.Clients;
+using StudioOMS.Requests.Employees;
+using StudioOMS.Requests.Orders;
+using StudioOMS.Requests.Orders.Timing;
+using StudioOMS.Requests.Users;
+using StudioOMS.Security.Session;
+
 
 #pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
 namespace Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,7 @@ public static class DependencyInjectionExtensions
         {
             // User
             services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest>();
+            services.AddRequestHandler<UserLoginRequest.Handler, UserLoginRequest, SessionToken>();
 
             // Employee
             services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest>();

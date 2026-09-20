@@ -1,4 +1,4 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.Security;
 
 
 internal sealed class PasswordHasher : IPasswordHasher

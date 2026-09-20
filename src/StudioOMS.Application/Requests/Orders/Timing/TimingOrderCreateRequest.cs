@@ -1,8 +1,10 @@
 ﻿using StudioOMS.Clients;
 using StudioOMS.Employees;
-using StudioOMS.Messaging;
+using StudioOMS.Orders;
+using StudioOMS.Orders.Timing;
+using StudioOMS.Security.Permission;
 
-namespace StudioOMS.Orders.Timing;
+namespace StudioOMS.Requests.Orders.Timing;
 
 
 public sealed record class TimingOrderCreateRequest : IRequest
@@ -18,8 +20,10 @@ public sealed record class TimingOrderCreateRequest : IRequest
 
 
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderCreateRequest>
+    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderCreateRequest>, IRequirePermissions
     {
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderCreate);
+
         public async ValueTask HandleAsync(TimingOrderCreateRequest request, CancellationToken cancellationToken = default)
         {
             var order = TimingOrder.Create(request.Id, request.ClientId, request.SalespersonId, request.TotalDays, request.CreateAt);

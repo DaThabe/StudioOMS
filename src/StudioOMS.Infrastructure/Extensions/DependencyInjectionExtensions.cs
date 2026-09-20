@@ -3,9 +3,12 @@ using StudioOMS;
 using StudioOMS.Clients;
 using StudioOMS.EfCore;
 using StudioOMS.Employees;
-using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Repositories;
+using StudioOMS.Requests;
+using StudioOMS.Security;
+using StudioOMS.Security.Permission;
+using StudioOMS.Security.Session;
 using StudioOMS.Users;
 using System.Diagnostics.CodeAnalysis;
 
@@ -23,10 +26,11 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddInfrastructure(Action<DbContextOptionsBuilder> databaseOptionAction)
         {
             return services
+                .AddMemoryCache()
                 .AddDatabase(databaseOptionAction)
                 .AddRepository()
                 .AddMessaging()
-                .AddPassword();
+                .AddSecurity();
         }
 
 
@@ -54,12 +58,16 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddMessaging()
         {
             services.AddScoped<ISender, Sender>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
             return services;
         }
 
-        public IServiceCollection AddPassword()
+        public IServiceCollection AddSecurity()
         {
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<IPermissionChecker, PermissionChecker>();
+
             return services;
         }
     }
