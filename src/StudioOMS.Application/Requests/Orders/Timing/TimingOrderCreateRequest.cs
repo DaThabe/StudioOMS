@@ -7,27 +7,36 @@ using StudioOMS.Security.Permission;
 namespace StudioOMS.Requests.Orders.Timing;
 
 
-public sealed record class TimingOrderCreateRequest : IRequest
+public sealed record class TimingOrderCreateRequest : IRequest<OrderId>
 {
     public required ClientId ClientId { get; init; }
     public required EmployeeId SalespersonId { get; init; }
     public required decimal TotalDays { get; init; }
-
-
-    public OrderId Id { get; init; } = OrderId.Create();
-    public DateTimeOffset CreateAt { get; init; } = DateTimeOffset.UtcNow;
     public string Title { get; init; } = "未命名的订单";
 
 
+    public static TimingOrderCreateRequest FromDto(TimingOrderCreateDto dto)
+    {
+        return new()
+        {
+            ClientId = ClientId.Parse(dto.ClientId),
+            SalespersonId = EmployeeId.Parse(dto.SalespersonId),
+            TotalDays = dto.TotalDays,
+            Title = dto.Title
+        };
+    }
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderCreateRequest>, IRequirePermissions
+
+    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderCreateRequest, OrderId>, IRequirePermissions
     {
         public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderCreate);
 
-        public async ValueTask HandleAsync(TimingOrderCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<OrderId> HandleAsync(TimingOrderCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var order = TimingOrder.Create(request.Id, request.ClientId, request.SalespersonId, request.TotalDays, request.CreateAt);
+            var order = TimingOrder.CreateNow(request.ClientId, request.SalespersonId, request.TotalDays);
             await orderRepository.SaveAsync(order, cancellationToken);
+
+            return order.Id;
         }
     }
 }

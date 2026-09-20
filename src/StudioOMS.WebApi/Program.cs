@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using StudioOMS.Orders;
-using StudioOMS.Orders.Timing;
+using StudioOMS.Endpoints;
+using StudioOMS.Endpoints.Orders;
+using StudioOMS.Middlewares;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -23,8 +25,7 @@ builder.Services.AddCors(options =>
 
 // StudioOMS
 builder.Services.AddStudioOMSHandlers();
-builder.Services.AddMessaging();
-builder.Services.AddRepository();
+builder.Services.AddInfrastructure(x => x.UseSqlite("Data Source=studio_oms.db"));
 
 
 // Build
@@ -40,8 +41,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // Api
-app.MapOrderEndpoints();
+app.MapStudioOMSEndpoints();
 app.MapTimingOrderEndpoints();
+app.UseMiddleware<CurrentUserMiddleware>();
 
 
 app.Run();

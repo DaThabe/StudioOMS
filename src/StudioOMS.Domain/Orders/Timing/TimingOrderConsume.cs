@@ -29,7 +29,11 @@ public sealed class TimingOrderConsume : OrderConsume
             Timestamp = timestamp,
         };
     }
+    public static TimingOrderConsume Create(EmployeeId employeeId, decimal days, DateTimeOffset timestamp) =>
+        Create(ConsumeId.Create(), employeeId, days, timestamp);
 
     public static TimingOrderConsume CreateNow(ConsumeId consumeId, EmployeeId employeeId, decimal days) =>
-        Create(consumeId, employeeId, days, DateTime.Now);
+        Create(consumeId, employeeId, days, DateTimeOffset.Now);
+    public static TimingOrderConsume CreateNow(EmployeeId employeeId, decimal days) =>
+        Create(employeeId, days, DateTimeOffset.Now);
 }

@@ -3,5 +3,5 @@
 
 public record class OrderAssignEmployeeDto
 {
-    public required Guid EmployeeId { get; init; }
+    public required string EmployeeId { get; init; }
 }

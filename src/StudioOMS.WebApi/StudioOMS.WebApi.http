@@ -1,11 +1,74 @@
-@StudioOMS.WebApi_HostAddress = http://localhost:5281
+@host = http://localhost:5281
 
-GET {{StudioOMS.WebApi_HostAddress}}/api/orders/timing/
-Accept: application/json
+### 登录
+# @name login
+POST {{host}}/api/users/login
+Content-Type: application/json
+{
+  "username": "admin",
+  "password": "123456"
+}
 
-###
+### 创建销售
+# @name salesperson
+POST {{host}}/api/employees
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "name": "销售",
+  "roles": [ "Sales" ]
+}
 
-GET {{StudioOMS.WebApi_HostAddress}}/todos/1
-Accept: application/json
+### 创建设计师
+# @name designer
+POST {{host}}/api/employees
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "name": "设计",
+  "roles": [ "Designer" ]
+}
 
-###
+
+### 创建客户
+# @name client
+POST {{host}}/api/clients
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "name": "测试客户"
+}
+
+### 创建订单
+# @name timingOrder
+POST {{host}}/api/orders/timing
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "title": "测试订单",
+  "clientId": {{client.response.body.*}},
+  "salespersonId": {{salesperson.response.body.*}},
+  "totalDays": 20
+}
+
+### 订单分配设计师
+POST {{host}}/api/orders/{{timingOrder.response.body.$.}}/assign
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "employeeId": {{designer.response.body.*}}
+}
+
+### 订单开始服务
+POST {{host}}/api/orders/{{timingOrder.response.body.$.}}/servicing
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+
+### 订单开始划扣
+POST {{host}}/api/orders/timing/{{timingOrder.response.body.$.}}/consume
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+    "employeeId": {{designer.response.body.*}},
+    "days":1
+}

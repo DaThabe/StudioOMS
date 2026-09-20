@@ -2,6 +2,7 @@
 using StudioOMS.Employees;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
+using System.Collections.Concurrent;
 
 namespace StudioOMS.Security;
 
@@ -9,10 +10,15 @@ namespace StudioOMS.Security;
 internal sealed class SessionService(IMemoryCache memoryCache) : ISessionService
 {
     private static readonly TimeSpan SessionLifetime = TimeSpan.FromDays(7);
+    private readonly ConcurrentDictionary<UserId, SessionToken> _userTokens = new();
 
 
     public ValueTask<SessionToken> CreateAsync(UserId userId, EmployeeId employeeId, CancellationToken cancellationToken = default)
     {
+        // 删除该用户的旧会话
+        if (_userTokens.TryRemove(userId, out var oldToken))
+            memoryCache.Remove(oldToken);
+
         var token = SessionToken.Create();
         var info = SessionInfo.Create(userId, employeeId);
 
@@ -21,6 +27,7 @@ internal sealed class SessionService(IMemoryCache memoryCache) : ISessionService
             AbsoluteExpirationRelativeToNow = SessionLifetime
         });
 
+        _userTokens[userId] = token;
         return ValueTask.FromResult(token);
     }
 
@@ -33,6 +40,11 @@ internal sealed class SessionService(IMemoryCache memoryCache) : ISessionService
     public ValueTask RemoveAsync(SessionToken token, CancellationToken cancellationToken = default)
     {
         memoryCache.Remove(token);
+
+        var entry = _userTokens.FirstOrDefault(kvp => kvp.Value == token);
+        if (entry.Key != default)
+            _userTokens.TryRemove(entry.Key, out _);
+
         return ValueTask.CompletedTask;
     }
 }

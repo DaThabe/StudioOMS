@@ -9,6 +9,14 @@ public sealed class OrderMarkServicingRequest : IRequest
     public required OrderId OrderId { get; init; }
 
 
+    public static OrderMarkServicingRequest FromOrderId(string orderId)
+    {
+        return new()
+        {
+            OrderId = OrderId.Parse(orderId),
+        };
+    }
+
     internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<OrderMarkServicingRequest>, IRequirePermissions
     {
         public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderManage);

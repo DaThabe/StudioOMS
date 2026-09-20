@@ -1,10 +1,14 @@
-﻿using StudioOMS.Requests;
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
+using StudioOMS.Orders;
+using StudioOMS.Requests;
 using StudioOMS.Requests.Clients;
 using StudioOMS.Requests.Employees;
 using StudioOMS.Requests.Orders;
 using StudioOMS.Requests.Orders.Timing;
 using StudioOMS.Requests.Users;
 using StudioOMS.Security.Session;
+using StudioOMS.Users;
 
 
 #pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
@@ -19,20 +23,20 @@ public static class DependencyInjectionExtensions
         public void AddStudioOMSHandlers()
         {
             // User
-            services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest>();
+            services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest, UserId>();
             services.AddRequestHandler<UserLoginRequest.Handler, UserLoginRequest, SessionToken>();
 
             // Employee
-            services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest>();
+            services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest, EmployeeId>();
 
             // Client
-            services.AddRequestHandler<ClientCreateRequest.Handler, ClientCreateRequest>();
+            services.AddRequestHandler<ClientCreateRequest.Handler, ClientCreateRequest, ClientId>();
 
             // Order
             services.AddRequestHandler<OrderAssignEmployeeRequest.Handler, OrderAssignEmployeeRequest>();
             services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest>();
             //Order-Timing
-            services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest>();
+            services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest, OrderId>();
             services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest>();
         }
 

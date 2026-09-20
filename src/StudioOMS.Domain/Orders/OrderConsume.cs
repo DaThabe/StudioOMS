@@ -18,7 +18,7 @@ public readonly record struct ConsumeId
     public static ConsumeId Empty => default;
 
     private readonly Guid _value;
-    private ConsumeId(Guid value) => _value = value;
+    public ConsumeId(Guid value) => _value = value;
     public override string ToString() => _value.ToString("N");
 
 

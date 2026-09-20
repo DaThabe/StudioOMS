@@ -33,4 +33,6 @@ public sealed class Client : Entity<ClientId>
             Id = clientId
         };
     }
+    public static Client Create() =>
+        Create(ClientId.Create());
 }

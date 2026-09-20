@@ -11,7 +11,7 @@ public sealed class UserLoginRequest : IRequest<SessionToken>
     public required string Password { get; init; }
 
 
-    public static implicit operator UserLoginRequest(UserLoginDto dto)
+    public static UserLoginRequest FromDto(UserLoginDto dto)
     {
         return new()
         {

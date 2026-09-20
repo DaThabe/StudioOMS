@@ -41,6 +41,7 @@ public static class DependencyInjectionExtensions
         {
             services.AddDbContext<AppDbContext>(buildAction);
             services.AddHostedService<MigrateHostedService>();
+            services.AddHostedService<InitAdminHostedService>();
             return services;
         }
 
@@ -66,7 +67,7 @@ public static class DependencyInjectionExtensions
         {
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<ISessionService, SessionService>();
-            services.AddSingleton<IPermissionChecker, PermissionChecker>();
+            services.AddScoped<IPermissionChecker, PermissionChecker>();
 
             return services;
         }

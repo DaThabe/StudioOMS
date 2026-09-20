@@ -99,7 +99,7 @@ await sender.SendAsync(timingOrderCreateRequest);
 // 分配设计师
 var orderAssignEmployeeRequest = new OrderAssignEmployeeRequest()
 {
-    OrderId = timingOrderCreateRequest.Id,
+    Id = timingOrderCreateRequest.Id,
     EmployeeId = designrEmployeeCreateRequest.Id
 };
 await sender.SendAsync(orderAssignEmployeeRequest);

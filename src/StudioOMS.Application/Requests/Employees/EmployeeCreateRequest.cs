@@ -4,33 +4,32 @@ using StudioOMS.Security.Permission;
 namespace StudioOMS.Requests.Employees;
 
 
-public sealed class EmployeeCreateRequest : IRequest
+public sealed class EmployeeCreateRequest : IRequest<EmployeeId>
 {
-    public required EmployeeId Id { get; init; }
     public required string Name { get; init; }
     public required EmployeeRole[] Roles { get; init; }
 
 
-    public static implicit operator EmployeeCreateRequest(EmployeeCreateDto dto)
+    public static EmployeeCreateRequest FromDto(EmployeeCreateDto dto)
     {
         return new()
         {
-            Id = new EmployeeId(dto.Id),
             Name = dto.Name,
             Roles = dto.Roles
         };
     }
 
-    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeCreateRequest>, IRequirePermissions
+    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeCreateRequest, EmployeeId>, IRequirePermissions
     {
         public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.EmployeeCreate);
 
-        public async ValueTask HandleAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<EmployeeId> HandleAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = Employee.Create(request.Id, request.Roles);
-            user.Rename(request.Name);
+            var employee = Employee.Create(request.Roles);
+            employee.Rename(request.Name);
+            await employeeRepository.SaveAsync(employee, cancellationToken);
 
-            await employeeRepository.SaveAsync(user, cancellationToken);
+            return employee.Id;
         }
     }
 }
