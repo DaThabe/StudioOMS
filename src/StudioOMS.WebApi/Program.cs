@@ -23,8 +23,8 @@ builder.Services.AddCors(options =>
 
 // StudioOMS
 builder.Services.AddStudioOMSHandlers();
-builder.Services.AddMessagingSender();
-builder.Services.AddStudioOMSRepository();
+builder.Services.AddMessaging();
+builder.Services.AddRepository();
 
 
 // Build

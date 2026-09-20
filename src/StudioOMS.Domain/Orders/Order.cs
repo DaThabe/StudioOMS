@@ -1,15 +1,14 @@
-﻿namespace StudioOMS.Orders;
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
+
+namespace StudioOMS.Orders;
 
 
 /// <summary>
 /// 订单
 /// </summary>
-public abstract partial record class Order : IEquatable<Order>
+public abstract partial class Order : Entity<OrderId>
 {
-    /// <summary>
-    /// 订单Id
-    /// </summary>
-    public required OrderId Id { get; init; }
     /// <summary>
     /// 客户Id
     /// </summary>
@@ -18,15 +17,10 @@ public abstract partial record class Order : IEquatable<Order>
     /// 销售员Id
     /// </summary>
     public required EmployeeId SalespersonId { get; init; }
-
-
-    public virtual bool Equals(Order? other) => Id.Equals(other?.Id);
-    public override int GetHashCode() => Id.GetHashCode();
-    public override string ToString() => Id.ToString() ?? string.Empty;
 }
 
 
-public readonly record struct OrderId
+public readonly record struct OrderId : IEquatable<OrderId>
 {
     public static OrderId Empty => default;
 
@@ -36,4 +30,5 @@ public readonly record struct OrderId
 
 
     public static OrderId Create() => new(Guid.CreateVersion7());
+    public static OrderId Parse(string guid) => new(Guid.Parse(guid));
 }

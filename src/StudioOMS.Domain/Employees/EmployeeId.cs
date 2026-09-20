@@ -1,4 +1,4 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.Employees;
 
 
 public readonly record struct EmployeeId
@@ -11,4 +11,5 @@ public readonly record struct EmployeeId
 
 
     public static EmployeeId Create() => new(Guid.CreateVersion7());
+    public static EmployeeId Parse(string guid) => new(Guid.Parse(guid));
 }

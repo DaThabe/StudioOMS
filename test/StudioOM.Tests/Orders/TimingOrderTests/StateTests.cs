@@ -1,4 +1,5 @@
-﻿using StudioOMS;
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 
@@ -15,7 +16,7 @@ public sealed class StateTests
     [TestInitialize]
     public void Setup()
     {
-        _order = TimingOrder.Create(OrderId.Create(), ClientId.Create(), EmployeeId.Create(), _totalDays);
+        _order = TimingOrder.CreateNow(ClientId.Create(), EmployeeId.Create(), _totalDays);
     }
 
 
@@ -56,7 +57,7 @@ public sealed class StateTests
         _order.AssignEmployees(employeeId);
         _order.MarkServicing(new DateTime(2026, 1, 1));
 
-        var consume = TimingConsume.Create(
+        var consume = TimingOrderConsume.Create(
             ConsumeId.Create(), employeeId, _totalDays, new DateTime(2026, 1, 2));
 
         var result = _order.Consume(consume);

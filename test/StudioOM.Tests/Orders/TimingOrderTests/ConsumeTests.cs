@@ -1,4 +1,5 @@
-﻿using StudioOMS;
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 
@@ -15,7 +16,7 @@ public sealed class ConsumeTests
     [TestInitialize]
     public void Setup()
     {
-        _order = TimingOrder.Create(OrderId.Create(), ClientId.Create(), EmployeeId.Create(), _totalDays);
+        _order = TimingOrder.CreateNow(ClientId.Create(), EmployeeId.Create(), _totalDays);
     }
 
 
@@ -26,10 +27,9 @@ public sealed class ConsumeTests
         _order.AssignEmployees(employeeId);
         _order.MarkServicingNow();
 
-        var consume = TimingConsume.CreateNow(ConsumeId.Create(), employeeId, 1);
-        var result = _order.Consume(consume);
+        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), employeeId, 1);
+        _order.Consume(consume);
 
-        Assert.IsInstanceOfType<TimingOrderConsumeResult.SuccessResult>(result);
         Assert.AreEqual(1m, _order.UsedDays);
     }
 
@@ -37,8 +37,8 @@ public sealed class ConsumeTests
     [TestMethod(DisplayName = "未标记服务中无法消耗")]
     public void NotMarkServicing()
     {
-        var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
-        var result = _order.Consume(consume);
+        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
+        _order.Consume(consume);
 
         Assert.IsInstanceOfType<TimingOrderConsumeResult.StateNotAllowedResultResult>(result);
     }
@@ -49,7 +49,7 @@ public sealed class ConsumeTests
         var markResult = _order.MarkServicingNow();
         Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(markResult);
 
-        var consume = TimingConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
+        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         var result = _order.Consume(consume);
 
         Assert.IsInstanceOfType<TimingOrderConsumeResult.NotAssignedResult>(result);

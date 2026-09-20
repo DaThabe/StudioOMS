@@ -4,7 +4,7 @@
 /// <summary>
 /// 订单
 /// </summary>
-public abstract partial record class Order
+public abstract partial class Order
 {
     private static readonly Comparer<OrderStateChange> _stateChangedsComparer = Comparer<OrderStateChange>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
     private readonly SortedSet<OrderStateChange> _stateChangeds = new(_stateChangedsComparer);
@@ -19,55 +19,55 @@ public abstract partial record class Order
     /// <summary>
     /// 开始服务
     /// </summary>
-    public OrderStateChangeResult MarkServicing(DateTime timestamp) =>
+    public void MarkServicing(DateTimeOffset timestamp) =>
         MarkState(OrderState.Servicing, timestamp);
-    public OrderStateChangeResult MarkServicingNow() =>
+    public void MarkServicingNow() =>
         MarkServicing(DateTime.Now);
 
 
     /// <summary>
     /// 完成服务
     /// </summary>
-    protected OrderStateChangeResult MarkCompleted(DateTime timestamp) =>
+    protected void MarkCompleted(DateTimeOffset timestamp) =>
         MarkState(OrderState.Completed, timestamp);
-    public OrderStateChangeResult MarkCompletedNow() =>
-        MarkCompleted(DateTime.Now);
+    public void MarkCompletedNow() =>
+        MarkCompleted(DateTimeOffset.Now);
 
 
     /// <summary>
     /// 暂停服务
     /// </summary>
-    public OrderStateChangeResult MarkPaused(DateTime timestamp) =>
+    public void MarkPaused(DateTimeOffset timestamp) =>
         MarkState(OrderState.Paused, timestamp);
-    public OrderStateChangeResult MarkPausedNow() =>
-        MarkPaused(DateTime.Now);
+    public void MarkPausedNow() =>
+        MarkPaused(DateTimeOffset.Now);
 
 
     /// <summary>
     /// 终止服务
     /// </summary>
-    public OrderStateChangeResult MarkTerminated(DateTime timestamp) =>
+    public void MarkTerminated(DateTimeOffset timestamp) =>
         MarkState(OrderState.Terminated, timestamp);
-    public OrderStateChangeResult MarkTerminatedNow() =>
-        MarkTerminated(DateTime.Now);
+    public void MarkTerminatedNow() =>
+        MarkTerminated(DateTimeOffset.Now);
 
     /// <summary>
     /// 取消服务
     /// </summary>
-    public OrderStateChangeResult MarkCancelled(DateTime timestamp)
+    public void MarkCancelled(DateTimeOffset timestamp)
         => MarkState(OrderState.Cancelled, timestamp);
-    public OrderStateChangeResult MarkCancelledNow()
-       => MarkCancelled(DateTime.Now);
+    public void MarkCancelledNow()
+       => MarkCancelled(DateTimeOffset.Now);
 
 
 
-    private OrderStateChangeResult MarkState(OrderState state, DateTime timestamp)
+    private void MarkState(OrderState state, DateTimeOffset timestamp)
     {
         var newStateChanged = new OrderStateChange(state, timestamp);
 
         // 已存在的状态变化
         if (_stateChangeds.Contains(newStateChanged))
-            return OrderStateChangeResult.Success;
+            return;
 
         // 回放验证
         var currentState = OrderState.Waiting;
@@ -75,29 +75,21 @@ public abstract partial record class Order
 
         foreach (var e in allChangeds.OrderBy(x => x.Timestamp))
         {
-            var result = StateTransition(currentState, e.State);
-            if (result is not OrderStateChangeResult.SuccessResult) return result;
-
+            AssertStateTransition(currentState, e.State);
             currentState = e.State;
         }
 
         State = newStateChanged.State;
         _stateChangeds.Add(newStateChanged);
-
-        return OrderStateChangeResult.Success;
     }
 
-    private static OrderStateChangeResult StateTransition(OrderState from, OrderState to)
+    private static void AssertStateTransition(OrderState from, OrderState to)
     {
         if (!AllowedTransitions.TryGetValue(from, out var allowed))
             throw new InvalidOperationException($"无法识别的状态 {from}");
 
         if (!allowed.Contains(to))
-        {
-            return OrderStateChangeResult.NotAsExpected(to, allowed);
-        }
-
-        return OrderStateChangeResult.Success;
+            throw new ArgumentOutOfRangeException(nameof(to), $"状态 [{to}] 下一个状态只能在 [{string.Join(',', allowed)}] 中");
     }
 
     private static readonly Dictionary<OrderState, OrderState[]> AllowedTransitions = new()
@@ -151,7 +143,7 @@ public enum OrderState
 /// <summary>
 /// 订单状态改变
 /// </summary>
-public record OrderStateChange(OrderState State, DateTime Timestamp);
+public record OrderStateChange(OrderState State, DateTimeOffset Timestamp);
 
 
 /// <summary>
@@ -189,7 +181,7 @@ public abstract record class OrderStateChangeResult
     {
         public required OrderState Actual { get; init; }
         public required IReadOnlySet<OrderState> Expects { get; init; }
-       
+
         internal NotAsExpectedResult() { }
         public override string ToString() => $"状态切换失败, 只能在 [{string.Join(',', Expects)}] 状态下切换, 当前 {Actual}";
     }

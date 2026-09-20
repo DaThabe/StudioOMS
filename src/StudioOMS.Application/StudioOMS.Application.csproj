@@ -6,6 +6,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\StudioOMS.Domain\StudioOMS.Domain.csproj" />
+		<ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
 	</ItemGroup>
 
 </Project>

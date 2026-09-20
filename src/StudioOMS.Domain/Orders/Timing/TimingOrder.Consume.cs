@@ -1,44 +1,48 @@
-﻿namespace StudioOMS.Orders.Timing;
+﻿using StudioOMS.Employees;
+
+namespace StudioOMS.Orders.Timing;
 
 
-public sealed partial record class TimingOrder : Order
+public sealed partial class TimingOrder : Order
 {
-    private readonly List<TimingConsume> _consumes = [];
-    public IReadOnlyList<TimingConsume> Consumes => _consumes.AsReadOnly();
+    private readonly List<TimingOrderConsume> _consumes = [];
+    public IReadOnlyList<TimingOrderConsume> Consumes => _consumes.AsReadOnly();
 
 
-    public TimingOrderConsumeResult Consume(TimingConsume consume)
+    public void Consume(TimingOrderConsume consume)
     {
         // 状态不允许
         if (State is not OrderState.Servicing)
-            return TimingOrderConsumeResult.StateNotAllowed(State);
+            throw new ArgumentException($"无法划扣, 订单 [{consume.Id}] {GetStateName(State)}", nameof(consume));
         // 已存在
         if (_consumes.Contains(consume))
-            return TimingOrderConsumeResult.Repeated;
+            throw new ArgumentException($"无法划扣, 该划扣 [{consume.Id}] 已存在");
         // 不能操作的员工
         if (!AssignedEmployees.Contains(consume.EmployeeId))
-            return TimingOrderConsumeResult.NotAssigned(consume.EmployeeId);
+            throw new ArgumentException($"无法划扣, 该员工 [{consume.EmployeeId}] 未服务此订单 [{Id}]");
         // 超过订单额度
         var nextUsedDays = UsedDays + consume.Days;
         if (nextUsedDays > TotalDays)
-            return TimingOrderConsumeResult.Exceed(nextUsedDays, TotalDays);
+            throw new ArgumentOutOfRangeException($"无法划扣, 当前消耗 [{nextUsedDays}] 超过订单上线 [{TotalDays}] ");
 
 
         UsedDays = nextUsedDays;
         _consumes.Add(consume);
 
-
         // 消耗完毕
-        if (UsedDays == TotalDays)
+        if (UsedDays == TotalDays) MarkCompleted(consume.Timestamp);
+
+
+        // StateName
+        static string GetStateName(OrderState state) => state switch
         {
-            // 标记完成
-            var markResult = MarkCompleted(consume.Timestamp);
-
-            if (markResult is not OrderStateChangeResult.SuccessResult)
-                throw new InvalidOperationException("订单状态标记异常: {markResult}");
-        }
-
-        return TimingOrderConsumeResult.Success;
+            OrderState.Waiting => "未开始服务",
+            OrderState.Paused => "已暂停",
+            OrderState.Completed => "已完成",
+            OrderState.Terminated => "已终止",
+            OrderState.Cancelled => "已取消",
+            _ => "当前状态不允许划扣"
+        };
     }
 }
 

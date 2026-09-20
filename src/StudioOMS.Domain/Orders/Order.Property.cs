@@ -4,12 +4,12 @@
 /// <summary>
 /// 订单
 /// </summary>
-public abstract partial record class Order
+public abstract partial class Order
 {
     /// <summary>
     /// 创建时间
     /// </summary>
-    public required DateTime CreateAt { get; init; }
+    public required DateTimeOffset CreateAt { get; init; }
 
     /// <summary>
     /// 标题
@@ -33,29 +33,5 @@ public abstract partial record class Order
 
         Title = trimmed;
         return PropertyChangedResult.Success;
-    }
-}
-
-
-public abstract record class PropertyChangedResult
-{
-    public static SuccessResult Success { get; } = new();
-    public static InvalidValueResult InvalidValue(string reason) => new()
-    {
-        Reason = reason
-    };
-
-
-    internal PropertyChangedResult() { }
-    public sealed record class SuccessResult : PropertyChangedResult
-    {
-        internal SuccessResult() { }
-        public override string ToString() => "属性更改成功";
-    }
-    public sealed record class InvalidValueResult : PropertyChangedResult
-    {
-        public required string Reason { get; init; }
-        internal InvalidValueResult() { }
-        public override string ToString() => $"属性更改失败: {Reason}";
     }
 }

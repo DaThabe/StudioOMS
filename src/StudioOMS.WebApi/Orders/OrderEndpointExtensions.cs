@@ -1,4 +1,5 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Employees;
+using StudioOMS.Messaging;
 
 namespace StudioOMS.Orders;
 
@@ -22,7 +23,7 @@ public static class OrderEndpointExtensions
     }
 
     private static async Task<IResult> AssignEmployee(
-        Guid id, OrderAssignEmployeeDto dto, ISender sender, CancellationToken ct)
+        Guid id, OrderAssignEmployeeRequest dto, ISender sender, CancellationToken ct)
     {
         await sender.SendAsync(
             new OrderAssignEmployeeRequest(new OrderId(id), new EmployeeId(dto.EmployeeId)), ct);
@@ -33,8 +34,8 @@ public static class OrderEndpointExtensions
     private static async Task<IResult> MarkServicing(
         Guid id, ISender sender, CancellationToken ct)
     {
-        var result = await sender.SendAsync<OrderMarkServicingRequest, OrderStateChangeResult>(
-            new OrderMarkServicingRequest(new OrderId(id)), ct);
+        var result = await sender.SendAsync<OrderMarkServicingDto, OrderStateChangeResult>(
+            new OrderMarkServicingDto(new OrderId(id)), ct);
 
         return result.ToHttpResult();
     }

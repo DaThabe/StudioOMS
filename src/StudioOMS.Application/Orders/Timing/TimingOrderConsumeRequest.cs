@@ -1,12 +1,23 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Employees;
+using StudioOMS.Messaging;
 
 namespace StudioOMS.Orders.Timing;
 
-public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, ConsumeId ConsumeId, decimal ConsuemDays, DateTime Timestamp) : IRequest<TimingOrderConsumeResult>
+
+public record TimingOrderConsumeRequest : IRequest
 {
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest, TimingOrderConsumeResult>
+    public ConsumeId Id { get; init; } = ConsumeId.Create();
+    public DateTimeOffset Timestamp { get; init; } = DateTimeOffset.UtcNow;
+
+    public required OrderId OrderId { get; init; }
+    public required EmployeeId EmployeeId { get; init; }
+    public required decimal ConsuemDays { get; init; }
+
+
+
+    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest>
     {
-        public async ValueTask<TimingOrderConsumeResult> HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");
@@ -14,10 +25,10 @@ public record TimingOrderConsumeRequest(OrderId OrderId, EmployeeId EmployeeId, 
             if (order is not TimingOrder timingOrder)
                 throw new InvalidOperationException($"订单 {order.Id} 无法扣除天数");
 
-            var result = timingOrder.Consume(TimingConsume.Create(request.ConsumeId, request.EmployeeId, request.ConsuemDays, request.Timestamp));
-            await orderRepository.SaveAsync(order, cancellationToken);
+            var consume = TimingOrderConsume.Create(request.Id, request.EmployeeId, request.ConsuemDays, request.Timestamp);
+            timingOrder.Consume(consume);
 
-            return result;
+            await orderRepository.SaveAsync(order, cancellationToken);
         }
     }
 }

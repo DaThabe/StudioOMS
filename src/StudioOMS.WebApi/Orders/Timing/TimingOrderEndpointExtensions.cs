@@ -1,4 +1,6 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
+using StudioOMS.Messaging;
 
 namespace StudioOMS.Orders.Timing;
 
@@ -20,7 +22,7 @@ public static class TimingOrderEndpointExtensions
 
 
     private static async Task<IResult> Create(
-        TimingOrderCreateDto dto,
+        TimingOrderCreateRequest dto,
         ISender sender,
         CancellationToken ct)
     {
@@ -28,14 +30,16 @@ public static class TimingOrderEndpointExtensions
             new OrderId(dto.OrderId),
             new ClientId(dto.ClientId),
             new EmployeeId(dto.SalespersonId),
-            dto.TotalDays);
+            dto.TotalDays,
+            DateTimeOffset.Now
+            );
 
         var orderId = await sender.SendAsync<TimingOrderCreateRequest, OrderId>(request, ct);
         return Results.Ok(orderId.ToString());
     }
     private static async Task<IResult> Consume(
         Guid id,
-        TimingOrderConsumeDto dto,
+        TimingOrderConsumeRequest dto,
         ISender sender,
         CancellationToken ct)
     {

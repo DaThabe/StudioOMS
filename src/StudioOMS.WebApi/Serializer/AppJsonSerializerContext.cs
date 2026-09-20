@@ -3,7 +3,7 @@ using StudioOMS.Orders.Timing;
 using System.Text.Json.Serialization;
 
 
-[JsonSerializable(typeof(OrderAssignEmployeeDto))]
-[JsonSerializable(typeof(TimingOrderConsumeDto))]
-[JsonSerializable(typeof(TimingOrderCreateDto))]
+[JsonSerializable(typeof(OrderAssignEmployeeRequest))]
+[JsonSerializable(typeof(TimingOrderConsumeRequest))]
+[JsonSerializable(typeof(TimingOrderCreateRequest))]
 public partial class AppJsonSerializerContext : JsonSerializerContext;

@@ -1,4 +1,4 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.Clients;
 
 
 public readonly record struct ClientId
@@ -11,4 +11,5 @@ public readonly record struct ClientId
 
 
     public static ClientId Create() => new(Guid.CreateVersion7());
+    public static ClientId Parse(string guid) => new(Guid.Parse(guid));
 }

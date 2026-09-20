@@ -1,10 +1,12 @@
-﻿namespace StudioOMS.Orders;
+﻿using StudioOMS.Employees;
+
+namespace StudioOMS.Orders;
 
 
 /// <summary>
 /// 订单
 /// </summary>
-public abstract partial record class Order
+public abstract partial class Order
 {
     private readonly HashSet<EmployeeId> _assignedEmployees = [];
 

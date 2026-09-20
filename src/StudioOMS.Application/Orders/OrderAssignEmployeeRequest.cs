@@ -1,10 +1,15 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Employees;
+using StudioOMS.Messaging;
 
 namespace StudioOMS.Orders;
 
 
-public readonly record struct OrderAssignEmployeeRequest(OrderId OrderId, EmployeeId EmployeeId) : IRequest
+public sealed record class OrderAssignEmployeeRequest : IRequest
 {
+    public required OrderId OrderId { get; init; }
+    public required EmployeeId EmployeeId { get; init; }
+
+
     internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<OrderAssignEmployeeRequest>
     {
         public async ValueTask HandleAsync(OrderAssignEmployeeRequest request, CancellationToken cancellationToken = default)

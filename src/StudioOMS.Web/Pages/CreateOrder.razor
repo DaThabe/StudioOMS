@@ -40,7 +40,7 @@
             TotalDays = totalDays
         };
 
-        var response = await Http.PostAsJsonAsync("/api/orders/timing", dto, AppJsonSerializerContext.Default.TimingOrderCreateDto, default);
+        var response = await Http.PostAsJsonAsync("/api/orders/timing", dto, (System.Text.Json.Serialization.Metadata.JsonTypeInfo<TimingOrderCreateDto>)AppJsonSerializerContext.Default.TimingOrderCreateDto, default);
 
         if (response.IsSuccessStatusCode)
         {

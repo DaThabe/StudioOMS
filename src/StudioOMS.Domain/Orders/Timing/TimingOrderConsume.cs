@@ -1,13 +1,15 @@
-﻿namespace StudioOMS.Orders.Timing;
+﻿using StudioOMS.Employees;
+
+namespace StudioOMS.Orders.Timing;
 
 
-public sealed record class TimingConsume : Consume
+public sealed class TimingOrderConsume : OrderConsume
 {
     public required decimal Days { get; init; }
 
 
-    private TimingConsume() { }
-    public static TimingConsume Create(ConsumeId consumeId, EmployeeId employeeId, decimal days, DateTime timestamp)
+    private TimingOrderConsume() { }
+    public static TimingOrderConsume Create(ConsumeId consumeId, EmployeeId employeeId, decimal days, DateTimeOffset timestamp)
     {
         if (consumeId == ConsumeId.Empty)
             throw new ArgumentException("划扣 Id 不可为空", nameof(consumeId));
@@ -28,6 +30,6 @@ public sealed record class TimingConsume : Consume
         };
     }
 
-    public static TimingConsume CreateNow(ConsumeId consumeId, EmployeeId employeeId, decimal days) =>
+    public static TimingOrderConsume CreateNow(ConsumeId consumeId, EmployeeId employeeId, decimal days) =>
         Create(consumeId, employeeId, days, DateTime.Now);
 }

@@ -10,9 +10,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\StudioOMS.Application\StudioOMS.Application.csproj" />
-	  <ProjectReference Include="..\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
 	  <ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+	  <ProjectReference Include="..\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

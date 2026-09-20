@@ -1,4 +1,6 @@
-﻿namespace StudioOMS.User;
+﻿using StudioOMS.Employees;
+
+namespace StudioOMS.Users;
 
 
 /// <summary>

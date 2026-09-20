@@ -4,5 +4,5 @@
 public sealed class TimingOrderConsumeDto
 {
     public required decimal Days { get; init; }
-    public required Guid EmployeeId { get; init; } = Guid.CreateVersion7();
+    public required Guid EmployeeId { get; init; }
 }
