@@ -7,13 +7,18 @@
 public abstract partial class Order
 {
     private static readonly Comparer<OrderStateChange> _stateChangedsComparer = Comparer<OrderStateChange>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
-    private readonly SortedSet<OrderStateChange> _stateChangeds = new(_stateChangedsComparer);
+    private readonly SortedSet<OrderStateChange> _stateChangeds = [with(_stateChangedsComparer)];
 
 
     /// <summary>
     /// 当前状态
     /// </summary>
     public OrderState State { get; private set; } = OrderState.Waiting;
+
+    /// <summary>
+    /// 状态改变历史
+    /// </summary>
+    public IReadOnlyCollection<OrderStateChange> StateChangeds => _stateChangeds.AsReadOnly();
 
 
     /// <summary>
@@ -143,46 +148,8 @@ public enum OrderState
 /// <summary>
 /// 订单状态改变
 /// </summary>
-public record OrderStateChange(OrderState State, DateTimeOffset Timestamp);
-
-
-/// <summary>
-/// 订单状态改变结果
-/// </summary>
-public abstract record class OrderStateChangeResult
+public record class OrderStateChange(OrderState State, DateTimeOffset Timestamp) : IComparable<OrderStateChange>
 {
-    /// <summary>
-    /// 已改变
-    /// </summary>
-    internal static SuccessResult Success { get; } = new();
-    /// <summary>
-    /// 不符合预期的状态
-    /// </summary>
-    internal static NotAsExpectedResult NotAsExpected(OrderState actual, params IEnumerable<OrderState> expect) => new()
-    {
-        Actual = actual,
-        Expects = expect.ToHashSet()
-    };
-
-
-    /// <summary>
-    /// 状态已改变
-    /// </summary>
-    public sealed record class SuccessResult : OrderStateChangeResult
-    {
-        internal SuccessResult() { }
-        public override string ToString() => "状态切换成功";
-    }
-
-    /// <summary>
-    /// 不符合预期
-    /// </summary>
-    public sealed record class NotAsExpectedResult : OrderStateChangeResult
-    {
-        public required OrderState Actual { get; init; }
-        public required IReadOnlySet<OrderState> Expects { get; init; }
-
-        internal NotAsExpectedResult() { }
-        public override string ToString() => $"状态切换失败, 只能在 [{string.Join(',', Expects)}] 状态下切换, 当前 {Actual}";
-    }
+    public int CompareTo(OrderStateChange? other) =>
+        other is null ? 1 : Timestamp.CompareTo(other.Timestamp);
 }

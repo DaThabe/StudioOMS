@@ -45,8 +45,14 @@ internal sealed class OrderEntityTypeConfiguration :
         // AssignedEmployees
         builder.Property(x => x.AssignedEmployees)
             .HasField("_assignedEmployees")
-            .HasConversion<IReadonlySetEmployeeId_String_Converter>()
-            .Metadata.SetValueComparer(new IReadonlySetEmployeeId_String_Comparer());
+            .HasConversion<HashSetEmployeeId_String_Converter>()
+            .Metadata.SetValueComparer(new HashSetEmployeeId_String_Comparer());
+
+        // StateChangeds
+        builder.Property(x => x.StateChangeds)
+            .HasField("_stateChangeds")
+            .HasConversion<SortedSetOrderStateChange_String_Converter>()
+            .Metadata.SetValueComparer(new SortedSetOrderStateChange_String_Comparer());
     }
 
     public void Configure(EntityTypeBuilder<TimingOrder> builder)
