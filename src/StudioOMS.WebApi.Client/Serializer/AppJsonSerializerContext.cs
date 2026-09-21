@@ -29,14 +29,17 @@ namespace StudioOMS.Serializer;
 
 /******************** Employee ********************/
 [JsonSerializable(typeof(EmployeeCreateDto))]
+[JsonSerializable(typeof(EmployeeCreateResult))]
 
 /******************** Customer ********************/
 [JsonSerializable(typeof(CustomerCreateDto))]
+[JsonSerializable(typeof(CustomerCreateResult))]
 
 /******************** Order ********************/
 [JsonSerializable(typeof(OrderAssignEmployeeDto))]
+[JsonSerializable(typeof(OrderCreateResult))]
+[JsonSerializable(typeof(OrderListResult))]
 // Timing
 [JsonSerializable(typeof(TimingOrderCreateDto))]
 [JsonSerializable(typeof(TimingOrderConsumeDto))]
-[JsonSerializable(typeof(OrderListResult))]
 public partial class AppJsonSerializerContext : JsonSerializerContext;

@@ -1,31 +1,6 @@
-﻿using StudioOMS.Orders;
-using System.Text;
+﻿using System.Text;
 
-namespace StudioOMS;
-
-
-public sealed record class ServerUrl
-{
-    public required Uri BaseUrl { get; init; }
-    public string Login { get; init; } = "/login";
-
-    public string Users { get; init; } = "users";
-    public string UserPassword { get; init; } = "users/password";
-
-
-    public string Orders { get; init; } = "orders";
-    public string OrderAssin { get; init; } = "orders";
-    public string GetOderList(OrderListDto dto)
-    {
-        return new UrlBuilder(BaseUrl)
-            .AddPath("orders")
-            .AddQuery(nameof(dto.Take), dto.Take?.ToString())
-            .AddQuery(nameof(dto.Skip), dto.Skip?.ToString())
-            .AddQuery(nameof(dto.Types), dto.Types)
-            .ToString();
-    }
-}
-
+namespace StudioOMS.Routes;
 
 public sealed class UrlBuilder
 {

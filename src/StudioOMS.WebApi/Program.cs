@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using StudioOMS.Endpoints;
+using StudioOMS;
 using StudioOMS.Middlewares;
 using StudioOMS.Serializer;
 using StudioOMS.Serializer.Converters;
@@ -13,7 +13,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new DateTimeOffsetConverter());
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
-
 
 // WebApi
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -35,17 +34,14 @@ builder.Services.AddInfrastructure(x => x.UseSqlite(connectString));
 // Build
 var app = builder.Build();
 
-// Doc
+app.UseCors("Blazor");
+app.MapStudioOMS();
+app.UseMiddleware<CurrentSessionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
 
-// Model
-app.UseCors("Blazor");
-app.MapStudioOMS();
-app.UseMiddleware<CurrentSessionMiddleware>();
-
-
+// Run
 app.Run();
