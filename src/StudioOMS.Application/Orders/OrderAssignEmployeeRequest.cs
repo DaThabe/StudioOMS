@@ -11,16 +11,6 @@ public sealed record class OrderAssignEmployeeRequest : IRequest
     public required EmployeeId EmployeeId { get; init; }
 
 
-    public static OrderAssignEmployeeRequest FromDto(Guid orderId, OrderAssignEmployeeDto dto)
-    {
-        return new()
-        {
-            Id = new(orderId),
-            EmployeeId = EmployeeId.Parse(dto.EmployeeId)
-        };
-    }
-
-
     internal sealed class Handler(
             IOrderRepository orderRepository
         ) : IRequestHandler<OrderAssignEmployeeRequest>, IAuthorization

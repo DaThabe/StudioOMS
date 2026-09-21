@@ -1,6 +1,5 @@
-﻿using StudioOMS.Extensions;
+﻿using StudioOMS.Http;
 using StudioOMS.Orders;
-using StudioOMS.Orders.Timing;
 using StudioOMS.Routes;
 using StudioOMS.Serializer;
 
@@ -24,7 +23,7 @@ internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<
 {
     public async Task AssignEmployeeAsync(Guid orderId, OrderAssignEmployeeDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.PutJson(routes.Assign(orderId), dto, AppJsonSerializerContext.Default.OrderAssignEmployeeDto);
+        var request = HttpRequestMessage.PutJson(routes.Assign(orderId), dto, DtoJsonSerializerContext.Default.OrderAssignEmployeeDto);
         messageOptionsAction?.Invoke(request);
 
         var response = await client.SendAsync(request, cancellationToken);
@@ -35,21 +34,21 @@ internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<
         var request = HttpRequestMessage.Get(routes.List(dto));
         messageOptionsAction?.Invoke(request);
 
-        return await client.GetJsonAsync(request, AppJsonSerializerContext.Default.OrderListResult, cancellationToken);
+        return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.OrderListResult, cancellationToken);
     }
 
 
 
     async Task<OrderCreateResult?> ITimingOrderClient.CreateAsync(TimingOrderCreateDto dto, CancellationToken cancellationToken)
     {
-        var request = HttpRequestMessage.PostJson(routes.CreateTiming, dto, AppJsonSerializerContext.Default.TimingOrderCreateDto);
+        var request = HttpRequestMessage.PostJson(routes.CreateTiming, dto, DtoJsonSerializerContext.Default.TimingOrderCreateDto);
         messageOptionsAction?.Invoke(request);
 
-        return await client.GetJsonAsync(request, AppJsonSerializerContext.Default.OrderCreateResult, cancellationToken);
+        return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.OrderCreateResult, cancellationToken);
     }
     async Task ITimingOrderClient.ConsumeAsync(Guid orderId, TimingOrderConsumeDto dto, CancellationToken cancellationToken)
     {
-        var request = HttpRequestMessage.PostJson(routes.ConsumeTiming(orderId), dto, AppJsonSerializerContext.Default.TimingOrderConsumeDto);
+        var request = HttpRequestMessage.PostJson(routes.ConsumeTiming(orderId), dto, DtoJsonSerializerContext.Default.TimingOrderConsumeDto);
         messageOptionsAction?.Invoke(request);
 
         var response = await client.SendAsync(request, cancellationToken);

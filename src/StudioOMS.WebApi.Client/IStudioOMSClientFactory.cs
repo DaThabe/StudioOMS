@@ -1,27 +1,28 @@
-﻿namespace StudioOMS;
+﻿using StudioOMS.Routes;
+using System.Net.Http.Headers;
 
+namespace StudioOMS;
 
 public interface IStudioOMSClientFactory
 {
-    IStudioOMSClient CreateWithAuthentication(string scheme, string? parameter);
-    IStudioOMSClient CreateWithAuthentication(Uri baseUrl, string scheme, string? parameter);
-
-
-    Task<IStudioOMSClient> LoginAsync(Uri baseUrl, string username, string password, CancellationToken cancellationToken = default);
-    Task<IStudioOMSClient> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
+    IStudioOMSClient CreateWithAuthentication(AuthenticationHeaderValue authentication);
+    IStudioOMSClient CreateWithAuthentication(AuthenticationHeaderValue authentication, Uri baseUrl);
 }
 
 
-internal sealed class StudioOMSClientFactory(Uri defaultBaseUrl) : IStudioOMSClientFactory
+internal sealed class StudioOMSClientFactory(IHttpClientFactory httpClientFactory) : IStudioOMSClientFactory
 {
-    public IStudioOMSClient CreateWithAuthentication(Uri baseUrl, string scheme, string? parameter) =>
-        new StudioOMSClient(baseUrl, new(scheme, parameter));
-    public IStudioOMSClient CreateWithAuthentication(string scheme, string? parameter) =>
-        CreateWithAuthentication(defaultBaseUrl, scheme, parameter);
+    public IStudioOMSClient CreateWithAuthentication(AuthenticationHeaderValue authentication)
+    {
+        var httpClient = httpClientFactory.CreateClient(StudioOMSClientNames.Default);
+        return StudioOMSClient.Create(httpClient, authentication);
+    }
 
-    public async Task<IStudioOMSClient> LoginAsync(Uri baseUrl, string username, string password, CancellationToken cancellationToken = default) =>
-        await StudioOMSClient.LoginAsync(baseUrl, new() { Username = username, Password = password }, cancellationToken);
+    public IStudioOMSClient CreateWithAuthentication(AuthenticationHeaderValue authentication, Uri baseUrl)
+    {
+        var httpClient = httpClientFactory.CreateClient();
+        var serverRoutes = new ServerRoutes(baseUrl);
 
-    public Task<IStudioOMSClient> LoginAsync(string username, string password, CancellationToken cancellationToken = default) =>
-        LoginAsync(defaultBaseUrl, username, password, cancellationToken);
+        return new StudioOMSClient(httpClient, serverRoutes, authentication);
+    }
 }

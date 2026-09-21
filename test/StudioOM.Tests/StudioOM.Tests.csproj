@@ -9,7 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\StudioOMS.Demo\StudioOMS.Demo.csproj" />
 	  <ProjectReference Include="..\..\src\StudioOMS.Domain\StudioOMS.Domain.csproj" />
 	</ItemGroup>
 

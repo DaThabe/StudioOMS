@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using StudioOMS;
-using StudioOMS.Middlewares;
+using StudioOMS.Me;
 using StudioOMS.Serializer;
 using StudioOMS.Serializer.Converters;
 
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new DateTimeOffsetConverter());
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, DtoJsonSerializerContext.Default);
 });
 
 // WebApi

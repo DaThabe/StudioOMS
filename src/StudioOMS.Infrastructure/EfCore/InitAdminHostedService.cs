@@ -24,18 +24,17 @@ internal sealed class InitAdminHostedService(IServiceScopeFactory scopeFactory, 
         // 创建管理员
 
         // 员工
-        var employee = Employee.Create([EmployeeRole.Admin]);
-        employee.Rename("管理员");
+        var employee = Employee.Create(EmployeeName.From("管理员"), [EmployeeRole.Admin]);
         await employeeRepository.SaveAsync(employee, cancellationToken);
 
         // 用户
-        const string initPassword = "123456";
+        var initPassword = Password.Create();
         var hashedPwd = await passwordHasher.HashAsync(initPassword, cancellationToken);
 
-        var user = User.Create("admin", hashedPwd, employee.Id);
+        var user = User.Create(Username.From("admin"), hashedPwd, employee.Id);
         await userRepository.SaveAsync(user, cancellationToken);
 
-        logger.LogInformation("初始管理员用户已创建, Username: {Name}, Password={Pwd}", user.Username, initPassword);
+        logger.LogInformation("初始管理员用户已创建, Username: {Name}, Password={Pwd}", user.Username, initPassword.GetRawText());
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

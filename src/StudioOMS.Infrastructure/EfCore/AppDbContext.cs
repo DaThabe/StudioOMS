@@ -32,12 +32,21 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
         // 用户
         configurationBuilder.Properties<UserId>()
             .HaveConversion<UserId_String_Converter>();
+        configurationBuilder.Properties<Username>()
+            .HaveConversion<Username_String_Converter>();
+
         // 员工
         configurationBuilder.Properties<EmployeeId>()
             .HaveConversion<EmployeeId_String_Converter>();
+        configurationBuilder.Properties<EmployeeName>()
+          .HaveConversion<EmployeeName_String_Converter>();
+
         // 客户
         configurationBuilder.Properties<CustomertId>()
             .HaveConversion<CustomerId_String_Converter>();
+        configurationBuilder.Properties<CustomerName>()
+            .HaveConversion<CustomerName_String_Converter>();
+
         // 订单
         configurationBuilder.Properties<OrderId>()
             .HaveConversion<OrderId_String_Converter>();

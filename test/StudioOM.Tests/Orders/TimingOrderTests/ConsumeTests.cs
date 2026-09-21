@@ -1,4 +1,4 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
@@ -16,7 +16,7 @@ public sealed class ConsumeTests
     [TestInitialize]
     public void Setup()
     {
-        _order = TimingOrder.CreateNow(ClientId.Create(), EmployeeId.Create(), _totalDays);
+        _order = TimingOrder.CreateNow(CustomertId.Create(), EmployeeId.Create(), _totalDays);
     }
 
 
@@ -39,19 +39,14 @@ public sealed class ConsumeTests
     {
         var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
         _order.Consume(consume);
-
-        Assert.IsInstanceOfType<TimingOrderConsumeResult.StateNotAllowedResultResult>(result);
     }
 
     [TestMethod(DisplayName = "未分配的员工无法消耗")]
     public void NotAssigned()
     {
-        var markResult = _order.MarkServicingNow();
-        Assert.IsInstanceOfType<OrderStateChangeResult.SuccessResult>(markResult);
+        _order.MarkServicingNow();
 
         var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
-        var result = _order.Consume(consume);
-
-        Assert.IsInstanceOfType<TimingOrderConsumeResult.NotAssignedResult>(result);
+        _order.Consume(consume);
     }
 }

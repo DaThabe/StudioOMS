@@ -1,14 +1,13 @@
 <Solution>
-  <Folder Name="/Src/">
-    <Project Path="src/StudioOMS.Demo/StudioOMS.Demo.csproj" Id="b7fa9d89-213d-42d3-b7f7-f7dc4810eb5e" />
-  </Folder>
+  <Folder Name="/Src/" />
   <Folder Name="/Src/Core/">
     <Project Path="src/StudioOMS.Application/StudioOMS.Application.csproj" />
     <Project Path="src/StudioOMS.Domain/StudioOMS.Domain.csproj" />
-    <Project Path="src/StudioOMS.Dtos/StudioOMS.Dtos.csproj" />
+    <Project Path="src/StudioOMS.IdGenerator/StudioOMS.IdGenerator.csproj" Id="188cf849-ae78-45e7-9ce7-f2c898145a3a" />
     <Project Path="src/StudioOMS.Infrastructure/StudioOMS.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Src/Web/">
+    <Project Path="src/StudioOMS.Dtos/StudioOMS.Dtos.csproj" />
     <Project Path="src/StudioOMS.Web/StudioOMS.Web.csproj" Id="9192d6ba-e8c8-4bbb-a2b3-e3fb3467171a" />
     <Project Path="src/StudioOMS.WebApi.Client/StudioOMS.WebApi.Client.csproj" Id="46a89b27-00d4-4e9f-8f91-f2ba00aeee5c" />
     <Project Path="src/StudioOMS.WebApi/StudioOMS.WebApi.csproj" />

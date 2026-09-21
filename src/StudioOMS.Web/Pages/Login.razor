@@ -1,0 +1,92 @@
+﻿@* Pages/Login.razor *@
+@page "/login"
+@attribute [AllowAnonymous]
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using StudioOMS.Me
+@using StudioOMS.Web.Services
+
+@inject IStudioOMSAuthentication Authentication
+@inject StudioOMSAuthenticationStateProvider AuthProvider
+@inject NavigationManager Nav
+
+
+<h3>登录</h3>
+
+<EditForm Model="loginForm" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label class="form-label">用户名</label>
+        <InputText @bind-Value="loginForm.Username" class="form-control" />
+        <ValidationMessage For="() => loginForm.Username" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">密码</label>
+        <InputText @bind-Value="loginForm.Password" type="password" class="form-control" />
+        <ValidationMessage For="() => loginForm.Password" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+        @(isSubmitting ? "登录中..." : "登录")
+    </button>
+</EditForm>
+
+@code {
+    private LoginFormModel loginForm = new();
+    private string? errorMessage;
+    private bool isSubmitting;
+
+    private async Task HandleLogin()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+
+        try
+        {
+            var result = await Authentication.LoginAsync(loginForm.ToDto());
+            await AuthProvider.LoginAsync(result.Token);
+            Nav.NavigateTo("/");
+        }
+        catch (HttpRequestException ex)
+        {
+            errorMessage = ex.StatusCode switch
+            {
+                System.Net.HttpStatusCode.Unauthorized => "用户名或密码错误",
+                _ => $"登录失败：{ex.Message}"
+            };
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"登录失败：{ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+
+    private sealed class LoginFormModel
+    {
+        [Required(ErrorMessage = "请输入用户名")]
+        public string Username { get; set; } = "";
+
+        [Required(ErrorMessage = "请输入密码")]
+        public string Password { get; set; } = "";
+
+
+        public LoginDto ToDto() => new()
+        {
+            Username = Username,
+            Password = Password
+        };
+    }
+}

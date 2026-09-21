@@ -11,15 +11,8 @@ public sealed class TimingOrderConsume : OrderConsume
     private TimingOrderConsume() { }
     public static TimingOrderConsume Create(ConsumeId consumeId, EmployeeId employeeId, decimal days, DateTimeOffset timestamp)
     {
-        if (consumeId == ConsumeId.Empty)
-            throw new ArgumentException("划扣 Id 不可为空", nameof(consumeId));
-
-        if (employeeId == EmployeeId.Empty)
-            throw new ArgumentException("员工 Id 不可为空", nameof(employeeId));
-
         if (days <= 0)
             throw new ArgumentOutOfRangeException(nameof(days), "划扣天数必须大于零");
-
 
         return new()
         {

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace StudioOMS.Exceptions;
+﻿namespace StudioOMS.Exceptions;
 
 /// <summary>
 /// 未认证异常
@@ -12,13 +10,11 @@ public sealed class NotAuthenticatedException : Exception
     public NotAuthenticatedException(string? message, Exception? innerException) : base(message, innerException) { }
 
 
-    [DoesNotReturn]
     public static void ThrowIf(bool condition)
     {
         if (condition)
             throw new NotAuthenticatedException();
     }
-    [DoesNotReturn]
     public static void ThrowIf(bool condition, string message)
     {
         if (condition)

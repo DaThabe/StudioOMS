@@ -8,4 +8,8 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\StudioOMS.IdGenerator\StudioOMS.IdGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
 </Project>

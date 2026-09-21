@@ -1,5 +1,4 @@
 ﻿using StudioOMS;
-using System.Net.Http.Headers;
 
 #pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
 namespace Microsoft.Extensions.DependencyInjection;
@@ -10,15 +9,13 @@ public static class DependencyInjectionExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddStudioOMSClient(Uri defaultBaseUrl)
+        public IServiceCollection AddStudioOMSClient(Uri baseUrl)
         {
-            return services.AddSingleton<IStudioOMSClientFactory>(_ => new StudioOMSClientFactory(defaultBaseUrl));
-        }
+            services.AddHttpClient(StudioOMSClientNames.Default, client =>
+                client.BaseAddress = baseUrl);
 
-        public IServiceCollection AddStudioOMSClient(Uri baseUrl, AuthenticationHeaderValue authentication)
-        {
-            services.AddSingleton<IStudioOMSClient>(_ => new StudioOMSClient(baseUrl, authentication));
-            services.AddSingleton<IStudioOMSClientFactory>(_ => new StudioOMSClientFactory(baseUrl));
+            services.AddSingleton<IStudioOMSAuthentication, StudioOMSAuthentication>();
+            services.AddSingleton<IStudioOMSClientFactory, StudioOMSClientFactory>();
 
             return services;
         }

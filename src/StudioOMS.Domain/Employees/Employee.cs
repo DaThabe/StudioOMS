@@ -5,20 +5,17 @@ public sealed class Employee : Entity<EmployeeId>
 {
     private HashSet<EmployeeRole> _roles = [];
 
-    public string Name { get; private set; } = "未命名员工";
+    public EmployeeName Name { get; private set; }
     public IReadOnlySet<EmployeeRole> Roles => _roles.AsReadOnly();
 
 
 
-    public void Rename(string value)
+    public void Rename(EmployeeName value)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(value);
-        var trimmed = value.Trim();
+        if (value.IsExactlySameAs(Name)) return;
 
-        if (string.Equals(trimmed, Name, StringComparison.OrdinalIgnoreCase))
-            return;
-
-        Name = trimmed;
+        // 更新
+        Name = value;
     }
 
     public void AddRoles(params IEnumerable<EmployeeRole> roles)
@@ -38,23 +35,20 @@ public sealed class Employee : Entity<EmployeeId>
 
 
 
-    internal Employee() { }
-    public static Employee Create(EmployeeId employeeId, IEnumerable<EmployeeRole> roles)
+    private Employee(EmployeeName name) => Name = name;
+    public static Employee Create(EmployeeId employeeId, EmployeeName name, IEnumerable<EmployeeRole> roles)
     {
-        if (employeeId == EmployeeId.Empty)
-            throw new ArgumentException("员工 Id 不可为空", nameof(employeeId));
-
         var roleSet = roles.ToHashSet();
         if (roleSet.Count == 0)
             throw new ArgumentException("员工 职位 不可为空", nameof(roles));
 
 
-        return new()
+        return new(name)
         {
             _roles = [.. roleSet],
             Id = employeeId
         };
     }
-    public static Employee Create(IEnumerable<EmployeeRole> roles) =>
-        Create(EmployeeId.Create(), roles);
+    public static Employee Create(EmployeeName name, IEnumerable<EmployeeRole> roles) =>
+        Create(EmployeeId.Create(), name, roles);
 }

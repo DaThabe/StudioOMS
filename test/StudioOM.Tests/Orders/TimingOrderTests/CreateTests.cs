@@ -1,4 +1,4 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
@@ -13,7 +13,7 @@ public sealed class CreateTests
     public void OrderIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.CreateNow(OrderId.Empty, ClientId.Create(), EmployeeId.Create(), 10));
+            TimingOrder.CreateNow(null!, CustomertId.Create(), EmployeeId.Create(), 10));
 
         Assert.AreEqual("orderId", ex.ParamName);
     }
@@ -22,7 +22,7 @@ public sealed class CreateTests
     public void ClientIdIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.CreateNow(OrderId.Create(), ClientId.Empty, EmployeeId.Create(), 10));
+            TimingOrder.CreateNow(OrderId.Create(), null!, EmployeeId.Create(), 10));
 
         Assert.AreEqual("clientId", ex.ParamName);
     }
@@ -31,7 +31,7 @@ public sealed class CreateTests
     public void SalespersonIdIdIdEmpty_ThrowArgumentException()
     {
         var ex = Assert.Throws<ArgumentException>(() =>
-            TimingOrder.CreateNow(OrderId.Create(), ClientId.Create(), EmployeeId.Empty, 10));
+            TimingOrder.CreateNow(OrderId.Create(), CustomertId.Create(), null!, 10));
 
         Assert.AreEqual("salespersonId", ex.ParamName);
     }
@@ -40,7 +40,7 @@ public sealed class CreateTests
     public void TotalDaysNotPositive_ThrowArgumentOutOfRangeException()
     {
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-            TimingOrder.CreateNow(OrderId.Create(), ClientId.Create(), EmployeeId.Create(), 0));
+            TimingOrder.CreateNow(OrderId.Create(), CustomertId.Create(), EmployeeId.Create(), 0));
 
         Assert.AreEqual("totalDays", ex.ParamName);
     }

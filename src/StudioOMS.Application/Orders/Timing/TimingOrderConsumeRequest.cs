@@ -1,5 +1,6 @@
 ﻿using StudioOMS.Employees;
 using StudioOMS.Messaging;
+using StudioOMS.Orders;
 using StudioOMS.Security.Permission;
 
 namespace StudioOMS.Orders.Timing;
@@ -12,15 +13,7 @@ public record TimingOrderConsumeRequest : IRequest
     public required decimal ConsuemDays { get; init; }
 
 
-    public static TimingOrderConsumeRequest FromDto(Guid orderId, TimingOrderConsumeDto dto)
-    {
-        return new()
-        {
-            ConsuemDays = dto.Days,
-            EmployeeId = EmployeeId.Parse(dto.EmployeeId),
-            OrderId = new(orderId)
-        };
-    }
+    
 
 
     internal sealed class Handler(

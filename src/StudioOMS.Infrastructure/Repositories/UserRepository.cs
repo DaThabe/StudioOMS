@@ -10,13 +10,10 @@ internal sealed class UserRepository(AppDbContext appDbContext) : Repository<Use
     protected override DbSet<User> Entities => appDbContext.Users;
 
 
-    public async ValueTask<User?> FindByUsername(string username, CancellationToken cancellationToken = default)
+    public async ValueTask<User?> FindByUsername(Username username, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        var lowerUsername = username.Trim().ToLower();
-
         return await appDbContext.Users
-            .FirstOrDefaultAsync(x => x.Username.ToLower().Equals(lowerUsername), cancellationToken);
+            .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
     }
 
     public ValueTask<IReadOnlyList<User>> GetAllAsync(int skip, int take, CancellationToken cancellationToken = default) =>

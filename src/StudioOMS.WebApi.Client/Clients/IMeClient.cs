@@ -1,4 +1,4 @@
-﻿using StudioOMS.Extensions;
+﻿using StudioOMS.Http;
 using StudioOMS.Me;
 using StudioOMS.Routes;
 using StudioOMS.Serializer;
@@ -15,7 +15,7 @@ internal sealed class MeClient(MeRoutes routes, HttpClient client, Action<HttpRe
 {
     public async Task ChangePasswordAsync(ChangePasswordDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.PostJson(routes.Password, dto, AppJsonSerializerContext.Default.ChangePasswordDto);
+        var request = HttpRequestMessage.PostJson(routes.Password, dto, DtoJsonSerializerContext.Default.ChangePasswordDto);
         messageOptionsAction?.Invoke(request);
 
         var response = await client.SendAsync(request, cancellationToken);

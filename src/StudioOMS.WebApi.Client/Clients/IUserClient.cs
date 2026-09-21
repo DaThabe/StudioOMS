@@ -1,4 +1,4 @@
-﻿using StudioOMS.Extensions;
+﻿using StudioOMS.Http;
 using StudioOMS.Routes;
 using StudioOMS.Serializer;
 using StudioOMS.Users;
@@ -14,9 +14,9 @@ internal sealed class UserClient(UserRoutes routes, HttpClient client, Action<Ht
 {
     public async Task<UserCreateResult> CreateAsync(UserCreateDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.PostJson(routes.Create, dto, AppJsonSerializerContext.Default.UserCreateDto);
+        var request = HttpRequestMessage.PostJson(routes.Create, dto, DtoJsonSerializerContext.Default.UserCreateDto);
         messageOptionsAction?.Invoke(request);
 
-        return await client.GetJsonAsync(request, AppJsonSerializerContext.Default.UserCreateResult, cancellationToken);
+        return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.UserCreateResult, cancellationToken);
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StudioOMS.Customers;
 using StudioOMS.Employees;
-using StudioOMS.Login;
+using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;

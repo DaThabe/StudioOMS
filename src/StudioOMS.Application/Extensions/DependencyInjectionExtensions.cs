@@ -1,12 +1,12 @@
 ﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
-using StudioOMS.Login;
 using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
+using System.Diagnostics.CodeAnalysis;
 
 
 #pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
@@ -34,7 +34,7 @@ public static class DependencyInjectionExtensions
             // Order
             services.AddRequestHandler<OrderAssignEmployeeRequest.Handler, OrderAssignEmployeeRequest>();
             services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest>();
-            services.AddRequestHandler<OrderListRequest.Handler, OrderListRequest, OrderListResult>();
+            services.AddRequestHandler<OrderListRequest.Handler, OrderListRequest, OrderListResponse>();
             //Order-Timing
             services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest, OrderId>();
             services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest>();
@@ -42,13 +42,13 @@ public static class DependencyInjectionExtensions
 
 
 
-        private IServiceCollection AddRequestHandler<THandler, TRequest>()
+        private IServiceCollection AddRequestHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TRequest>()
             where THandler : class, IRequestHandler<TRequest>
             where TRequest : IRequest
         {
             return services.AddScoped<IRequestHandler<TRequest>, THandler>();
         }
-        private IServiceCollection AddRequestHandler<THandler, TRequest, TResponse>()
+        private IServiceCollection AddRequestHandler<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] THandler, TRequest, TResponse>()
             where THandler : class, IRequestHandler<TRequest, TResponse>
             where TRequest : IRequest<TResponse>
         {

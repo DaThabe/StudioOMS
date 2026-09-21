@@ -10,17 +10,8 @@ namespace StudioOMS.Me;
 public sealed class ChangePasswordRequest : IRequest
 {
     public required string CurrentPassword { get; init; }
-    public required string NewPassword { get; init; }
+    public required Password NewPassword { get; init; }
 
-
-    public static ChangePasswordRequest FromDto(ChangePasswordDto dto)
-    {
-        return new()
-        {
-            CurrentPassword = dto.CurrentPassword,
-            NewPassword = dto.NewPassword
-        };
-    }
 
     internal sealed class Handler(
             ICurrentSession currentSession,
@@ -46,7 +37,7 @@ public sealed class ChangePasswordRequest : IRequest
 
             // 创建新密码
             var newHashedPwd = await passwordHasher.HashAsync(request.NewPassword, cancellationToken);
-            entity.ChangePassword(newHashedPwd);
+            entity.SetPasswordHash(newHashedPwd);
             await userRepository.SaveAsync(entity, cancellationToken);
 
             // 删除会话信息

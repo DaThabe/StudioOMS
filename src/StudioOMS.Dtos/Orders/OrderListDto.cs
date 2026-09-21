@@ -13,11 +13,11 @@ public readonly record struct OrderListDto
 
 public sealed record class OrderListResult
 {
-    public required OrderListItem[] Items { get; init; }
+    public required OrderListItemDto[] Items { get; init; }
 }
 
 
-public sealed record class OrderListItem
+public sealed record class OrderListItemDto
 {
     public required string Id { get; init; }
     public required string Title { get; init; }

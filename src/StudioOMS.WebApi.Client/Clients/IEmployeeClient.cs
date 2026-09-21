@@ -1,5 +1,5 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Extensions;
+using StudioOMS.Http;
 using StudioOMS.Routes;
 using StudioOMS.Serializer;
 
@@ -15,9 +15,9 @@ internal sealed class EmployeeClient(EmployeeRoutes routes, HttpClient client, A
 {
     public async Task<EmployeeCreateResult?> CreateAsync(EmployeeCreateDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.PostJson(routes.Create, dto, AppJsonSerializerContext.Default.EmployeeCreateDto);
+        var request = HttpRequestMessage.PostJson(routes.Create, dto, DtoJsonSerializerContext.Default.EmployeeCreateDto);
         messageOptionsAction?.Invoke(request);
 
-        return await client.GetJsonAsync(request, AppJsonSerializerContext.Default.EmployeeCreateResult, cancellationToken);
+        return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.EmployeeCreateResult, cancellationToken);
     }
 }

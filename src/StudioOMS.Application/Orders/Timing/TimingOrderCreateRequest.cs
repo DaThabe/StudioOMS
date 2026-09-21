@@ -14,17 +14,6 @@ public sealed record class TimingOrderCreateRequest : IRequest<OrderId>
     public string Title { get; init; } = "未命名的订单";
 
 
-    public static TimingOrderCreateRequest FromDto(TimingOrderCreateDto dto)
-    {
-        return new()
-        {
-            CustomerId = CustomertId.Parse(dto.CustomerId),
-            SalespersonId = EmployeeId.Parse(dto.SalespersonId),
-            TotalDays = dto.TotalDays,
-            Title = dto.Title
-        };
-    }
-
 
     internal sealed class Handler(
             IOrderRepository orderRepository

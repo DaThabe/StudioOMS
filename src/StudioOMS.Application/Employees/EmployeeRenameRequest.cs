@@ -1,5 +1,4 @@
-﻿using StudioOMS.Customers;
-using StudioOMS.Messaging;
+﻿using StudioOMS.Messaging;
 using StudioOMS.Security.Permission;
 
 namespace StudioOMS.Employees;
@@ -8,21 +7,13 @@ namespace StudioOMS.Employees;
 public sealed class EmployeeRenameRequest : IRequest
 {
     public required EmployeeId Id { get; init; }
-    public required string Name { get; init; }
+    public required EmployeeName Name { get; init; }
 
-
-    public static CustomerRenameRequest FromDto(Guid employeeId, EmployeeRenameDto dto)
-    {
-        return new()
-        {
-            Id = new(employeeId),
-            Name = dto.Name
-        };
-    }
 
     internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeRenameRequest>, IAuthorization
     {
-        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.EmployeeManage);
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
+            PermissionType.Group(PermissionType.EmployeeManage);
 
         public async ValueTask HandleAsync(EmployeeRenameRequest request, CancellationToken cancellationToken = default)
         {

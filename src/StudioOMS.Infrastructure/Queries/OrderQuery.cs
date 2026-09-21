@@ -7,7 +7,7 @@ namespace StudioOMS.Queries;
 
 internal sealed class OrderQuery(AppDbContext appDbContext) : IOrderQuery
 {
-    public async ValueTask<OrderListResult> QueryAsync(OrderListRequest requesst, CancellationToken cancellationToken = default)
+    public async ValueTask<OrderListResponse> QueryAsync(OrderListRequest requesst, CancellationToken cancellationToken = default)
     {
         var orderQuery = appDbContext.Orders.AsNoTracking();
         var types = requesst.Types;
@@ -23,16 +23,17 @@ internal sealed class OrderQuery(AppDbContext appDbContext) : IOrderQuery
             join customer in appDbContext.Customers on order.CustomerId equals customer.Id
             select new OrderListItem
             {
-                Id = order.Id.ToString(),
+                Id = order.Id,
                 Title = order.Title,
-                State = order.State.ToString(),
+                State = order.State,
                 CreateAt = order.CreateAt,
+                Type = EF.Property<OrderType>(order, "Type"),
 
-                CustomerId = order.CustomerId.ToString(),
+                CustomerId = order.CustomerId,
                 CustomerName = customer.Name,
             };
 
         var items = await orderListItemQuery.ToArrayAsync(cancellationToken: cancellationToken);
-        return new OrderListResult() { Items = items };
+        return new OrderListResponse() { Items = items };
     }
 }

@@ -43,7 +43,7 @@ internal sealed class MessageSender(IServiceProvider services, ICurrentSession c
             if (handler is IAuthorization authorization)
             {
                 // 检查授权
-                var pass = await permissionChecker.HasAllPermissionsAsync(currentEmployeeId.Value, authorization.RequiredPermissions);
+                var pass = await permissionChecker.HasAllPermissionsAsync(currentEmployeeId!, authorization.RequiredPermissions);
                 ForbiddenException.ThrowIf(!pass);
             }
 

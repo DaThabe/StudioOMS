@@ -1,4 +1,4 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
@@ -16,7 +16,7 @@ public sealed class AssignedTests
     [TestInitialize]
     public void Setup()
     {
-        _order = TimingOrder.CreateNow(ClientId.Create(), EmployeeId.Create(), _totalDays);
+        _order = TimingOrder.CreateNow(CustomertId.Create(), EmployeeId.Create(), _totalDays);
     }
 
 

@@ -3,7 +3,7 @@
 namespace StudioOMS.Routes;
 
 
-public sealed class ServerRoutes(Uri baseUrl)
+internal sealed class ServerRoutes(Uri baseUrl)
 {
     public string Login { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "login")
@@ -17,7 +17,7 @@ public sealed class ServerRoutes(Uri baseUrl)
     public OrderRoutes Order { get; init; } = new(baseUrl);
 }
 
-public sealed class MeRoutes(Uri baseUrl)
+internal sealed class MeRoutes(Uri baseUrl)
 {
     public string Password { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "me", "password")
@@ -25,28 +25,28 @@ public sealed class MeRoutes(Uri baseUrl)
 }
 
 
-public sealed class UserRoutes(Uri baseUrl)
+internal sealed class UserRoutes(Uri baseUrl)
 {
     public string Create { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "users")
         .ToString();
 }
 
-public sealed class EmployeeRoutes(Uri baseUrl)
+internal sealed class EmployeeRoutes(Uri baseUrl)
 {
     public string Create { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "employees")
         .ToString();
 }
 
-public sealed class CustomerRoutes(Uri baseUrl)
+internal sealed class CustomerRoutes(Uri baseUrl)
 {
     public string Create { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "customers")
         .ToString();
 }
 
-public sealed class OrderRoutes(Uri baseUrl)
+internal sealed class OrderRoutes(Uri baseUrl)
 {
     public string List(OrderListDto dto) => new UrlBuilder(baseUrl)
         .AddPaths("api", "orders")
