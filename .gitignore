@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/src/StudioOMS.WebApi/studio_oms.db
+/src/StudioOMS.WebApi/studio_oms.db-shm
+/src/StudioOMS.WebApi/studio_oms.db-wal
