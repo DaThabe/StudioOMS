@@ -10,8 +10,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // 认证
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, StudioOMSAuthenticationStateProvider>();
-builder.Services.AddScoped(sp => (StudioOMSAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
+builder.Services.AddScoped<AuthenticationStateProvider, SessionStateProvider>();
+builder.Services.AddScoped(sp => (ISession)sp.GetRequiredService<AuthenticationStateProvider>());
 builder.Services.AddCascadingAuthenticationState();
 
 // 请求客户端

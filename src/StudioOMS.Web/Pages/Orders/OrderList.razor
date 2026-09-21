@@ -1,0 +1,119 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using StudioOMS.Orders
+@using StudioOMS.Web.Services
+
+@page "/orders"
+@attribute [Authorize]
+@inject ISession Session
+
+<h3>订单列表</h3>
+
+@if (isLoading)
+{
+    <p>加载中...</p>
+}
+else if (errorMessage is not null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (result is null || result.Total == 0)
+{
+    <p>没有订单</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>标题</th>
+                <th>客户</th>
+                <th>状态</th>
+                <th>类型</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in result.Items)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.CustomerName</td>
+                    <td>@item.State</td>
+                    <td>@item.Type</td>
+                    <td>@item.CreateAt.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <span>共 @result.Total 条</span>
+        <div>
+            <button class="btn btn-sm btn-outline-secondary"
+                    disabled="@(skip == 0)"
+                    @onclick="PreviousPage">
+                上一页
+            </button>
+            <button class="btn btn-sm btn-outline-secondary"
+                    disabled="@(skip + take >= result.Total)"
+                    @onclick="NextPage">
+                下一页
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private OrderListResult? result;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    private int skip = 0;
+    private const int take = 20;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var client = Session.GetRequiredClient();
+
+            var dto = new OrderListDto
+            {
+                Skip = skip,
+                Take = take,
+                Types = string.Empty
+            };
+
+            result = await client.Order.ListAsync(dto);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"加载失败：{ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (skip == 0) return;
+        skip = Math.Max(0, skip - take);
+        await LoadAsync();
+    }
+
+    private async Task NextPage()
+    {
+        skip += take;
+        await LoadAsync();
+    }
+}

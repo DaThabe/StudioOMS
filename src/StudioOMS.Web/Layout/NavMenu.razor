@@ -1,4 +1,12 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using StudioOMS.Web.Services
+
+@* NavMenu.razor *@
+
+@inject ISession Session
+@inject NavigationManager Nav
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">StudioOMS.Web</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,21 +17,30 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+
+        @* 订单列表 *@
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="orders">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Orders
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="create-order">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> CreateOrder
-            </NavLink>
-        </div>
+
+        @* 登出 *@
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <button class="nav-link btn btn-link" @onclick="HandleSignOut">
+                        <span class="bi bi-box-arrow-right" aria-hidden="true"></span> 登出
+                    </button>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </nav>
 </div>
 
@@ -35,5 +52,11 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task HandleSignOut()
+    {
+        await Session.SignOutAsync();
+        Nav.NavigateTo("/login");
     }
 }

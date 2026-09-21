@@ -5,7 +5,34 @@ using System.Security.Claims;
 namespace StudioOMS.Web.Services;
 
 
-internal sealed class StudioOMSAuthenticationStateProvider(IStudioOMSClientFactory factory, IJSRuntime js) : AuthenticationStateProvider
+public interface ISession
+{
+    IStudioOMSClient? Client { get; }
+
+
+    Task SignInAsync(string token);
+    Task SignOutAsync();
+}
+
+public static class ISessionExtensions
+{
+    extension(ISession session)
+    {
+        public bool IsSign => session.Client is not null;
+
+        public IStudioOMSClient GetRequiredClient()
+        {
+            if (session.Client is null)
+                throw new InvalidOperationException("未登录");
+
+            return session.Client;
+        }
+    }
+}
+
+
+
+internal sealed class SessionStateProvider(IStudioOMSClientFactory factory, IJSRuntime js) : AuthenticationStateProvider, ISession
 {
     private IStudioOMSClient? _client;
     public IStudioOMSClient? Client => _client;
@@ -24,14 +51,14 @@ internal sealed class StudioOMSAuthenticationStateProvider(IStudioOMSClientFacto
         return BuildAuthenticatedState();
     }
 
-    public async Task LoginAsync(string token)
+    public async Task SignInAsync(string token)
     {
         await js.InvokeVoidAsync("localStorage.setItem", "oms_token", token);
         _client = factory.CreateWithAuthentication(new("Bearer", token));
         NotifyAuthenticationStateChanged(Task.FromResult(BuildAuthenticatedState()));
     }
 
-    public async Task LogoutAsync()
+    public async Task SignOutAsync()
     {
         await js.InvokeVoidAsync("localStorage.removeItem", "oms_token");
         _client = null;

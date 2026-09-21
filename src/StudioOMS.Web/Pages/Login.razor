@@ -8,7 +8,7 @@
 @using StudioOMS.Web.Services
 
 @inject IStudioOMSAuthentication Authentication
-@inject StudioOMSAuthenticationStateProvider AuthProvider
+@inject ISession Session
 @inject NavigationManager Nav
 
 
@@ -52,7 +52,7 @@
         try
         {
             var result = await Authentication.LoginAsync(loginForm.ToDto());
-            await AuthProvider.LoginAsync(result.Token);
+            await Session.SignInAsync(result.Token);
             Nav.NavigateTo("/");
         }
         catch (HttpRequestException ex)

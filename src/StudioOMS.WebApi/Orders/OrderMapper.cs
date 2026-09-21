@@ -39,6 +39,7 @@ public static class OrderMapper
             Id = x.Id.ToString(),
             Title = x.Title,
             State = x.State.ToString(),
+            Type = x.Type.ToString(),
             CreateAt = x.CreateAt,
             CustomerId = x.CustomerId.ToString(),
             CustomerName = x.CustomerName.ToString()

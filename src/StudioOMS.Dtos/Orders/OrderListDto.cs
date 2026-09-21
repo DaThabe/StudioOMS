@@ -14,6 +14,7 @@ public readonly record struct OrderListDto
 public sealed record class OrderListResult
 {
     public required OrderListItemDto[] Items { get; init; }
+    public int Total => Items.Length;
 }
 
 
@@ -24,6 +25,7 @@ public sealed record class OrderListItemDto
     public required DateTimeOffset CreateAt { get; init; }
 
     public required string State { get; init; }
+    public required string Type { get; init; }
 
     public required string CustomerId { get; init; }
     public required string CustomerName { get; init; }
