@@ -2,16 +2,16 @@
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
 
-namespace StudioOMS.Requests.Users;
+namespace StudioOMS.Requests.Login;
 
 
-public sealed class UserLoginRequest : IRequest<SessionToken>
+public sealed class LoginRequest : IRequest<SessionToken>
 {
     public required string Username { get; init; }
     public required string Password { get; init; }
 
 
-    public static UserLoginRequest FromDto(UserLoginDto dto)
+    public static LoginRequest FromDto(LoginDto dto)
     {
         return new()
         {
@@ -21,11 +21,13 @@ public sealed class UserLoginRequest : IRequest<SessionToken>
     }
 
     internal sealed class Handler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        ISessionService sessionService) : IRequestHandler<UserLoginRequest, SessionToken>
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher,
+            ISessionService sessionService
+        ) : IRequestHandler<LoginRequest, SessionToken>, IAllowAnonymous
     {
-        public async ValueTask<SessionToken> HandleAsync(UserLoginRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<SessionToken> HandleAsync(LoginRequest request,
+            CancellationToken cancellationToken = default)
         {
             var user = await userRepository.FindByUsername(request.Username, cancellationToken)
                 ?? throw new InvalidOperationException($"用户名或密码错误");

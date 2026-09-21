@@ -32,9 +32,13 @@ public sealed class UserCreateRequest : IRequest<UserId>
         };
     }
 
-    internal sealed class Handler(IUserRepository userRepository, IPasswordHasher passwordHasher) : IRequestHandler<UserCreateRequest, UserId>
+    internal sealed class Handler(
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher
+        ) : IRequestHandler<UserCreateRequest, UserId>, IAllowAnonymous
     {
-        public async ValueTask<UserId> HandleAsync(UserCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<UserId> HandleAsync(UserCreateRequest request,
+            CancellationToken cancellationToken = default)
         {
             var passwordHash = await passwordHasher.HashAsync(request.Password, cancellationToken);
 

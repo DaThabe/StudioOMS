@@ -9,6 +9,16 @@ Content-Type: application/json
   "password": "123456"
 }
 
+### 修改密码
+POST {{host}}/api/users/me/password
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+{
+  "currentPassword": "123456",
+  "newPassword": "123456"
+}
+
+
 ### 创建销售
 # @name salesperson
 POST {{host}}/api/employees
@@ -50,6 +60,12 @@ Authorization: Bearer {{login.response.body.$.}}
   "salespersonId": {{salesperson.response.body.*}},
   "totalDays": 20
 }
+### 订单列表
+# @name timingOrder
+GET {{host}}/api/orders?skip=0&take=20&types=
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.}}
+
 
 ### 订单分配设计师
 POST {{host}}/api/orders/{{timingOrder.response.body.$.}}/assign

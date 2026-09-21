@@ -7,9 +7,9 @@ using StudioOMS.Orders;
 using StudioOMS.Requests;
 using StudioOMS.Requests.Clients;
 using StudioOMS.Requests.Employees;
+using StudioOMS.Requests.Login;
 using StudioOMS.Requests.Orders;
 using StudioOMS.Requests.Orders.Timing;
-using StudioOMS.Requests.Users;
 using StudioOMS.Security;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
@@ -25,7 +25,7 @@ var app = Host.CreateDefaultBuilder(args)
 await app.StartAsync();
 var sender = app.Services.GetRequiredService<ISender>();
 var sessionService = app.Services.GetRequiredService<ISessionService>();
-var currentUser = app.Services.GetRequiredService<ICurrentUser>();
+var curentSession = app.Services.GetRequiredService<ICurrentSession>();
 var employeeRepository = app.Services.GetRequiredService<IEmployeeRepository>();
 var userRepository = app.Services.GetRequiredService<IUserRepository>();
 var passwordHasher = app.Services.GetRequiredService<IPasswordHasher>();
@@ -48,75 +48,70 @@ if (await userRepository.FindByUsername(adminUsername) is null)
 }
 
 // 登录
-var adminUserLoginRequest = new UserLoginRequest()
+var adminUserLoginRequest = new LoginRequest()
 {
     Username = adminUsername,
     Password = adminPassword,
 };
-var adminLoginToken = await sender.SendAsync<UserLoginRequest, SessionToken>(adminUserLoginRequest);
-var adminSessionInfo = await sessionService.FindAsync(adminLoginToken) ?? throw new InvalidOperationException("会话信息不存在");
-currentUser.EmployeeId = adminSessionInfo.EmployeeId;
+// 初始化当前会话
+curentSession.Token = await sender.SendAsync<LoginRequest, SessionToken>(adminUserLoginRequest);
+curentSession.Info = await sessionService.FindAsync(curentSession.Token) ?? throw new InvalidOperationException("会话信息不存在");
 
 
 // 创建设计师
 var designrEmployeeCreateRequest = new EmployeeCreateRequest()
 {
-    Id = EmployeeId.Create(),
     Name = "设计师",
     Roles = [EmployeeRole.Designer]
 };
-await sender.SendAsync(designrEmployeeCreateRequest);
+var designerId = await sender.SendAsync<EmployeeCreateRequest, EmployeeId>(designrEmployeeCreateRequest);
 
 // 创建销售
 var salespersonEmployeeCreateRequest = new EmployeeCreateRequest()
 {
-    Id = EmployeeId.Create(),
     Name = "销售",
     Roles = [EmployeeRole.Sales]
 };
-await sender.SendAsync(salespersonEmployeeCreateRequest);
+var salespersonId = await sender.SendAsync<EmployeeCreateRequest, EmployeeId>(salespersonEmployeeCreateRequest);
 
 // 创建客户
 var clientCreateRequest = new ClientCreateRequest()
 {
-    Id = ClientId.Create(),
     Name = "测试客户名称"
 };
-await sender.SendAsync(clientCreateRequest);
+var clientId = await sender.SendAsync<ClientCreateRequest, ClientId>(clientCreateRequest);
 
 // 创建订单
 var timingOrderCreateRequest = new TimingOrderCreateRequest()
 {
-    Id = OrderId.Create(),
-    ClientId = clientCreateRequest.Id,
-    SalespersonId = salespersonEmployeeCreateRequest.Id,
-    CreateAt = DateTimeOffset.Now,
+    ClientId = clientId,
+    SalespersonId = salespersonId,
     TotalDays = 30,
     Title = "30天包月设计服务"
 };
-await sender.SendAsync(timingOrderCreateRequest);
+var orderId = await sender.SendAsync<TimingOrderCreateRequest, OrderId>(timingOrderCreateRequest);
 
 // 分配设计师
 var orderAssignEmployeeRequest = new OrderAssignEmployeeRequest()
 {
-    Id = timingOrderCreateRequest.Id,
-    EmployeeId = designrEmployeeCreateRequest.Id
+    Id = orderId,
+    EmployeeId = designerId,
 };
 await sender.SendAsync(orderAssignEmployeeRequest);
 
 // 订单开始服务
 var orderMarkServicingRequest = new OrderMarkServicingRequest()
 {
-    OrderId = timingOrderCreateRequest.Id
+    OrderId = orderId
 };
 await sender.SendAsync(orderMarkServicingRequest);
 
 // 开始消耗
 var timingOrderConsumeRequest = new TimingOrderConsumeRequest()
 {
-    OrderId = timingOrderCreateRequest.Id,
+    OrderId = orderId,
     ConsuemDays = 1,
-    EmployeeId = designrEmployeeCreateRequest.Id,
+    EmployeeId = designerId,
 };
 await sender.SendAsync(timingOrderConsumeRequest);
 

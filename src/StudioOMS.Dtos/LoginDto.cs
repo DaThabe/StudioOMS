@@ -1,13 +1,13 @@
-﻿namespace StudioOMS.Users;
+﻿namespace StudioOMS;
 
 
-public readonly record struct UserLoginDto
+public readonly record struct LoginDto
 {
     public required string Username { get; init; }
     public required string Password { get; init; }
 }
 
-public readonly record struct UserLoginResult
+public readonly record struct LoginResult
 {
     public required string Token { get; init; }
 }

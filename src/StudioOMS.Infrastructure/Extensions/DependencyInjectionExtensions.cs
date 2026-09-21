@@ -4,8 +4,10 @@ using StudioOMS.Clients;
 using StudioOMS.EfCore;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
+using StudioOMS.Queries;
 using StudioOMS.Repositories;
 using StudioOMS.Requests;
+using StudioOMS.Requests.Orders;
 using StudioOMS.Security;
 using StudioOMS.Security.Permission;
 using StudioOMS.Security.Session;
@@ -28,7 +30,8 @@ public static class DependencyInjectionExtensions
             return services
                 .AddMemoryCache()
                 .AddDatabase(databaseOptionAction)
-                .AddRepository()
+                .AddRepositories()
+                .AddQueries()
                 .AddMessaging()
                 .AddSecurity();
         }
@@ -45,7 +48,7 @@ public static class DependencyInjectionExtensions
             return services;
         }
 
-        public IServiceCollection AddRepository()
+        public IServiceCollection AddRepositories()
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
@@ -54,12 +57,18 @@ public static class DependencyInjectionExtensions
 
             return services;
         }
+        public IServiceCollection AddQueries()
+        {
+            services.AddScoped<IOrderQuery, OrderQuery>();
+
+            return services;
+        }
 
 
         public IServiceCollection AddMessaging()
         {
             services.AddScoped<ISender, Sender>();
-            services.AddScoped<ICurrentUser, CurrentUser>();
+            services.AddScoped<ICurrentSession, CurrentSession>();
             return services;
         }
 

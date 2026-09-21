@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using StudioOMS.Exceptions;
 using StudioOMS.Requests;
 using StudioOMS.Security.Permission;
 using StudioOMS.Security.Session;
@@ -6,7 +7,7 @@ using StudioOMS.Security.Session;
 namespace StudioOMS;
 
 
-internal sealed class Sender(IServiceProvider services, ICurrentUser currentUser, IPermissionChecker permissionChecker) : ISender
+internal sealed class Sender(IServiceProvider services, ICurrentSession currentSession, IPermissionChecker permissionChecker) : ISender
 {
     public async ValueTask SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken = default)
         where TRequest : IRequest
@@ -28,10 +29,27 @@ internal sealed class Sender(IServiceProvider services, ICurrentUser currentUser
 
     private async ValueTask AssertCheckPermission(object handler)
     {
-        if (handler is not IRequirePermissions requirePermissions)
-            return;
+        // 不需要认证
+        if (handler is IAllowAnonymous) return;
 
-        var pass = await permissionChecker.HasAllPermissionsAsync(currentUser.EmployeeId, requirePermissions.RequiredPermissions);
-        if (!pass) throw new UnauthorizedAccessException("权限不足");
+        // 需要认证
+        if (handler is IAuthentication)
+        {
+            // 检查认证
+            var currentEmployeeId = currentSession.Info?.EmployeeId;
+            NotAuthenticatedException.ThrowIf(currentEmployeeId is null);
+
+            // 需要授权
+            if (handler is IAuthorization authorization)
+            {
+                // 检查授权
+                var pass = await permissionChecker.HasAllPermissionsAsync(currentEmployeeId.Value, authorization.RequiredPermissions);
+                ForbiddenException.ThrowIf(!pass);
+            }
+
+            return;
+        }
+
+        throw new InvalidOperationException($"处理器 [{handler}] 配置错误, 未设置约束信息");
     }
 }

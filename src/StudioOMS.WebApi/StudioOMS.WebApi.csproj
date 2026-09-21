@@ -2,8 +2,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>StudioOMS</RootNamespace>
-		<PublishAot>false</PublishAot>
-		<RunAOTCompilation>false</RunAOTCompilation>
+		<EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
 	</PropertyGroup>
 
 	<ItemGroup>

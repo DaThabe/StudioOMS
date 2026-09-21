@@ -2,10 +2,10 @@
 using StudioOMS.Requests;
 using StudioOMS.Requests.Clients;
 
-namespace StudioOMS.Endpoints.Clients;
+namespace StudioOMS.Endpoints;
 
 
-public static class ClientEndpointExtensions
+public static class ClientEndpoint
 {
     extension(IEndpointRouteBuilder app)
     {

@@ -19,6 +19,6 @@ internal sealed class EmployeeEntityTypeConfiguration :
             .IsRequired();
         builder.Property(x => x.Roles)
            .HasField("_roles")
-           .HasConversion<IReadonlySetEmployeeRole_String_Converter>();
+           .HasConversion<HashSetEmployeeRole_String_Converter>();
     }
 }

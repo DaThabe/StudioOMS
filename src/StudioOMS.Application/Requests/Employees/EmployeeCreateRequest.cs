@@ -19,11 +19,15 @@ public sealed class EmployeeCreateRequest : IRequest<EmployeeId>
         };
     }
 
-    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeCreateRequest, EmployeeId>, IRequirePermissions
+    internal sealed class Handler(
+            IEmployeeRepository employeeRepository
+        ) : IRequestHandler<EmployeeCreateRequest, EmployeeId>, IAuthorization
     {
-        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.EmployeeCreate);
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
+            PermissionType.Group(PermissionType.EmployeeCreate);
 
-        public async ValueTask<EmployeeId> HandleAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<EmployeeId> HandleAsync(EmployeeCreateRequest request,
+            CancellationToken cancellationToken = default)
         {
             var employee = Employee.Create(request.Roles);
             employee.Rename(request.Name);

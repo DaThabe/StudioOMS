@@ -17,11 +17,14 @@ public sealed class OrderMarkServicingRequest : IRequest
         };
     }
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<OrderMarkServicingRequest>, IRequirePermissions
+    internal sealed class Handler(
+            IOrderRepository orderRepository
+        ) : IRequestHandler<OrderMarkServicingRequest>, IAuthorization
     {
         public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderManage);
 
-        public async ValueTask HandleAsync(OrderMarkServicingRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask HandleAsync(OrderMarkServicingRequest request, 
+            CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");

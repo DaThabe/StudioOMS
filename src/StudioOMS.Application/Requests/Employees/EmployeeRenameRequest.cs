@@ -1,0 +1,37 @@
+﻿using StudioOMS.Clients;
+using StudioOMS.Employees;
+using StudioOMS.Requests.Clients;
+using StudioOMS.Security.Permission;
+
+namespace StudioOMS.Requests.Employees;
+
+
+public sealed class EmployeeRenameRequest : IRequest
+{
+    public required EmployeeId Id { get; init; }
+    public required string Name { get; init; }
+
+
+    public static ClientRenameRequest FromDto(Guid employeeId, EmployeeRenameDto dto)
+    {
+        return new()
+        {
+            Id = new(employeeId),
+            Name = dto.Name
+        };
+    }
+
+    internal sealed class Handler(IEmployeeRepository employeeRepository) : IRequestHandler<EmployeeRenameRequest>, IAuthorization
+    {
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.EmployeeManage);
+
+        public async ValueTask HandleAsync(EmployeeRenameRequest request, CancellationToken cancellationToken = default)
+        {
+            var entity = await employeeRepository.FindByIdAsync(request.Id, cancellationToken)
+                ?? throw new InvalidOperationException($"员工 [{request.Id}] 不存在");
+
+            entity.Rename(request.Name);
+            await employeeRepository.SaveAsync(entity, cancellationToken);
+        }
+    }
+}

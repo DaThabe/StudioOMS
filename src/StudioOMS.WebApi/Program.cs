@@ -1,14 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using StudioOMS.Endpoints;
-using StudioOMS.Endpoints.Orders;
 using StudioOMS.Middlewares;
+using StudioOMS.Serializer;
+using StudioOMS.Serializer.Converters;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
 // Json
 builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default));
+{
+    options.SerializerOptions.Converters.Add(new DateTimeOffsetConverter());
+    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+});
 
 
 // WebApi
@@ -22,10 +26,10 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-
 // StudioOMS
 builder.Services.AddStudioOMSHandlers();
-builder.Services.AddInfrastructure(x => x.UseSqlite("Data Source=studio_oms.db"));
+var connectString = builder.Configuration.GetConnectionString("sqlite");
+builder.Services.AddInfrastructure(x => x.UseSqlite(connectString));
 
 
 // Build
@@ -41,9 +45,12 @@ if (app.Environment.IsDevelopment())
 }
 
 // Api
-app.MapStudioOMSEndpoints();
-app.MapTimingOrderEndpoints();
-app.UseMiddleware<CurrentUserMiddleware>();
+app.MapLoginEndpoints()
+   .MapUserEndpoints()
+   .MapEmployeeEndpoints()
+   .MapClientEndpoints()
+   .MapOrderEndpoints();
+app.UseMiddleware<CurrentSessionMiddleware>();
 
 
 app.Run();

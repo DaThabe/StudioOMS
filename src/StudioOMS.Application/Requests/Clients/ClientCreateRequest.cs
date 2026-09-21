@@ -15,11 +15,15 @@ public sealed class ClientCreateRequest : IRequest<ClientId>
     }
 
 
-    internal sealed class Handler(IClientRepository clientRepository) : IRequestHandler<ClientCreateRequest, ClientId>, IRequirePermissions
+    internal sealed class Handler(
+            IClientRepository clientRepository
+        ) : IRequestHandler<ClientCreateRequest, ClientId>, IAuthorization
     {
-        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.ClientCreate);
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
+            PermissionType.Group(PermissionType.ClientCreate);
 
-        public async ValueTask<ClientId> HandleAsync(ClientCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<ClientId> HandleAsync(ClientCreateRequest request,
+            CancellationToken cancellationToken = default)
         {
             var client = Client.Create();
             client.Rename(request.Name);

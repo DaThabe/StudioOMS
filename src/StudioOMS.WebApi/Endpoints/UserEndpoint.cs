@@ -1,12 +1,13 @@
 ﻿using StudioOMS.Requests;
+using StudioOMS.Requests.Login;
 using StudioOMS.Requests.Users;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
 
-namespace StudioOMS.Endpoints.Users;
+namespace StudioOMS.Endpoints;
 
 
-public static class UserEndpointExtensions
+public static class UserEndpoint
 {
     extension(IEndpointRouteBuilder app)
     {
@@ -15,7 +16,7 @@ public static class UserEndpointExtensions
             var group = app.MapGroup("/api/users");
 
             group.MapPost("/", CreateAsync);
-            group.MapPost("/login", LoginAsync);
+            group.MapPost("/me/password", ChangePasswordAsync);
 
             return app;
         }
@@ -29,11 +30,12 @@ public static class UserEndpointExtensions
         return Results.Ok(id.ToString());
     }
 
-    private static async Task<IResult> LoginAsync(UserLoginDto dto,
+    private static async Task<IResult> ChangePasswordAsync(UserChangePasswordDto dto,
         ISender sender,
+        ICurrentSession currentUser,
         CancellationToken ct)
     {
-        var token = await sender.SendAsync<UserLoginRequest, SessionToken>(UserLoginRequest.FromDto(dto), ct);
-        return Results.Ok(token.ToString());
+        await sender.SendAsync(UserChangePasswordRequest.FromDto(dto), ct);
+        return Results.Ok();
     }
 }

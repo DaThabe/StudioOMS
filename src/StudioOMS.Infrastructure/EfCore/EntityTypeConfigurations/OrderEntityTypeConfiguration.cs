@@ -6,6 +6,7 @@ using StudioOMS.EfCore.ValueConverters;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
+using StudioOMS.Requests.Orders;
 
 namespace StudioOMS.EfCore.EntityTypeConfigurations;
 
@@ -53,6 +54,10 @@ internal sealed class OrderEntityTypeConfiguration :
             .HasField("_stateChangeds")
             .HasConversion<SortedSetOrderStateChange_String_Converter>()
             .Metadata.SetValueComparer(new SortedSetOrderStateChange_String_Comparer());
+
+        // 派生类
+        builder.HasDiscriminator<OrderType>("Type")
+            .HasValue<TimingOrder>(OrderType.Timing);
     }
 
     public void Configure(EntityTypeBuilder<TimingOrder> builder)

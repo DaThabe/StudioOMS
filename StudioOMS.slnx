@@ -10,6 +10,7 @@
   </Folder>
   <Folder Name="/Src/Web/">
     <Project Path="src/StudioOMS.Web/StudioOMS.Web.csproj" Id="9192d6ba-e8c8-4bbb-a2b3-e3fb3467171a" />
+    <Project Path="src/StudioOMS.WebApi.Client/StudioOMS.WebApi.Client.csproj" Id="46a89b27-00d4-4e9f-8f91-f2ba00aeee5c" />
     <Project Path="src/StudioOMS.WebApi/StudioOMS.WebApi.csproj" />
   </Folder>
   <Folder Name="/Tests/">

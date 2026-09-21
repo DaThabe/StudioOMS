@@ -47,4 +47,15 @@ internal sealed class SessionService(IMemoryCache memoryCache) : ISessionService
 
         return ValueTask.CompletedTask;
     }
+
+    public ValueTask RemoveByUserIdAsync(UserId userId, CancellationToken cancellationToken = default)
+    {
+        if (_userTokens.TryGetValue(userId, out var token))
+        {
+            memoryCache.Remove(userId);
+            _userTokens.Remove(userId, out _);
+        }
+
+        return ValueTask.CompletedTask;
+    }
 }

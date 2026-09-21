@@ -24,11 +24,15 @@ public record TimingOrderConsumeRequest : IRequest
     }
 
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderConsumeRequest>, IRequirePermissions
+    internal sealed class Handler(
+            IOrderRepository orderRepository
+        ) : IRequestHandler<TimingOrderConsumeRequest>, IAuthorization
     {
-        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderConsume);
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
+            PermissionType.Group(PermissionType.OrderConsume);
 
-        public async ValueTask HandleAsync(TimingOrderConsumeRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask HandleAsync(TimingOrderConsumeRequest request,
+            CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");

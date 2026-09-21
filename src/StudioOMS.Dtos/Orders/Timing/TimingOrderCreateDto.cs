@@ -8,3 +8,8 @@ public sealed class TimingOrderCreateDto
     public required decimal TotalDays { get; init; }
     public string Title { get; init; } = "未命名订单";
 }
+
+public sealed class OrderCreateResult
+{
+    public required string OrderId { get; init; }
+}

@@ -27,11 +27,15 @@ public sealed record class TimingOrderCreateRequest : IRequest<OrderId>
     }
 
 
-    internal sealed class Handler(IOrderRepository orderRepository) : IRequestHandler<TimingOrderCreateRequest, OrderId>, IRequirePermissions
+    internal sealed class Handler(
+            IOrderRepository orderRepository
+        ) : IRequestHandler<TimingOrderCreateRequest, OrderId>, IAuthorization
     {
-        public IReadOnlySet<PermissionType> RequiredPermissions { get; } = PermissionType.Group(PermissionType.OrderCreate);
+        public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
+            PermissionType.Group(PermissionType.OrderCreate);
 
-        public async ValueTask<OrderId> HandleAsync(TimingOrderCreateRequest request, CancellationToken cancellationToken = default)
+        public async ValueTask<OrderId> HandleAsync(TimingOrderCreateRequest request,
+            CancellationToken cancellationToken = default)
         {
             var order = TimingOrder.CreateNow(request.ClientId, request.SalespersonId, request.TotalDays);
             await orderRepository.SaveAsync(order, cancellationToken);

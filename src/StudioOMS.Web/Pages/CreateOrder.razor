@@ -34,9 +34,8 @@
     {
         var dto = new TimingOrderCreateDto()
         {
-            Id = Guid.NewGuid(),
-            ClientId = clientId,
-            SalespersonId = salespersonId,
+            ClientId = clientId.ToString(),
+            SalespersonId = salespersonId.ToString(),
             TotalDays = totalDays
         };
 

@@ -18,6 +18,7 @@ namespace StudioOMS.Serializer;
 /******************** User ********************/
 [JsonSerializable(typeof(UserCreateDto))]
 [JsonSerializable(typeof(LoginDto))]
+[JsonSerializable(typeof(LoginResult))]
 
 /******************** Employee ********************/
 [JsonSerializable(typeof(EmployeeCreateDto))]

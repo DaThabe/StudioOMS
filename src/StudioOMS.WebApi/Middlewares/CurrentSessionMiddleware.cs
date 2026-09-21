@@ -3,12 +3,12 @@
 namespace StudioOMS.Middlewares;
 
 
-internal sealed class CurrentUserMiddleware(RequestDelegate next)
+internal sealed class CurrentSessionMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(
         HttpContext context,
         ISessionService sessions,
-        ICurrentUser currentUser)
+        ICurrentSession currentUser)
     {
         var authHeader = context.Request.Headers.Authorization.FirstOrDefault();
 
@@ -17,8 +17,8 @@ internal sealed class CurrentUserMiddleware(RequestDelegate next)
             var tokenStr = authHeader["Bearer ".Length..].Trim();
             if (SessionToken.TryParse(tokenStr, out var token))
             {
-                var session = await sessions.FindAsync(token);
-                if (session is not null) currentUser.EmployeeId = session.EmployeeId;
+                currentUser.Token = token;
+                currentUser.Info = await sessions.FindAsync(token);
             }
         }
 

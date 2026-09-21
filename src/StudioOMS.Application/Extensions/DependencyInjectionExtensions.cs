@@ -4,6 +4,7 @@ using StudioOMS.Orders;
 using StudioOMS.Requests;
 using StudioOMS.Requests.Clients;
 using StudioOMS.Requests.Employees;
+using StudioOMS.Requests.Login;
 using StudioOMS.Requests.Orders;
 using StudioOMS.Requests.Orders.Timing;
 using StudioOMS.Requests.Users;
@@ -24,7 +25,8 @@ public static class DependencyInjectionExtensions
         {
             // User
             services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest, UserId>();
-            services.AddRequestHandler<UserLoginRequest.Handler, UserLoginRequest, SessionToken>();
+            services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
+            services.AddRequestHandler<UserChangePasswordRequest.Handler, UserChangePasswordRequest>();
 
             // Employee
             services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest, EmployeeId>();
@@ -35,6 +37,7 @@ public static class DependencyInjectionExtensions
             // Order
             services.AddRequestHandler<OrderAssignEmployeeRequest.Handler, OrderAssignEmployeeRequest>();
             services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest>();
+            services.AddRequestHandler<OrderListRequest.Handler, OrderListRequest, OrderListResult>();
             //Order-Timing
             services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest, OrderId>();
             services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest>();
