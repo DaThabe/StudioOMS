@@ -8,6 +8,7 @@ namespace StudioOMS;
 
 public interface IStudioOMSClient
 {
+    IMeClient Me { get; }
     IUserClient User { get; }
     IEmployeeClient Employee { get; }
     ICustomerClient Customer { get; }

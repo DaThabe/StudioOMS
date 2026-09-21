@@ -28,6 +28,8 @@ internal static class Endpoints
 
         // POST 👉 api/login
         apiGroup.MapPost("/login", LoginEndpoint.LoginAsync);
+        // GET  👉 api/me
+        meGroup.MapGet("/", MeEndpoint.InfoAsync);
         // POST 👉 api/me/password
         meGroup.MapPost("/password", MeEndpoint.ChangePasswordAsync);
         // POST 👉 api/users/

@@ -20,10 +20,13 @@ public static class DependencyInjectionExtensions
     {
         public void AddStudioOMSHandlers()
         {
+            // Me
+            services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
+            services.AddRequestHandler<MineInfoRequest.Handler, MineInfoRequest, MineInfoResponse>();
+            services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
+
             // User
             services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest, UserId>();
-            services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
-            services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
 
             // Employee
             services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest, EmployeeId>();

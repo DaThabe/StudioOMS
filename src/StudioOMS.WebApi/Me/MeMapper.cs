@@ -30,4 +30,16 @@ public static class MeMapper
             NewPassword = Password.From(dto.NewPassword)
         };
     }
+
+
+    public static InfoResult ToInfoResult(this MineInfoResponse response)
+    {
+        return new()
+        {
+            Id = response.Id.ToString(),
+            Username = response.Id.ToString(),
+            EmployeeId = response.EmployeeId.ToString(),
+            EmployeeName = response.EmployeeName.ToString()
+        };
+    }
 }

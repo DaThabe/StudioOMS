@@ -3,6 +3,7 @@ using StudioOMS;
 using StudioOMS.Customers;
 using StudioOMS.EfCore;
 using StudioOMS.Employees;
+using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Queries;
@@ -59,6 +60,7 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddQueries()
         {
             services.AddScoped<IOrderQuery, OrderQuery>();
+            services.AddScoped<IMineInfoQuery, MineInfoQuery>();
 
             return services;
         }

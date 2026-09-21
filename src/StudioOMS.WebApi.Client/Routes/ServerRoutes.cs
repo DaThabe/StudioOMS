@@ -19,6 +19,10 @@ internal sealed class ServerRoutes(Uri baseUrl)
 
 internal sealed class MeRoutes(Uri baseUrl)
 {
+    public string Info { get; } = new UrlBuilder(baseUrl)
+        .AddPaths("api", "me")
+        .ToString();
+
     public string Password { get; } = new UrlBuilder(baseUrl)
         .AddPaths("api", "me", "password")
         .ToString();

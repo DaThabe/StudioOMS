@@ -9,7 +9,16 @@ internal static class HttpExtensions
 {
     extension(HttpClient httpClient)
     {
-        public async ValueTask<TResponse?> GetJsonAsync<TResponse>(
+        public async Task SendEnsureSuccessAsync(
+            HttpRequestMessage requestMessage,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await httpClient.SendAsync(requestMessage, cancellationToken);
+            response.EnsureSuccessStatusCode();
+        }
+
+
+        public async Task<TResponse?> GetJsonAsync<TResponse>(
             HttpRequestMessage requestMessage,
             JsonTypeInfo<TResponse> jsonTypeInfo,
             CancellationToken cancellationToken = default)
