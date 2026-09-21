@@ -18,7 +18,7 @@ public static class MeEndpoint
         }
     }
 
-    private static async Task<IResult> ChangePasswordAsync(ChangePasswordDto dto,
+    public static async Task<IResult> ChangePasswordAsync(ChangePasswordDto dto,
         ISender sender,
         ICurrentSession currentUser,
         CancellationToken ct)

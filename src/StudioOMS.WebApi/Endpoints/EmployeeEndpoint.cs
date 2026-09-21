@@ -6,19 +6,7 @@ namespace StudioOMS.Endpoints;
 
 public static class EmployeeEndpoint
 {
-    extension(IEndpointRouteBuilder app)
-    {
-        public IEndpointRouteBuilder MapEmployeeEndpoints()
-        {
-            var group = app.MapGroup("/api/employees");
-
-            group.MapPost("/", CreateAsync);
-
-            return app;
-        }
-    }
-
-    private static async Task<IResult> CreateAsync(EmployeeCreateDto dto,
+    public static async Task<IResult> CreateAsync(EmployeeCreateDto dto,
         ISender sender,
         CancellationToken ct)
     {

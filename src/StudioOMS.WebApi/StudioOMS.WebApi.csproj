@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>StudioOMS</RootNamespace>
 		<EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
+		<PublishAot>false</PublishAot>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -35,8 +35,6 @@ builder.Services.AddInfrastructure(x => x.UseSqlite(connectString));
 // Build
 var app = builder.Build();
 
-app.UseCors("Blazor");
-
 // Doc
 if (app.Environment.IsDevelopment())
 {
@@ -44,13 +42,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// Api
-app.MapLoginEndpoints()
-   .MapMeEndpoints()
-   .MapUserEndpoints()
-   .MapEmployeeEndpoints()
-   .MapCustomerEndpoints()
-   .MapOrderEndpoints();
+// Model
+app.UseCors("Blazor");
+app.MapStudioOMS();
 app.UseMiddleware<CurrentSessionMiddleware>();
 
 
