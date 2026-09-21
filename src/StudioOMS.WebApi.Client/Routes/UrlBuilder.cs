@@ -5,8 +5,8 @@ namespace StudioOMS.Routes;
 public sealed class UrlBuilder
 {
     private readonly string _baseUrl;
-    private readonly List<string> _segments = new();
-    private readonly List<KeyValuePair<string, string?>> _query = new();
+    private readonly List<string> _segments = [];
+    private readonly List<KeyValuePair<string, string?>> _query = [];
 
     public UrlBuilder(Uri uri)
     {

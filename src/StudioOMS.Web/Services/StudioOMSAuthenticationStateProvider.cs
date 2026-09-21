@@ -39,7 +39,7 @@ internal sealed class StudioOMSAuthenticationStateProvider(IStudioOMSClientFacto
             Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
     }
 
-    private AuthenticationState BuildAuthenticatedState()
+    private static AuthenticationState BuildAuthenticatedState()
     {
         var identity = new ClaimsIdentity([new Claim(ClaimTypes.Name, "user")], "oms");
         return new AuthenticationState(new ClaimsPrincipal(identity));

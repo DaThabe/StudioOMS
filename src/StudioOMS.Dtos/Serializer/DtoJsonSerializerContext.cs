@@ -10,6 +10,7 @@ namespace StudioOMS.Serializer;
 
 
 [JsonSourceGenerationOptions(
+    PropertyNameCaseInsensitive = true,
     UseStringEnumConverter = true,
     Converters = [
         typeof(DateTimeOffsetConverter)

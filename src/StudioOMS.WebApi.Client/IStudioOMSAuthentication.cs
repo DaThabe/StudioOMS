@@ -30,7 +30,7 @@ internal sealed class StudioOMSAuthentication(IHttpClientFactory factory) : IStu
     }
 
 
-    private async Task<LoginResult> LoginAsync(HttpClient httpClient, ServerRoutes routes, LoginDto dto, CancellationToken cancellationToken = default)
+    private static async Task<LoginResult> LoginAsync(HttpClient httpClient, ServerRoutes routes, LoginDto dto, CancellationToken cancellationToken = default)
     {
         var request = HttpRequestMessage.PostJson(routes.Login, dto, DtoJsonSerializerContext.Default.LoginDto);
         return await httpClient.GetJsonAsync(request, DtoJsonSerializerContext.Default.LoginResult, cancellationToken);
