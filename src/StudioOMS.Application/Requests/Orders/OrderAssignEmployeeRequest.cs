@@ -30,12 +30,12 @@ public sealed record class OrderAssignEmployeeRequest : IRequest
         public async ValueTask HandleAsync(OrderAssignEmployeeRequest request,
             CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken)
+            var entity = await orderRepository.FindByIdAsync(request.Id, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.Id} 不存在");
 
-            order.AssignEmployees(request.EmployeeId);
+            entity.AssignEmployees(request.EmployeeId);
 
-            await orderRepository.SaveAsync(order, cancellationToken);
+            await orderRepository.SaveAsync(entity, cancellationToken);
         }
     }
 }

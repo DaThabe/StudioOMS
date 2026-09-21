@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudioOMS;
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.EfCore;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
@@ -51,7 +51,7 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddRepositories()
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
 

@@ -25,6 +25,6 @@ public sealed record class OrderListItem
 
     public required string State { get; init; }
 
-    public required string ClientId { get; init; }
-    public required string ClientName { get; init; }
+    public required string CustomerId { get; init; }
+    public required string CustomerName { get; init; }
 }

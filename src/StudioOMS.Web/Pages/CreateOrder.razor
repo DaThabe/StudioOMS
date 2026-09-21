@@ -6,7 +6,7 @@
 
 <div>
     <label>客户 ID：</label>
-    <input @bind="clientId" />
+    <input @bind="customerId" />
 </div>
 <div>
     <label>销售 ID：</label>
@@ -25,7 +25,7 @@
 }
 
 @code {
-    private Guid clientId = Guid.NewGuid();
+    private Guid customerId = Guid.NewGuid();
     private Guid salespersonId = Guid.NewGuid();
     private decimal totalDays = 10;
     private string? message;
@@ -34,7 +34,7 @@
     {
         var dto = new TimingOrderCreateDto()
         {
-            ClientId = clientId.ToString(),
+            CustomerId = customerId.ToString(),
             SalespersonId = salespersonId.ToString(),
             TotalDays = totalDays
         };

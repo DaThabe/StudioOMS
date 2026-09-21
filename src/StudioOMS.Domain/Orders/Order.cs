@@ -1,4 +1,4 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 
 namespace StudioOMS.Orders;
@@ -12,7 +12,7 @@ public abstract partial class Order : Entity<OrderId>
     /// <summary>
     /// 客户Id
     /// </summary>
-    public required ClientId ClientId { get; init; }
+    public required CustomertId CustomerId { get; init; }
     /// <summary>
     /// 销售员Id
     /// </summary>

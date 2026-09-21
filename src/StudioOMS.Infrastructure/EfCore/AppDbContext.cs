@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.EfCore.EntityTypeConfigurations;
 using StudioOMS.EfCore.ValueConverters;
 using StudioOMS.Employees;
@@ -22,7 +22,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
     public DbSet<OrderConsume> Consumes { get; init; }
     public DbSet<TimingOrderConsume> TimingConsumes { get; init; }
 
-    public DbSet<Client> Clients { get; init; }
+    public DbSet<Customer> Customers { get; init; }
     public DbSet<Employee> Employees { get; init; }
     public DbSet<User> Users { get; init; }
 
@@ -36,8 +36,8 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
         configurationBuilder.Properties<EmployeeId>()
             .HaveConversion<EmployeeId_String_Converter>();
         // 客户
-        configurationBuilder.Properties<ClientId>()
-            .HaveConversion<ClientId_String_Converter>();
+        configurationBuilder.Properties<CustomertId>()
+            .HaveConversion<CustomerId_String_Converter>();
         // 订单
         configurationBuilder.Properties<OrderId>()
             .HaveConversion<OrderId_String_Converter>();

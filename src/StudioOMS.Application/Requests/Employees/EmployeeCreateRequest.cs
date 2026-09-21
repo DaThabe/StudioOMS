@@ -29,11 +29,11 @@ public sealed class EmployeeCreateRequest : IRequest<EmployeeId>
         public async ValueTask<EmployeeId> HandleAsync(EmployeeCreateRequest request,
             CancellationToken cancellationToken = default)
         {
-            var employee = Employee.Create(request.Roles);
-            employee.Rename(request.Name);
-            await employeeRepository.SaveAsync(employee, cancellationToken);
+            var entity = Employee.Create(request.Roles);
+            entity.Rename(request.Name);
+            await employeeRepository.SaveAsync(entity, cancellationToken);
 
-            return employee.Id;
+            return entity.Id;
         }
     }
 }

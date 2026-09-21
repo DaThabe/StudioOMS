@@ -41,8 +41,8 @@ Authorization: Bearer {{login.response.body.$.}}
 
 
 ### 创建客户
-# @name client
-POST {{host}}/api/clients
+# @name customer
+POST {{host}}/api/customers
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.}}
 {
@@ -56,7 +56,7 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.}}
 {
   "title": "测试订单",
-  "clientId": {{client.response.body.*}},
+  "customerId": {{customer.response.body.*}},
   "salespersonId": {{salesperson.response.body.*}},
   "totalDays": 20
 }

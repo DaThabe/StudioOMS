@@ -42,10 +42,10 @@ public sealed class UserCreateRequest : IRequest<UserId>
         {
             var passwordHash = await passwordHasher.HashAsync(request.Password, cancellationToken);
 
-            var user = User.Create(request.Username, passwordHash, request.EmployeeId);
-            await userRepository.SaveAsync(user, cancellationToken);
+            var entity = User.Create(request.Username, passwordHash, request.EmployeeId);
+            await userRepository.SaveAsync(entity, cancellationToken);
 
-            return user.Id;
+            return entity.Id;
         }
     }
 }

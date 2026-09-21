@@ -21,7 +21,7 @@ internal sealed class OrderQuery(AppDbContext appDbContext) : IOrderQuery
 
         var orderListItemQuery =
             from order in orderQuery
-            join client in appDbContext.Clients on order.ClientId equals client.Id
+            join customer in appDbContext.Customers on order.CustomerId equals customer.Id
             select new OrderListItem
             {
                 Id = order.Id.ToString(),
@@ -29,8 +29,8 @@ internal sealed class OrderQuery(AppDbContext appDbContext) : IOrderQuery
                 State = order.State.ToString(),
                 CreateAt = order.CreateAt,
 
-                ClientId = order.ClientId.ToString(),
-                ClientName = client.Name,
+                CustomerId = order.CustomerId.ToString(),
+                CustomerName = customer.Name,
             };
 
         var items = await orderListItemQuery.ToArrayAsync(cancellationToken: cancellationToken);

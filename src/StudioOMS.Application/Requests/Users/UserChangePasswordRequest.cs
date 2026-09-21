@@ -36,20 +36,20 @@ public sealed class UserChangePasswordRequest : IRequest
         {
             var currentUserId = currentSession.Info?.UserId ??
                 throw new InvalidOperationException("未登录");
-            var user = await userRepository.FindByIdAsync(currentUserId, cancellationToken)
+            var entity = await userRepository.FindByIdAsync(currentUserId, cancellationToken)
                 ?? throw new InvalidOperationException($"用户 {currentUserId} 不存在");
 
             // 检验旧密码
-            var pass = await passwordHasher.VerifyAsync(request.CurrentPassword, user.PasswordHash, cancellationToken);
+            var pass = await passwordHasher.VerifyAsync(request.CurrentPassword, entity.PasswordHash, cancellationToken);
             if (!pass) throw new InvalidOperationException("旧密码不匹配");
 
             // 创建新密码
             var newHashedPwd = await passwordHasher.HashAsync(request.NewPassword, cancellationToken);
-            user.ChangePassword(newHashedPwd);
-            await userRepository.SaveAsync(user, cancellationToken);
+            entity.ChangePassword(newHashedPwd);
+            await userRepository.SaveAsync(entity, cancellationToken);
 
             // 删除会话信息
-            await sessionService.RemoveByUserIdAsync(user.Id, cancellationToken);
+            await sessionService.RemoveByUserIdAsync(entity.Id, cancellationToken);
         }
     }
 }

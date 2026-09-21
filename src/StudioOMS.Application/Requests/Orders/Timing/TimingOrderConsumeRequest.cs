@@ -34,16 +34,16 @@ public record TimingOrderConsumeRequest : IRequest
         public async ValueTask HandleAsync(TimingOrderConsumeRequest request,
             CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
+            var entity = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");
 
-            if (order is not TimingOrder timingOrder)
-                throw new InvalidOperationException($"订单 {order.Id} 无法扣除天数");
+            if (entity is not TimingOrder timingOrder)
+                throw new InvalidOperationException($"订单 {entity.Id} 无法扣除天数");
 
             var consume = TimingOrderConsume.CreateNow(request.EmployeeId, request.ConsuemDays);
             timingOrder.Consume(consume);
 
-            await orderRepository.SaveAsync(order, cancellationToken);
+            await orderRepository.SaveAsync(entity, cancellationToken);
         }
     }
 }

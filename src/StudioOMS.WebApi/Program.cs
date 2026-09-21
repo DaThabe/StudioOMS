@@ -48,7 +48,7 @@ if (app.Environment.IsDevelopment())
 app.MapLoginEndpoints()
    .MapUserEndpoints()
    .MapEmployeeEndpoints()
-   .MapClientEndpoints()
+   .MapCustomerEndpoints()
    .MapOrderEndpoints();
 app.UseMiddleware<CurrentSessionMiddleware>();
 

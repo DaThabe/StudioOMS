@@ -1,8 +1,8 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Requests;
-using StudioOMS.Requests.Clients;
+using StudioOMS.Requests.Customers;
 using StudioOMS.Requests.Employees;
 using StudioOMS.Requests.Login;
 using StudioOMS.Requests.Orders;
@@ -31,8 +31,8 @@ public static class DependencyInjectionExtensions
             // Employee
             services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest, EmployeeId>();
 
-            // Client
-            services.AddRequestHandler<ClientCreateRequest.Handler, ClientCreateRequest, ClientId>();
+            // Customer
+            services.AddRequestHandler<CustomerCreateRequest.Handler, CustomerCreateRequest, CustomertId>();
 
             // Order
             services.AddRequestHandler<OrderAssignEmployeeRequest.Handler, OrderAssignEmployeeRequest>();

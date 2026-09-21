@@ -1,4 +1,4 @@
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
@@ -23,8 +23,8 @@ namespace StudioOMS.Serializer;
 /******************** Employee ********************/
 [JsonSerializable(typeof(EmployeeCreateDto))]
 
-/******************** Client ********************/
-[JsonSerializable(typeof(ClientCreateDto))]
+/******************** Customer ********************/
+[JsonSerializable(typeof(CustomerCreateDto))]
 
 /******************** Order ********************/
 [JsonSerializable(typeof(OrderAssignEmployeeDto))]

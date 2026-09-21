@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Users;
@@ -26,11 +26,11 @@ internal sealed class EmployeeId_String_Converter : ValueConverter<EmployeeId, s
 }
 
 
-internal sealed class ClientId_String_Converter : ValueConverter<ClientId, string>
+internal sealed class CustomerId_String_Converter : ValueConverter<CustomertId, string>
 {
-    public ClientId_String_Converter() : base(
+    public CustomerId_String_Converter() : base(
         id => id.ToString(),
-        value => ClientId.Parse(value))
+        value => CustomertId.Parse(value))
     { }
 }
 

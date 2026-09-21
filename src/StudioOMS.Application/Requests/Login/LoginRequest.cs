@@ -29,13 +29,13 @@ public sealed class LoginRequest : IRequest<SessionToken>
         public async ValueTask<SessionToken> HandleAsync(LoginRequest request,
             CancellationToken cancellationToken = default)
         {
-            var user = await userRepository.FindByUsername(request.Username, cancellationToken)
+            var entity = await userRepository.FindByUsername(request.Username, cancellationToken)
                 ?? throw new InvalidOperationException($"用户名或密码错误");
 
-            var pass = await passwordHasher.VerifyAsync(request.Password, user.PasswordHash, cancellationToken);
+            var pass = await passwordHasher.VerifyAsync(request.Password, entity.PasswordHash, cancellationToken);
             if (!pass) throw new InvalidOperationException($"用户名或密码错误");
 
-            return await sessionService.CreateAsync(user.Id, user.EmployeeId, cancellationToken);
+            return await sessionService.CreateAsync(entity.Id, entity.EmployeeId, cancellationToken);
         }
     }
 }

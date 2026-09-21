@@ -71,8 +71,8 @@ internal sealed class PermissionChecker(IEmployeeRepository employeeRepository) 
         [
             PermissionType.OrderRead,
             PermissionType.OrderCreate,
-            PermissionType.ClientRead,
-            PermissionType.ClientCreate
+            PermissionType.CustomerRead,
+            PermissionType.CustomerCreate
         ],
 
         // 设计主管

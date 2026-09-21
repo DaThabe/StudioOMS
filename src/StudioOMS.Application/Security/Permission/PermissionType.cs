@@ -12,9 +12,9 @@ public enum PermissionType
 
 
     // 客户
-    ClientRead,
-    ClientCreate,
-    ClientManage,
+    CustomerRead,
+    CustomerCreate,
+    CustomerManage,
 
 
     // 员工

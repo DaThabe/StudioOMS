@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Requests;
-using StudioOMS.Requests.Clients;
+using StudioOMS.Requests.Customers;
 using StudioOMS.Requests.Employees;
 using StudioOMS.Requests.Login;
 using StudioOMS.Requests.Orders;
@@ -75,16 +75,16 @@ var salespersonEmployeeCreateRequest = new EmployeeCreateRequest()
 var salespersonId = await sender.SendAsync<EmployeeCreateRequest, EmployeeId>(salespersonEmployeeCreateRequest);
 
 // 创建客户
-var clientCreateRequest = new ClientCreateRequest()
+var customerCreateRequest = new CustomerCreateRequest()
 {
     Name = "测试客户名称"
 };
-var clientId = await sender.SendAsync<ClientCreateRequest, ClientId>(clientCreateRequest);
+var customerId = await sender.SendAsync<CustomerCreateRequest, CustomertId>(customerCreateRequest);
 
 // 创建订单
 var timingOrderCreateRequest = new TimingOrderCreateRequest()
 {
-    ClientId = clientId,
+    CustomerId = customerId,
     SalespersonId = salespersonId,
     TotalDays = 30,
     Title = "30天包月设计服务"

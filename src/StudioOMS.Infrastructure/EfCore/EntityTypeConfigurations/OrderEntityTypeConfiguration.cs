@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StudioOMS.Clients;
+using StudioOMS.Customers;
 using StudioOMS.EfCore.ValueComparers;
 using StudioOMS.EfCore.ValueConverters;
 using StudioOMS.Employees;
@@ -21,10 +21,10 @@ internal sealed class OrderEntityTypeConfiguration :
 
         // Id
         builder.HasKey(x => x.Id);
-        // ClientId
-        builder.HasOne<Client>()
+        // CustomerId
+        builder.HasOne<Customer>()
             .WithMany()
-            .HasForeignKey(x => x.ClientId)
+            .HasForeignKey(x => x.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
         // SalespersonId
         builder.HasOne<Employee>()

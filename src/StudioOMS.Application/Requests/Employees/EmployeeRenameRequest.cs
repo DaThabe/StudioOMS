@@ -1,6 +1,6 @@
-﻿using StudioOMS.Clients;
+﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
-using StudioOMS.Requests.Clients;
+using StudioOMS.Requests.Customers;
 using StudioOMS.Security.Permission;
 
 namespace StudioOMS.Requests.Employees;
@@ -12,7 +12,7 @@ public sealed class EmployeeRenameRequest : IRequest
     public required string Name { get; init; }
 
 
-    public static ClientRenameRequest FromDto(Guid employeeId, EmployeeRenameDto dto)
+    public static CustomerRenameRequest FromDto(Guid employeeId, EmployeeRenameDto dto)
     {
         return new()
         {

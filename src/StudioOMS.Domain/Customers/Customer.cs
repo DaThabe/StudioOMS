@@ -1,7 +1,7 @@
-﻿namespace StudioOMS.Clients;
+﻿namespace StudioOMS.Customers;
 
 
-public sealed class Client : Entity<ClientId>
+public sealed class Customer : Entity<CustomertId>
 {
     public string Name { get; private set; } = "未命名客户";
 
@@ -21,18 +21,18 @@ public sealed class Client : Entity<ClientId>
 
 
 
-    internal Client() { }
-    public static Client Create(ClientId clientId)
+    internal Customer() { }
+    public static Customer Create(CustomertId customerId)
     {
-        if (clientId == ClientId.Empty)
-            throw new ArgumentException("客户 Id 不可为空", nameof(clientId));
+        if (customerId == CustomertId.Empty)
+            throw new ArgumentException("客户 Id 不可为空", nameof(customerId));
 
 
         return new()
         {
-            Id = clientId
+            Id = customerId
         };
     }
-    public static Client Create() =>
-        Create(ClientId.Create());
+    public static Customer Create() =>
+        Create(CustomertId.Create());
 }
