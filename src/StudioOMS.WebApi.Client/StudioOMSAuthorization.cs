@@ -1,4 +1,5 @@
 ﻿using StudioOMS.Extensions;
+using StudioOMS.Login;
 using StudioOMS.Serializer;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -45,69 +46,4 @@ public sealed record class StudioOMSAuthorization : IEquatable<StudioOMSAuthoriz
             Param = param.Trim()
         };
     }
-}
-
-
-public interface IHttpClient
-{
-    ValueTask<TResponse> PostJsonAsync<TPostData, TResponse>(
-        string url,
-        TPostData postData,
-        JsonTypeInfo<TPostData> requestJsonTypeInfo,
-        JsonTypeInfo<TResponse> responseJsonTypeInfo,
-        CancellationToken cancellationToken = default);
-}
-
-
-
-public sealed class AuthorizationStudioOMSClient : IHttpClient
-{
-    private AuthenticationHeaderValue _authorization;
-    private AuthorizationStudioOMSClient(StudioOMSAuthorization authorization) =>
-        _authorization = new(authorization.Scheme, authorization.Param);
-
-
-
-
-    public async ValueTask<TResponse?> PostJsonAsync<TPostData, TResponse>(string url, TPostData postData, JsonTypeInfo<TPostData> postDataJsonTypeInfo, JsonTypeInfo<TResponse> responseJsonTypeInfo, CancellationToken cancellationToken = default)
-    {
-        IStudioOMSClient clien;
-
-
-        var requestMessage = RequestJsonContentMessage(HttpMethod.Post, url, postData, postDataJsonTypeInfo);
-        return await requestMessage.Content?.ReadFromJsonAsync(responseJsonTypeInfo, cancellationToken);
-
-    }
-
-    private HttpRequestMessage RequestJsonContentMessage<TContent>(HttpMethod method, string url, TContent content, JsonTypeInfo<TContent> contentJsonTypeInfo)
-    {
-        var request = new HttpRequestMessage(method, url);
-        request.Headers.Authorization = _authorization;
-        request.Content = JsonContent.Create(content, contentJsonTypeInfo);
-
-        return request;
-    }
-
-
-
-    public static AuthorizationStudioOMSClient WithAuthorization(StudioOMSAuthorization authorization)
-    {
-        return new AuthorizationStudioOMSClient(authorization);
-    }
-
-    public static async ValueTask<AuthorizationStudioOMSClient> LoginAsync(ServiceUrl serviceUrl, LoginDto dto, CancellationToken cancellationToken = default)
-    {
-        var loginResult = await _sharedHttpClient.PostJsonAsync(
-            serviceUrl.UserLoginPath,
-            dto,
-            AppJsonSerializerContext.Default.LoginDto,
-            AppJsonSerializerContext.Default.LoginResult,
-            cancellationToken);
-
-        var authorization = StudioOMSAuthorization.Create("Bearer", loginResult.Token);
-        return WithAuthorization(authorization);
-    }
-
-
-    private static readonly HttpClient _sharedHttpClient = new();
 }

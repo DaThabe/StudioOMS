@@ -1,7 +1,8 @@
 using StudioOMS.Customers;
 using StudioOMS.Employees;
+using StudioOMS.Login;
+using StudioOMS.Me;
 using StudioOMS.Orders;
-using StudioOMS.Orders.Timing;
 using StudioOMS.Serializer.Converters;
 using StudioOMS.Users;
 using System.Text.Json.Serialization;
@@ -15,10 +16,16 @@ namespace StudioOMS.Serializer;
         typeof(DateTimeOffsetConverter)
     ]
 )]
-/******************** User ********************/
-[JsonSerializable(typeof(UserCreateDto))]
+
+
+/******************** Login ********************/
 [JsonSerializable(typeof(LoginDto))]
 [JsonSerializable(typeof(LoginResult))]
+
+/******************** User ********************/
+[JsonSerializable(typeof(UserCreateDto))]
+[JsonSerializable(typeof(UserCreateResult))]
+[JsonSerializable(typeof(ChangePasswordDto))]
 
 /******************** Employee ********************/
 [JsonSerializable(typeof(EmployeeCreateDto))]

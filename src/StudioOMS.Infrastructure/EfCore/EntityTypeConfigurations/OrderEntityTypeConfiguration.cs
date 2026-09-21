@@ -6,7 +6,6 @@ using StudioOMS.EfCore.ValueConverters;
 using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
-using StudioOMS.Requests.Orders;
 
 namespace StudioOMS.EfCore.EntityTypeConfigurations;
 

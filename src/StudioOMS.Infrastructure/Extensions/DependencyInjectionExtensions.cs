@@ -3,11 +3,10 @@ using StudioOMS;
 using StudioOMS.Customers;
 using StudioOMS.EfCore;
 using StudioOMS.Employees;
+using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Queries;
 using StudioOMS.Repositories;
-using StudioOMS.Requests;
-using StudioOMS.Requests.Orders;
 using StudioOMS.Security;
 using StudioOMS.Security.Permission;
 using StudioOMS.Security.Session;
@@ -67,7 +66,7 @@ public static class DependencyInjectionExtensions
 
         public IServiceCollection AddMessaging()
         {
-            services.AddScoped<ISender, Sender>();
+            services.AddScoped<ISender, MessageSender>();
             services.AddScoped<ICurrentSession, CurrentSession>();
             return services;
         }

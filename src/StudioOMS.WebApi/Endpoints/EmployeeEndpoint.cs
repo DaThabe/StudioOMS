@@ -1,6 +1,5 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Requests;
-using StudioOMS.Requests.Employees;
+using StudioOMS.Messaging;
 
 namespace StudioOMS.Endpoints;
 

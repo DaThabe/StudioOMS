@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudioOMS.EfCore;
 using StudioOMS.Orders;
-using StudioOMS.Requests.Orders;
 
 namespace StudioOMS.Queries;
 

@@ -1,13 +1,10 @@
 ﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
+using StudioOMS.Login;
+using StudioOMS.Me;
+using StudioOMS.Messaging;
 using StudioOMS.Orders;
-using StudioOMS.Requests;
-using StudioOMS.Requests.Customers;
-using StudioOMS.Requests.Employees;
-using StudioOMS.Requests.Login;
-using StudioOMS.Requests.Orders;
-using StudioOMS.Requests.Orders.Timing;
-using StudioOMS.Requests.Users;
+using StudioOMS.Orders.Timing;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
 
@@ -26,7 +23,7 @@ public static class DependencyInjectionExtensions
             // User
             services.AddRequestHandler<UserCreateRequest.Handler, UserCreateRequest, UserId>();
             services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
-            services.AddRequestHandler<UserChangePasswordRequest.Handler, UserChangePasswordRequest>();
+            services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
 
             // Employee
             services.AddRequestHandler<EmployeeCreateRequest.Handler, EmployeeCreateRequest, EmployeeId>();

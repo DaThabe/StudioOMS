@@ -1,8 +1,6 @@
-﻿using StudioOMS.Orders;
+﻿using StudioOMS.Messaging;
+using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
-using StudioOMS.Requests;
-using StudioOMS.Requests.Orders;
-using StudioOMS.Requests.Orders.Timing;
 
 namespace StudioOMS.Endpoints;
 

@@ -1,6 +1,5 @@
-﻿using StudioOMS.Requests;
-using StudioOMS.Requests.Login;
-using StudioOMS.Requests.Users;
+﻿using StudioOMS.Me;
+using StudioOMS.Messaging;
 using StudioOMS.Security.Session;
 using StudioOMS.Users;
 
@@ -30,12 +29,12 @@ public static class UserEndpoint
         return Results.Ok(id.ToString());
     }
 
-    private static async Task<IResult> ChangePasswordAsync(UserChangePasswordDto dto,
+    private static async Task<IResult> ChangePasswordAsync(ChangePasswordDto dto,
         ISender sender,
         ICurrentSession currentUser,
         CancellationToken ct)
     {
-        await sender.SendAsync(UserChangePasswordRequest.FromDto(dto), ct);
+        await sender.SendAsync(ChangePasswordRequest.FromDto(dto), ct);
         return Results.Ok();
     }
 }

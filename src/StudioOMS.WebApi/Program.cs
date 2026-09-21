@@ -46,6 +46,7 @@ if (app.Environment.IsDevelopment())
 
 // Api
 app.MapLoginEndpoints()
+   .MapMeEndpoints()
    .MapUserEndpoints()
    .MapEmployeeEndpoints()
    .MapCustomerEndpoints()

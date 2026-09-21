@@ -1,4 +1,6 @@
-﻿namespace StudioOMS;
+﻿using StudioOMS.Login;
+
+namespace StudioOMS;
 
 
 public interface IStudioOMSClient
