@@ -52,14 +52,29 @@ public static class OrderMapper
         Id = OrderId.From(orderId),
         EmployeeId = EmployeeId.Parse(dto.EmployeeId)
     };
-    public static OrderMarkServicingRequest ToOrderMarkServicingRequest(this string orderId) => new()
-    {
-        OrderId = OrderId.Parse(orderId)
-    };
     public static OrderCreateResult ToOrderCreateResult(this OrderId id) => new()
     {
         OrderId = id.ToString()
     };
+
+    public static OrderMarkServicingRequest ToOrderMarkServicingRequest(this string orderId) => new()
+    {
+        OrderId = OrderId.Parse(orderId)
+    };
+    public static OrderMarkPausedRequest ToOrderMarkPausedRequest(this string orderId) => new()
+    {
+        OrderId = OrderId.Parse(orderId)
+    };
+    public static OrderMarkCancelledRequest ToOrderMarkCancelledRequest(this string orderId) => new()
+    {
+        OrderId = OrderId.Parse(orderId)
+    };
+    public static OrderMarkTerminatedRequest ToOrderMarkTerminatedRequest(this string orderId) => new()
+    {
+        OrderId = OrderId.Parse(orderId)
+    };
+
+
 
 
     public static TimingOrderCreateRequest ToRequest(this TimingOrderCreateDto dto) => new()

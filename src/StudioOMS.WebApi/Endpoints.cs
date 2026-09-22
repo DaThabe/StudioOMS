@@ -39,12 +39,24 @@ internal static class Endpoints
         employeeGroup.MapPost("/", EmployeeEndpoint.CreateAsync);
         // POST 👉 api/customers
         customerGroup.MapPost("/", CustomerEndpoint.CreateAsync);
+
+
         // GET  👉 api/orders/
         orderGroup.MapGet("/", OrderEndpoint.GetListAsync);
         // POST 👉 api/orders/assign
         orderIdGroup.MapPost("/assign", OrderEndpoint.AssignEmployeeAsync);
+
+
         // POST 👉 api/order/{id}/servicing
         orderIdGroup.MapPost("/servicing", OrderEndpoint.MarkServicingAsync);
+        // POST 👉 api/order/{id}/servicing
+        orderIdGroup.MapPost("/paused", OrderEndpoint.MarkPausedAsync);
+        // POST 👉 api/order/{id}/servicing
+        orderIdGroup.MapPost("/cancelled", OrderEndpoint.MarkCancelledAsync);
+        // POST 👉 api/order/{id}/servicing
+        orderIdGroup.MapPost("/terminated", OrderEndpoint.MarkTerminatedAsync);
+
+
         // POST 👉 api/order/{id}/consume-timing
         orderIdGroup.MapPost("/consume-timing", TimingOrderEndpoint.ConsumeAsync);
     }

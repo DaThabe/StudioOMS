@@ -10,24 +10,27 @@ public interface IOrderClient
 {
     Task AssignEmployeeAsync(Guid orderId, OrderAssignEmployeeDto dto, CancellationToken cancellationToken = default);
     Task<OrderListResult?> ListAsync(OrderListDto dto, CancellationToken cancellationToken = default);
+
+
+    Task MarkServicingAsync(Guid orderId, CancellationToken cancellationToken = default);
+    Task MarkPausedAsync(Guid orderId, CancellationToken cancellationToken = default);
+    Task MarkCancelledAsync(Guid orderId, CancellationToken cancellationToken = default);
+    Task MarkTerminatedAsync(Guid orderId, CancellationToken cancellationToken = default);
+
+
+
+    Task<OrderCreateResult?> CreateTimingAsync(TimingOrderCreateDto dto, CancellationToken cancellationToken = default);
+    Task ConsumeTimingAsync(Guid orderId, TimingOrderConsumeDto dto, CancellationToken cancellationToken = default);
 }
 
-public interface ITimingOrderClient : IOrderClient
+internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<HttpRequestMessage>? messageOptionsAction = null) : IOrderClient
 {
-    Task<OrderCreateResult?> CreateAsync(TimingOrderCreateDto dto, CancellationToken cancellationToken = default);
-    Task ConsumeAsync(Guid orderId, TimingOrderConsumeDto dto, CancellationToken cancellationToken = default);
-}
-
-
-internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<HttpRequestMessage>? messageOptionsAction = null) : IOrderClient, ITimingOrderClient
-{
-    public async Task AssignEmployeeAsync(Guid orderId, OrderAssignEmployeeDto dto, CancellationToken cancellationToken = default)
+    public Task AssignEmployeeAsync(Guid orderId, OrderAssignEmployeeDto dto, CancellationToken cancellationToken = default)
     {
         var request = HttpRequestMessage.PutJson(routes.Assign(orderId), dto, DtoJsonSerializerContext.Default.OrderAssignEmployeeDto);
         messageOptionsAction?.Invoke(request);
 
-        var response = await client.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
     }
     public async Task<OrderListResult?> ListAsync(OrderListDto dto, CancellationToken cancellationToken = default)
     {
@@ -39,19 +42,56 @@ internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<
 
 
 
-    async Task<OrderCreateResult?> ITimingOrderClient.CreateAsync(TimingOrderCreateDto dto, CancellationToken cancellationToken)
+
+    public Task MarkServicingAsync(Guid orderId, CancellationToken cancellationToken = default)
+    {
+        var request = HttpRequestMessage.Post(routes.MarServicing(orderId));
+        messageOptionsAction?.Invoke(request);
+
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
+    }
+
+    public Task MarkPausedAsync(Guid orderId, CancellationToken cancellationToken = default)
+    {
+        var request = HttpRequestMessage.Post(routes.MarkPaused(orderId));
+        messageOptionsAction?.Invoke(request);
+
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
+    }
+
+    public Task MarkCancelledAsync(Guid orderId, CancellationToken cancellationToken = default)
+    {
+        var request = HttpRequestMessage.Post(routes.MarkCancelle(orderId));
+        messageOptionsAction?.Invoke(request);
+
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
+    }
+
+    public Task MarkTerminatedAsync(Guid orderId, CancellationToken cancellationToken = default)
+    {
+        var request = HttpRequestMessage.Post(routes.MarkTerminated(orderId));
+        messageOptionsAction?.Invoke(request);
+
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
+    }
+
+
+
+
+
+
+    public async Task<OrderCreateResult?> CreateTimingAsync(TimingOrderCreateDto dto, CancellationToken cancellationToken)
     {
         var request = HttpRequestMessage.PostJson(routes.CreateTiming, dto, DtoJsonSerializerContext.Default.TimingOrderCreateDto);
         messageOptionsAction?.Invoke(request);
 
         return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.OrderCreateResult, cancellationToken);
     }
-    async Task ITimingOrderClient.ConsumeAsync(Guid orderId, TimingOrderConsumeDto dto, CancellationToken cancellationToken)
+    public Task ConsumeTimingAsync(Guid orderId, TimingOrderConsumeDto dto, CancellationToken cancellationToken)
     {
         var request = HttpRequestMessage.PostJson(routes.ConsumeTiming(orderId), dto, DtoJsonSerializerContext.Default.TimingOrderConsumeDto);
         messageOptionsAction?.Invoke(request);
 
-        var response = await client.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        return client.SendEnsureSuccessAsync(request, cancellationToken);
     }
 }

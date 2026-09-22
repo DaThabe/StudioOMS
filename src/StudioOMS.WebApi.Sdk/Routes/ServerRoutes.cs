@@ -59,16 +59,30 @@ internal sealed class OrderRoutes(Uri baseUrl)
         .AddQuery(nameof(dto.Types), dto.Types)
         .ToString();
 
-
-    public string CreateTiming { get; } = new UrlBuilder(baseUrl)
-       .AddPaths("api", "orders", "timing")
-       .ToString();
-
     public string Assign(Guid orderId) => new UrlBuilder(baseUrl)
         .AddPaths("api", "orders", orderId.ToString(), "assign")
         .ToString();
 
+    public string MarServicing(Guid orderId) => new UrlBuilder(baseUrl)
+        .AddPaths("api", "orders", orderId.ToString(), "servicing")
+        .ToString();
+    public string MarkPaused(Guid orderId) => new UrlBuilder(baseUrl)
+        .AddPaths("api", "orders", orderId.ToString(), "paused")
+        .ToString();
+    public string MarkCancelle(Guid orderId) => new UrlBuilder(baseUrl)
+        .AddPaths("api", "orders", orderId.ToString(), "cancelled")
+        .ToString();
+    public string MarkTerminated(Guid orderId) => new UrlBuilder(baseUrl)
+        .AddPaths("api", "orders", orderId.ToString(), "terminated")
+        .ToString();
+
+
+
     public string ConsumeTiming(Guid orderId) => new UrlBuilder(baseUrl)
         .AddPaths("api", "orders", orderId.ToString(), "consume-timing")
         .ToString();
+
+    public string CreateTiming { get; } = new UrlBuilder(baseUrl)
+       .AddPaths("api", "orders", "timing")
+       .ToString();
 }

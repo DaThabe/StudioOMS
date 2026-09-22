@@ -21,6 +21,29 @@ public static class OrderEndpoint
         await sender.SendAsync(id.ToOrderMarkServicingRequest(), ct);
         return Results.Ok();
     }
+    public static async Task<IResult> MarkPausedAsync(string id,
+        ISender sender,
+        CancellationToken ct)
+    {
+        await sender.SendAsync(id.ToOrderMarkPausedRequest(), ct);
+        return Results.Ok();
+    }
+    public static async Task<IResult> MarkCancelledAsync(string id,
+        ISender sender,
+        CancellationToken ct)
+    {
+        await sender.SendAsync(id.ToOrderMarkCancelledRequest(), ct);
+        return Results.Ok();
+    }
+    public static async Task<IResult> MarkTerminatedAsync(string id,
+        ISender sender,
+        CancellationToken ct)
+    {
+        await sender.SendAsync(id.ToOrderMarkTerminatedRequest(), ct);
+        return Results.Ok();
+    }
+
+
 
     public static async Task<IResult> GetListAsync([AsParameters] OrderListDto dto,
         ISender sender,
