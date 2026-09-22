@@ -83,8 +83,6 @@ else
 
         try
         {
-            var client = Session.GetRequiredClient();
-
             var dto = new OrderListDto
             {
                 Skip = skip,
@@ -92,7 +90,7 @@ else
                 Types = string.Empty
             };
 
-            result = await client.Order.ListAsync(dto);
+            result = await Session.Client.Order.ListAsync(dto);
         }
         catch (Exception ex)
         {

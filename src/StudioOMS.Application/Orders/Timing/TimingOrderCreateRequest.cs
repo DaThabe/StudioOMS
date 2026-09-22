@@ -1,7 +1,7 @@
 ﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 using StudioOMS.Messaging;
-using StudioOMS.Security.Permission;
+using StudioOMS.Permission;
 
 namespace StudioOMS.Orders.Timing;
 

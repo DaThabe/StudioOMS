@@ -1,7 +1,7 @@
 ﻿namespace StudioOMS.Me;
 
 
-public readonly record struct InfoResult
+public readonly record struct MeInfoResult
 {
     public required string Id { get; init; }
     public required string Username { get; init; }

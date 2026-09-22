@@ -4,7 +4,7 @@ using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
-using StudioOMS.Security.Session;
+using StudioOMS.Session;
 using StudioOMS.Users;
 using System.Diagnostics.CodeAnalysis;
 
@@ -22,7 +22,7 @@ public static class DependencyInjectionExtensions
         {
             // Me
             services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
-            services.AddRequestHandler<MineInfoRequest.Handler, MineInfoRequest, MineInfoResponse>();
+            services.AddRequestHandler<MineInfoRequest.Handler, MineInfoRequest, MeInfoResponse>();
             services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
 
             // User

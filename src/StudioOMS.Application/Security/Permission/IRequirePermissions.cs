@@ -1,2 +1,0 @@
-﻿namespace StudioOMS.Security.Permission;
-

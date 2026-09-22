@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Users;
 
-namespace StudioOMS.Security;
+namespace StudioOMS;
 
 
 internal sealed class PasswordHasher : IPasswordHasher

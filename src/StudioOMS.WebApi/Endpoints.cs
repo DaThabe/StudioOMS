@@ -2,6 +2,7 @@
 using StudioOMS.Employees;
 using StudioOMS.Me;
 using StudioOMS.Orders;
+using StudioOMS.Session;
 using StudioOMS.Users;
 
 namespace StudioOMS;

@@ -1,7 +1,7 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Security.Permission;
+using StudioOMS.Permission;
 
-namespace StudioOMS.Security;
+namespace StudioOMS;
 
 
 internal sealed class PermissionChecker(IEmployeeRepository employeeRepository) : IPermissionChecker

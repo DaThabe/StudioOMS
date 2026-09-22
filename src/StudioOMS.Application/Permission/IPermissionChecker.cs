@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Employees;
 
-namespace StudioOMS.Security.Permission;
+namespace StudioOMS.Permission;
 
 
 public interface IPermissionChecker

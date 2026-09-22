@@ -22,7 +22,7 @@ namespace StudioOMS.Serializer;
 [JsonSerializable(typeof(LoginResult))]
 [JsonSerializable(typeof(ChangePasswordDto))]
 
-[JsonSerializable(typeof(InfoResult))]
+[JsonSerializable(typeof(MeInfoResult))]
 
 /******************** User ********************/
 [JsonSerializable(typeof(UserCreateDto))]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using StudioOMS;
 using StudioOMS.Customers;
 using StudioOMS.EfCore;
@@ -6,11 +7,11 @@ using StudioOMS.Employees;
 using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Orders;
+using StudioOMS.Permission;
 using StudioOMS.Queries;
 using StudioOMS.Repositories;
 using StudioOMS.Security;
-using StudioOMS.Security.Permission;
-using StudioOMS.Security.Session;
+using StudioOMS.Session;
 using StudioOMS.Users;
 using System.Diagnostics.CodeAnalysis;
 
@@ -33,7 +34,8 @@ public static class DependencyInjectionExtensions
                 .AddRepositories()
                 .AddQueries()
                 .AddMessaging()
-                .AddSecurity();
+                .AddSecurity()
+                .AddSession();
         }
 
 
@@ -69,15 +71,29 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddMessaging()
         {
             services.AddScoped<ISender, MessageSender>();
-            services.AddScoped<ICurrentSession, CurrentSession>();
             return services;
         }
 
         public IServiceCollection AddSecurity()
         {
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
-            services.AddSingleton<ISessionService, SessionService>();
             services.AddScoped<IPermissionChecker, PermissionChecker>();
+            return services;
+        }
+
+        public IServiceCollection AddSession()
+        {
+            // Options
+            services.AddOptions<SessionOptions>()
+               .Configure<IConfiguration>((opts, conf) =>
+                  conf.GetSection(SessionOptions.SelectionPath).Bind(opts));
+            // Time
+            services.AddSingleton(TimeProvider.System);
+
+            services.AddScoped<ISessionManager, SessionManager>();
+            services.AddSingleton<ISessionInfoRepository, SessionInfoRepository>();
+            
+            services.AddSingleton<ICurrentSession, CurrentSession>();
 
             return services;
         }

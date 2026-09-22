@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Users;
 
-namespace StudioOMS.Security;
+namespace StudioOMS;
 
 
 public interface IPasswordHasher

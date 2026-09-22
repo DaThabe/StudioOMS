@@ -1,5 +1,5 @@
 ﻿using StudioOMS.Messaging;
-using StudioOMS.Security.Permission;
+using StudioOMS.Permission;
 
 namespace StudioOMS.Customers;
 

@@ -8,13 +8,13 @@ namespace StudioOMS.Queries;
 
 internal sealed class MineInfoQuery(AppDbContext appDbContext) : IMineInfoQuery
 {
-    public async ValueTask<MineInfoResponse?> QueryAsync(UserId id, CancellationToken cancellationToken = default)
+    public async ValueTask<MeInfoResponse?> QueryAsync(UserId id, CancellationToken cancellationToken = default)
     {
         var infoResponsesQuery =
             from user in appDbContext.Users.AsNoTracking()
             where user.Id == id
             join employee in appDbContext.Employees on user.EmployeeId equals employee.Id
-            select new MineInfoResponse()
+            select new MeInfoResponse()
             {
                 Id = user.Id,
                 Username = user.Username,

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using StudioOMS;
-using StudioOMS.Me;
 using StudioOMS.Serializer;
 using StudioOMS.Serializer.Converters;
+using StudioOMS.Session;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 

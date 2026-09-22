@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace StudioOMS.Security.Session;
+namespace StudioOMS.Session;
 
 
 public sealed record class SessionToken

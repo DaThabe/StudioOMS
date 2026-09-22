@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StudioOMS.Exceptions;
 using StudioOMS.Messaging;
-using StudioOMS.Security.Permission;
-using StudioOMS.Security.Session;
+using StudioOMS.Permission;
+using StudioOMS.Session;
 
 namespace StudioOMS;
 
@@ -36,14 +36,13 @@ internal sealed class MessageSender(IServiceProvider services, ICurrentSession c
         if (handler is IAuthentication)
         {
             // 检查认证
-            var currentEmployeeId = currentSession.Info?.EmployeeId;
-            NotAuthenticatedException.ThrowIf(currentEmployeeId is null);
+            NotAuthenticatedException.ThrowIf(!currentSession.IsAuthenticated);
 
             // 需要授权
             if (handler is IAuthorization authorization)
             {
                 // 检查授权
-                var pass = await permissionChecker.HasAllPermissionsAsync(currentEmployeeId!, authorization.RequiredPermissions);
+                var pass = await permissionChecker.HasAllPermissionsAsync(currentSession.EmployeeId!, authorization.RequiredPermissions);
                 ForbiddenException.ThrowIf(!pass);
             }
 

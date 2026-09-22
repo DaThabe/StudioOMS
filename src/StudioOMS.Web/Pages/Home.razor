@@ -26,9 +26,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var client = Session.GetRequiredClient();
-        var info = await client.Me.GetInfoAsync();
-
+        var info = await Session.Client.Me.GetInfoAsync();
         employeeName = info.EmployeeName;
     }
 }

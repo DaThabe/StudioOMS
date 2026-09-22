@@ -8,18 +8,18 @@ namespace StudioOMS.Clients;
 
 public interface IMeClient
 {
-    Task<InfoResult> GetInfoAsync(CancellationToken cancellationToken = default);
+    Task<MeInfoResult> GetInfoAsync(CancellationToken cancellationToken = default);
     Task ChangePasswordAsync(ChangePasswordDto dto, CancellationToken cancellationToken = default);
 }
 
 internal sealed class MeClient(MeRoutes routes, HttpClient client, Action<HttpRequestMessage>? messageOptionsAction = null) : IMeClient
 {
-    public Task<InfoResult> GetInfoAsync(CancellationToken cancellationToken = default)
+    public Task<MeInfoResult> GetInfoAsync(CancellationToken cancellationToken = default)
     {
         var request = HttpRequestMessage.Get(routes.Info);
         messageOptionsAction?.Invoke(request);
 
-        return client.GetJsonAsync(request, DtoJsonSerializerContext.Default.InfoResult, cancellationToken);
+        return client.GetJsonAsync(request, DtoJsonSerializerContext.Default.MeInfoResult, cancellationToken);
     }
 
     public Task ChangePasswordAsync(ChangePasswordDto dto, CancellationToken cancellationToken = default)

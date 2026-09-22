@@ -7,7 +7,7 @@ public static class EmployeeMapper
     public static EmployeeCreateRequest ToRequest(this EmployeeCreateDto dto) => new()
     {
         Name = EmployeeName.From(dto.Name),
-        Roles = dto.Roles.ToHashSet()
+        Roles = dto.Roles.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Enum.Parse<EmployeeRole>).ToHashSet()
     };
     public static EmployeeCreateResult ToEmployeeCreateResult(this EmployeeId value) => new()
     {

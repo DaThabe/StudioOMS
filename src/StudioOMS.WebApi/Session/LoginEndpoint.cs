@@ -1,7 +1,7 @@
-﻿using StudioOMS.Messaging;
-using StudioOMS.Security.Session;
+﻿using StudioOMS.Me;
+using StudioOMS.Messaging;
 
-namespace StudioOMS.Me;
+namespace StudioOMS.Session;
 
 
 public static class LoginEndpoint

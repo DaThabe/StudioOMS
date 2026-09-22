@@ -9,7 +9,7 @@ public static class MeEndpoint
         ISender sender,
         CancellationToken ct)
     {
-        var response = await sender.SendAsync<MineInfoRequest, MineInfoResponse>(new MineInfoRequest(), ct);
+        var response = await sender.SendAsync<MineInfoRequest, MeInfoResponse>(new MineInfoRequest(), ct);
         return Results.Ok(response.ToInfoResult());
     }
 
