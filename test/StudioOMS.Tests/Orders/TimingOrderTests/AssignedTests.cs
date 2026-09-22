@@ -52,9 +52,7 @@ public sealed class AssignedTests
         _order.AssignEmployees(employeeId);
         _order.MarkServicing(new DateTime(2026, 1, 1));
 
-        var consume = TimingOrderConsume.Create(
-            OrderConsumeId.Create(), employeeId, _totalDays, new DateTime(2026, 1, 2));
-        _order.Consume(consume);  // 订单完成
+        _order.Consume(employeeId, _totalDays, new DateTime(2026, 1, 2));  // 订单完成
 
         Assert.Throws<InvalidOperationException>(() =>
             _order.AssignEmployees(EmployeeId.Create()));

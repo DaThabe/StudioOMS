@@ -25,6 +25,6 @@ public abstract partial class Order
         if (State is OrderState.Waiting or OrderState.Servicing or OrderState.Paused)
             _assignedEmployees.UnionWith(employees);
 
-        throw new OrderStateOperationException(Id, State, "分配员工");
+        throw new OrderStateOperationException(Id, State, OrderStateOperationType.AssignedEmployee);
     }
 }

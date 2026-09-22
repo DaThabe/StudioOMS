@@ -107,6 +107,8 @@ public abstract partial class Order
     /// <exception cref="OrderStateChangeException"></exception>
     private void MarkState(OrderState state, DateTimeOffset timestamp)
     {
+        ArgumentException.ThrowIfNotDefined(state);
+
         var newStateChanged = new OrderStateChange(state, timestamp);
 
         // 已存在的状态变化

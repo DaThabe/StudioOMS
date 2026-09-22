@@ -1,6 +1,5 @@
 ﻿using StudioOMS.Employees;
 using StudioOMS.Messaging;
-using StudioOMS.Orders;
 using StudioOMS.Permission;
 
 namespace StudioOMS.Orders.Timing;
@@ -12,8 +11,6 @@ public record TimingOrderConsumeRequest : IRequest
     public required EmployeeId EmployeeId { get; init; }
     public required decimal ConsuemDays { get; init; }
 
-
-    
 
 
     internal sealed class Handler(
@@ -32,8 +29,7 @@ public record TimingOrderConsumeRequest : IRequest
             if (entity is not TimingOrder timingOrder)
                 throw new InvalidOperationException($"订单 {entity.Id} 无法扣除天数");
 
-            var consume = TimingOrderConsume.CreateNow(request.EmployeeId, request.ConsuemDays);
-            timingOrder.Consume(consume);
+            timingOrder.ConsumeNow(request.EmployeeId, request.ConsuemDays);
 
             await orderRepository.SaveAsync(entity, cancellationToken);
         }

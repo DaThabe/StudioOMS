@@ -52,10 +52,7 @@ public sealed class StateTests
         _order.AssignEmployees(employeeId);
         _order.MarkServicing(new DateTime(2026, 1, 1));
 
-        var consume = TimingOrderConsume.Create(
-            OrderConsumeId.Create(), employeeId, _totalDays, new DateTime(2026, 1, 2));
-
-        _order.Consume(consume);
+        _order.Consume(employeeId, _totalDays, new DateTime(2026, 1, 2));
 
         Assert.AreEqual(OrderState.Completed, _order.State);
     }

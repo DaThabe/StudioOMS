@@ -9,10 +9,10 @@ public sealed class OrderStateOperationException : StudioOMSException
 {
     public OrderId OrderId { get; }
     public OrderState CurrentState { get; }
-    public string Operation { get; }
+    public OrderStateOperationType Operation { get; }
 
 
-    internal OrderStateOperationException(OrderId orderId, OrderState currentState, string operation)
+    internal OrderStateOperationException(OrderId orderId, OrderState currentState, OrderStateOperationType operation)
         : base(FormatMessage(orderId, currentState, operation))
     {
         OrderId = orderId;
@@ -22,9 +22,9 @@ public sealed class OrderStateOperationException : StudioOMSException
 
 
 
-    private static string FormatMessage(OrderId orderId, OrderState currentState, string operation)
+    private static string FormatMessage(OrderId orderId, OrderState currentState, OrderStateOperationType operation)
     {
-        return $"订单 {orderId} {GetStateName(currentState)} 不允许 {operation}";
+        return $"订单 {orderId} {GetStateName(currentState)} 不允许 {GetStateOperationName(operation)}";
     }
     private static string GetStateName(OrderState state) => state switch
     {
@@ -35,4 +35,23 @@ public sealed class OrderStateOperationException : StudioOMSException
         OrderState.Cancelled => "已取消",
         _ => "未知状态"
     };
+
+    private static string GetStateOperationName(OrderStateOperationType state) => state switch
+    {
+        OrderStateOperationType.Consume => "划扣",
+        _ => "未知状态"
+    };
+}
+
+public enum OrderStateOperationType
+{
+    /// <summary>
+    /// 分配员工
+    /// </summary>
+    AssignedEmployee,
+
+    /// <summary>
+    /// 消耗
+    /// </summary>
+    Consume,
 }

@@ -1,4 +1,6 @@
-﻿namespace StudioOMS.Orders.Timing;
+﻿using StudioOMS.Employees;
+
+namespace StudioOMS.Orders.Timing;
 
 /// <summary>
 /// 时间订单划扣超过上限
@@ -10,10 +12,10 @@ public sealed class TimingOrderConsumeExceedsLimitException : OrderConsumeExceed
 
     internal TimingOrderConsumeExceedsLimitException(
             OrderId orderId,
-            OrderConsumeId orderConsumeId,
+            EmployeeId employeeId,
             decimal expectDays,
             decimal actualDays
-        ) : base(FormatMessage(orderId, orderConsumeId, expectDays, actualDays), orderId, orderConsumeId)
+        ) : base(FormatMessage(orderId, employeeId, expectDays, actualDays), orderId, employeeId)
     {
         ExpectDays = expectDays;
         ActualDays = actualDays;
@@ -22,10 +24,10 @@ public sealed class TimingOrderConsumeExceedsLimitException : OrderConsumeExceed
 
     private static string FormatMessage(
         OrderId orderId,
-        OrderConsumeId orderConsumeId,
+        EmployeeId employeeId,
         decimal expectDays,
         decimal actualDays)
     {
-        return $"订单 {orderId} 划扣 {orderConsumeId} 超过上限 [{expectDays:F2}/{actualDays:F2}] 天";
+        return $"订单 {orderId} 划扣超过上限 [{expectDays:F2}/{actualDays:F2}] 天";
     }
 }
