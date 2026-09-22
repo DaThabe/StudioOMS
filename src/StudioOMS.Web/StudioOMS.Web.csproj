@@ -1,6 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<PropertyGroup>
+		<RootNamespace>StudioOMS</RootNamespace>
 		<OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
 		<PublishAot>false</PublishAot>
 		<RunAOTCompilation>false</RunAOTCompilation>
@@ -13,8 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
-	  <ProjectReference Include="..\StudioOMS.WebApi.Client\StudioOMS.WebApi.Client.csproj" />
+		<ProjectReference Include="..\StudioOMS.WebApi.Sdk\StudioOMS.WebApi.Sdk.csproj" />
 	</ItemGroup>
 
 </Project>

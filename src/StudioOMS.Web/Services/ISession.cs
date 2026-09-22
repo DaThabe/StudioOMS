@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using System.Security.Claims;
 
-namespace StudioOMS.Web.Services;
+namespace StudioOMS.Services;
 
 
 public interface ISession

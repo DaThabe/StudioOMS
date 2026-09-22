@@ -1,11 +1,12 @@
-﻿@* Pages/Login.razor *@
-@page "/login"
-@attribute [AllowAnonymous]
-
-@using System.ComponentModel.DataAnnotations
+﻿@using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authorization
 @using StudioOMS.Me
-@using StudioOMS.Web.Services
+@using StudioOMS.Services
+
+
+@* Pages/Login.razor *@
+@page "/login"
+@attribute [AllowAnonymous]
 
 @inject IStudioOMSAuthentication Authentication
 @inject ISession Session

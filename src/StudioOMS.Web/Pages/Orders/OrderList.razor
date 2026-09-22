@@ -1,10 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Authorization
 @using StudioOMS.Orders
-@using StudioOMS.Web.Services
+@using StudioOMS.Services
 
 @page "/orders"
 @attribute [Authorize]
+
 @inject ISession Session
+
 
 <h3>订单列表</h3>
 
