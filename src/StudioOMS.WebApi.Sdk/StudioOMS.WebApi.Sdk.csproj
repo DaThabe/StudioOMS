@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+		<ProjectReference Include="..\StudioOMS.WebApi.Routes\StudioOMS.WebApi.Routes.csproj" />
 	</ItemGroup>
 
 </Project>

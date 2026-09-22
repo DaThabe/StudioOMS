@@ -12,6 +12,7 @@
     <Project Path="src/StudioOMS.Infrastructure/StudioOMS.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Src/WebApi/">
+    <Project Path="src/StudioOMS.WebApi.Routes/StudioOMS.WebApi.Routes.csproj" Id="97aa37ae-d985-4d23-b944-7a3c62fcc24e" />
     <Project Path="src/StudioOMS.WebApi.Sdk/StudioOMS.WebApi.Sdk.csproj" />
     <Project Path="src/StudioOMS.WebApi/StudioOMS.WebApi.csproj" />
   </Folder>

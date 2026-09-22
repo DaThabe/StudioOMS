@@ -53,7 +53,7 @@ public sealed class UrlBuilder
     public UrlBuilder AddPath(string segment)
     {
         if (string.IsNullOrEmpty(segment)) return this;
-        _segments.Add(Uri.EscapeDataString(segment));
+        _segments.Add(segment);
         return this;
     }
     /// <summary>添加一些路径段，会自动做 URL 转义</summary>

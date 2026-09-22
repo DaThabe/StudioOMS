@@ -11,56 +11,40 @@ internal static class Endpoints
 {
     public static void MapStudioOMS(this IEndpointRouteBuilder builder)
     {
-        // Endpoints
-        var apiGroup = builder.MapGroup("/api");
-        // api/me
-        var meGroup = apiGroup.MapGroup("/me");
-        // api/users
-        var userGroup = apiGroup.MapGroup("/users");
-        // api/employees
-        var employeeGroup = apiGroup.MapGroup("/employees");
-        // api/customers
-        var customerGroup = apiGroup.MapGroup("/customers");
-        // api/orders
-        var orderGroup = apiGroup.MapGroup("/orders");
-        // api/orders/{id}
-        var orderIdGroup = orderGroup.MapGroup("/{id:guid}");
-
-
         // POST 👉 api/login
-        apiGroup.MapPost("/login", LoginEndpoint.LoginAsync);
-
+        builder.MapPost(WebApiRoutes.Login, LoginEndpoint.LoginAsync);
 
         // GET  👉 api/me
-        meGroup.MapGet("/", MeEndpoint.InfoAsync);
+        builder.MapGet(WebApiRoutes.Me, MeEndpoint.InfoAsync);
         // POST 👉 api/me/password
-        meGroup.MapPost("/password", MeEndpoint.ChangePasswordAsync);
+        builder.MapPost(WebApiRoutes.MePassword, MeEndpoint.ChangePasswordAsync);
+
         // POST 👉 api/users/
-        userGroup.MapPost("/", UserEndpoint.CreateAsync);
+        builder.MapPost(WebApiRoutes.Users, UserEndpoint.CreateAsync);
         // POST 👉 api/employees/
-        employeeGroup.MapPost("/", EmployeeEndpoint.CreateAsync);
+        builder.MapPost(WebApiRoutes.Employees, EmployeeEndpoint.CreateAsync);
         // POST 👉 api/customers
-        customerGroup.MapPost("/", CustomerEndpoint.CreateAsync);
+        builder.MapPost(WebApiRoutes.Customers, CustomerEndpoint.CreateAsync);
 
 
         // GET  👉 api/orders/
-        orderGroup.MapGet("/", OrderEndpoint.GetListAsync);
+        builder.MapGet(WebApiRoutes.Orders, OrderEndpoint.GetListAsync);
         // POST 👉 api/order/timing
-        orderGroup.MapPost("/timing", TimingOrderEndpoint.CreateAsync);
+        builder.MapPost(WebApiRoutes.OrdersTiming, TimingOrderEndpoint.CreateAsync);
 
         // POST 👉 api/orders/{id}/assign
-        orderIdGroup.MapPost("/assign", OrderEndpoint.AssignEmployeeAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdAssign, OrderEndpoint.AssignEmployeeAsync);
 
         // POST 👉 api/order/{id}/servicing
-        orderIdGroup.MapPost("/servicing", OrderEndpoint.MarkServicingAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdServicing, OrderEndpoint.MarkServicingAsync);
         // POST 👉 api/order/{id}/servicing
-        orderIdGroup.MapPost("/paused", OrderEndpoint.MarkPausedAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdPaused, OrderEndpoint.MarkPausedAsync);
         // POST 👉 api/order/{id}/servicing
-        orderIdGroup.MapPost("/cancelled", OrderEndpoint.MarkCancelledAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdCancelled, OrderEndpoint.MarkCancelledAsync);
         // POST 👉 api/order/{id}/servicing
-        orderIdGroup.MapPost("/terminated", OrderEndpoint.MarkTerminatedAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdTerminated, OrderEndpoint.MarkTerminatedAsync);
 
         // POST 👉 api/order/{id}/timing-consume
-        orderIdGroup.MapPost("/timing-consume", TimingOrderEndpoint.ConsumeAsync);
+        builder.MapPost(WebApiRoutes.OrdersIdTimingConsume, TimingOrderEndpoint.ConsumeAsync);
     }
 }
