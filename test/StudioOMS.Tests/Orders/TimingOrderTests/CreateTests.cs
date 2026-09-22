@@ -1,6 +1,5 @@
 ﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
-using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 
 namespace StudioOMS.Orders.TimingOrderTests;

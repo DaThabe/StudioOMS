@@ -4,22 +4,31 @@
   "dependentFileProviders": {
     "add": {
       "fileToFile": {
-
-        // Order
         "add": {
+
+          // Order
           "OrderId.cs": [ "Order.cs" ],
+          "OrderException.cs": [ "Order.cs" ],
+          "IOrderRepository.cs": [ "Order.cs" ],
           // State
           "OrderState.cs": [ "Order.State.cs" ],
-          "OrderStateChange.cs": [ "Order.State.cs" ],
-          "OrderStateChangeException.cs": [ "Order.State.cs" ],
+          "OrderStateTransition.cs": [ "Order.State.cs" ],
           "OrderStateOperationException.cs": [ "Order.State.cs" ],
+          "OrderStateTransitionNotAllowedException.cs": [ "Order.State.cs" ],
+          "OrderStateTransitionTimestampInvalidException.cs": [ "Order.State.cs" ],
           // Assigned
           "OrderNotAssignedEmployeeException.cs": [ "Order.Assigned.cs" ],
           // Consume
           "OrderConsumeId.cs": [ "OrderConsume.cs" ],
           "OrderConsumeException.cs": [ "OrderConsume.cs" ],
           "OrderConsumeAlreadyExistsException.cs": [ "OrderConsume.cs" ],
-          "OrderConsumeExceedsLimitException.cs": [ "OrderConsume.cs" ]
+          "OrderConsumeTimestampInvalidException.cs": [ "OrderConsume.cs" ],
+          "OrderConsumeExceedsLimitException.cs": [ "OrderConsume.cs" ],
+
+          // Order-Timing
+          "TimingOrderConsumeExceedsLimitException.cs": [ "TimingOrder.Consume.cs" ]
+
+
         }
       }
     }

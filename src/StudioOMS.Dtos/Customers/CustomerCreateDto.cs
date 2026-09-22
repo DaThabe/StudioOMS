@@ -8,5 +8,5 @@ public readonly record struct CustomerCreateDto
 
 public readonly record struct CustomerCreateResult
 {
-    public required string Id { get; init; }
+    public required string CustomerId { get; init; }
 }

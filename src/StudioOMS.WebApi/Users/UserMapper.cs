@@ -15,6 +15,6 @@ public static class UserMapper
 
     public static UserCreateResult ToUserCreateResult(this UserId id) => new()
     {
-        Id = id.ToString()
+        UserId = id.ToString()
     };
 }

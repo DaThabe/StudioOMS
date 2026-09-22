@@ -10,13 +10,17 @@ namespace StudioOMS.Orders.TimingOrderTests;
 public sealed class StateTests
 {
     private const decimal _totalDays = 10;
+    private readonly DateTimeOffset _time = DateTimeOffset.Now;
+
     private TimingOrder _order = null!;
+    private Employee _adminEmployee = null!;
 
 
     [TestInitialize]
     public void Setup()
     {
         _order = TimingOrder.CreateNow(CustomertId.Create(), EmployeeId.Create(), _totalDays);
+        _adminEmployee = Employee.Create(EmployeeName.From("管理员"), [EmployeeRole.Admin]);
     }
 
 
@@ -25,46 +29,55 @@ public sealed class StateTests
     [TestMethod(DisplayName = "待派发订单可以开始服务")]
     public void MarkServicing_FromWaiting_Succeeds()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
     [TestMethod(DisplayName = "暂停中订单可以恢复服务")]
     public void MarkServicing_FromPaused_Succeeds()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkPaused(new DateTime(2026, 1, 2));
-        _order.MarkServicing(new DateTime(2026, 1, 3));
+        // 先到 Paused
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkPaused(_order, _adminEmployee, _time.AddDays(1));
+
+        // 再从 Paused 恢复
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time.AddDays(2));
 
         Assert.AreEqual(OrderState.Servicing, _order.State);
     }
 
     [TestMethod(DisplayName = "已处于服务中的订单不能再次开始服务")]
-    public void MarkServicing_WhenAlreadyServicing_ReturnsInvalidTransition()
+    public void MarkServicing_WhenAlreadyServicing_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkServicing(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time.AddDays(1)));
     }
 
     [TestMethod(DisplayName = "已完成的订单不能转为服务中")]
-    public void MarkServicing_WhenCompleted_ReturnsInvalidTransition()
+    public void MarkServicing_WhenCompleted_Throws()
     {
         var employeeId = EmployeeId.Create();
         _order.AssignEmployees(employeeId);
-        _order.MarkServicing(new DateTime(2026, 1, 1));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
 
-        _order.Consume(employeeId, _totalDays, new DateTime(2026, 1, 2));
+        _order.Consume(employeeId, _totalDays, _time.AddDays(1));
 
         Assert.AreEqual(OrderState.Completed, _order.State);
+
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time.AddDays(2)));
     }
 
-
     [TestMethod(DisplayName = "已终止的订单不能转为服务中")]
-    public void MarkServicing_WhenTerminated_ReturnsNotAsExpected()
+    public void MarkServicing_WhenTerminated_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkTerminated(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(1));
 
-        _order.MarkServicing(new DateTime(2026, 1, 3));
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time.AddDays(2)));
     }
 
     #endregion
@@ -74,25 +87,27 @@ public sealed class StateTests
     [TestMethod(DisplayName = "服务中订单可以暂停")]
     public void MarkPaused_FromServicing_Succeeds()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkPaused(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkPaused(_order, _adminEmployee, _time.AddDays(1));
 
         Assert.AreEqual(OrderState.Paused, _order.State);
     }
 
     [TestMethod(DisplayName = "待派发订单不能直接暂停")]
-    public void MarkPaused_FromWaiting_ReturnsInvalidTransition()
+    public void MarkPaused_FromWaiting_Throws()
     {
-        _order.MarkPaused(new DateTime(2026, 1, 1));
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkPaused(_order, _adminEmployee, _time));
     }
 
     [TestMethod(DisplayName = "已终止的订单不能暂停")]
-    public void MarkPaused_WhenTerminated_ReturnsNotAsExpected()
+    public void MarkPaused_WhenTerminated_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkTerminated(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(1));
 
-        _order.MarkPaused(new DateTime(2026, 1, 3));
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkPaused(_order, _adminEmployee, _time.AddDays(2)));
     }
 
     #endregion
@@ -102,24 +117,27 @@ public sealed class StateTests
     [TestMethod(DisplayName = "待派发的订单可以取消")]
     public void MarkCancelled_FromWaiting_Succeeds()
     {
-        _order.MarkCancelled(new DateTime(2026, 1, 1));
+        OrderStatePolicy.MarkCancelled(_order, _adminEmployee, _time);
 
         Assert.AreEqual(OrderState.Cancelled, _order.State);
     }
 
     [TestMethod(DisplayName = "服务中的订单不能取消")]
-    public void MarkCancelled_FromServicing_ReturnsNotAsExpected()
+    public void MarkCancelled_FromServicing_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkCancelled(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkCancelled(_order, _adminEmployee, _time.AddDays(1)));
     }
 
     [TestMethod(DisplayName = "已取消的订单不能转为服务中")]
-    public void MarkServicing_WhenCancelled_ReturnsNotAsExpected()
+    public void MarkServicing_WhenCancelled_Throws()
     {
-        _order.MarkCancelled(new DateTime(2026, 1, 1));
-        _order.MarkServicing(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkCancelled(_order, _adminEmployee, _time);
 
+        Assert.Throws<OrderStateTransitionNotAllowedException>(
+            () => OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time.AddDays(1)));
     }
 
     #endregion
@@ -129,9 +147,9 @@ public sealed class StateTests
     [TestMethod(DisplayName = "暂停中的订单可以终止")]
     public void MarkTerminated_FromPaused_Succeeds()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkPaused(new DateTime(2026, 1, 2));
-        _order.MarkTerminated(new DateTime(2026, 1, 3));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkPaused(_order, _adminEmployee, _time.AddDays(1));
+        OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(2));
 
         Assert.AreEqual(OrderState.Terminated, _order.State);
     }
@@ -139,26 +157,27 @@ public sealed class StateTests
     [TestMethod(DisplayName = "服务中的订单可以终止")]
     public void MarkTerminated_FromServicing_Succeeds()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkTerminated(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(1));
 
         Assert.AreEqual(OrderState.Terminated, _order.State);
     }
 
-
     [TestMethod(DisplayName = "待派发的订单不能直接终止")]
-    public void MarkTerminated_FromWaiting_ReturnsNotAsExpected()
+    public void MarkTerminated_FromWaiting_Throws()
     {
-        _order.MarkTerminated(new DateTime(2026, 1, 1));
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time));
     }
 
     [TestMethod(DisplayName = "已终止的订单不能再次终止")]
-    public void MarkTerminated_WhenAlreadyTerminated_ReturnsNotAsExpected()
+    public void MarkTerminated_WhenAlreadyTerminated_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkTerminated(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _time);
+        OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(1));
 
-        _order.MarkTerminated(new DateTime(2026, 1, 3));
+        Assert.Throws<OrderStateTransitionNotAllowedException>(() =>
+            OrderStatePolicy.MarkTerminated(_order, _adminEmployee, _time.AddDays(2)));
     }
 
     #endregion

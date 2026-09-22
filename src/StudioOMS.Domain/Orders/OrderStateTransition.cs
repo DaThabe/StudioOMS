@@ -1,66 +1,60 @@
 ﻿using StudioOMS.Employees;
+using System.Text.Json.Serialization;
 
 namespace StudioOMS.Orders;
+
 
 /// <summary>
 /// 订单状态改变
 /// </summary>
-public sealed record class OrderStateChange : IComparable<OrderStateChange>
+public sealed record class OrderStateTransition : IComparable<OrderStateTransition>
 {
-    public required OrderState State { get; init; }
+    public required OrderState From { get; init; }
+    public required OrderState To { get; init; }
     public required DateTimeOffset Timestamp { get; init; }
     public required OrderStateChangeType Type { get; init; }
     public EmployeeId? By { get; init; }
 
 
-    public int CompareTo(OrderStateChange? other) =>
+    public int CompareTo(OrderStateTransition? other) =>
         other is null ? 1 : Timestamp.CompareTo(other.Timestamp);
 
 
-
-    private OrderStateChange() { }
+    [JsonConstructor]
+    private OrderStateTransition() { }
 
     /// <inheritdoc/>
     /// <exception cref="ArgumentException" />
-    internal static OrderStateChange Auto(OrderState state, DateTimeOffset timestamp)
+    internal static OrderStateTransition Auto(OrderState from, OrderState to, DateTimeOffset timestamp)
     {
-        ArgumentException.ThrowIfNotDefined(state);
+        ArgumentException.ThrowIfNotDefined(from);
 
         return new()
         {
-            State = state,
+            From = from,
+            To = to,
             Type = OrderStateChangeType.Auto,
             Timestamp = timestamp
         };
     }
-    /// <inheritdoc/>
-    /// <exception cref="ArgumentException" />
-    internal static OrderStateChange AutoNow(OrderState state) =>
-        Auto(state, DateTimeOffset.Now);
-
 
     /// <inheritdoc/>
     /// <exception cref="ArgumentException" />
     /// <exception cref="ArgumentNullException" />
-    internal static OrderStateChange Manual(OrderState state, EmployeeId employeeId, DateTimeOffset timestamp)
+    internal static OrderStateTransition Manual(OrderState state, OrderState to, EmployeeId employeeId, DateTimeOffset timestamp)
     {
         ArgumentException.ThrowIfNotDefined(state);
         ArgumentNullException.ThrowIfNull(employeeId);
 
         return new()
         {
-            State = state,
+            From = state,
+            To = to,
             Type = OrderStateChangeType.Manual,
             Timestamp = timestamp,
             By = employeeId
         };
     }
-    /// <inheritdoc/>
-    /// <exception cref="ArgumentException" />
-    /// <exception cref="ArgumentNullException" />
-    internal static OrderStateChange ManualNow(OrderState state, EmployeeId employeeId) =>
-        Manual(state, employeeId, DateTimeOffset.Now);
-
 }
 
 

@@ -10,6 +10,6 @@ internal static class CustomerEndpoint
         CancellationToken ct)
     {
         var id = await sender.SendAsync<CustomerCreateRequest, CustomertId>(dto.ToRequest(), ct);
-        return Results.Ok(new CustomerCreateResult() { Id = id.ToString() });
+        return Results.Ok(new CustomerCreateResult() { CustomerId = id.ToString() });
     }
 }

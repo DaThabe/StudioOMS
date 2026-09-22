@@ -49,7 +49,7 @@ public static class OrderMapper
 
     public static OrderAssignEmployeeRequest ToRequest(this OrderAssignEmployeeDto dto, Guid orderId) => new()
     {
-        Id = OrderId.From(orderId),
+        OrderId = OrderId.From(orderId),
         EmployeeId = EmployeeId.Parse(dto.EmployeeId)
     };
     public static OrderCreateResult ToOrderCreateResult(this OrderId id) => new()

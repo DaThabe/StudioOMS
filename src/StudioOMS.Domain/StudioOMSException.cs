@@ -1,4 +1,4 @@
-﻿namespace StudioOMS.Exceptions;
+﻿namespace StudioOMS;
 
 
 public class StudioOMSException : Exception

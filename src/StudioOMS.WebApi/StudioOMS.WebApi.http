@@ -2,17 +2,17 @@
 
 ### 登录
 # @name login
-POST {{host}}/api/users/login
+POST {{host}}/api/login
 Content-Type: application/json
 {
   "username": "admin",
-  "password": "123456"
+  "password": "9j87#drQTZTkT9xu"
 }
 
 ### 修改密码
 POST {{host}}/api/users/me/password
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
   "currentPassword": "123456",
   "newPassword": "123456"
@@ -23,28 +23,27 @@ Authorization: Bearer {{login.response.body.$.}}
 # @name salesperson
 POST {{host}}/api/employees
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
   "name": "销售",
-  "roles": [ "Sales" ]
+  "roles": "Sales"
 }
 
 ### 创建设计师
 # @name designer
 POST {{host}}/api/employees
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
   "name": "设计",
-  "roles": [ "Designer" ]
+  "roles": "Designer"
 }
-
 
 ### 创建客户
 # @name customer
 POST {{host}}/api/customers
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
   "name": "测试客户"
 }
@@ -53,37 +52,40 @@ Authorization: Bearer {{login.response.body.$.}}
 # @name timingOrder
 POST {{host}}/api/orders/timing
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
   "title": "测试订单",
-  "customerId": {{customer.response.body.*}},
-  "salespersonId": {{salesperson.response.body.*}},
+  "customerId": "{{customer.response.body.$.CustomerId}}",
+  "salespersonId": "{{salesperson.response.body.$.EmployeeId}}",
   "totalDays": 20
 }
+
+
+### 订单开始服务
+POST {{host}}/api/orders/{{timingOrder.response.body.$.OrderId}}/servicing
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
 ### 订单列表
 # @name timingOrder
 GET {{host}}/api/orders?skip=0&take=20&types=
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 
 
 ### 订单分配设计师
-POST {{host}}/api/orders/{{timingOrder.response.body.$.}}/assign
+POST {{host}}/api/orders/{{timingOrder.response.body.$.OrderId}}/assign
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
-  "employeeId": {{designer.response.body.*}}
+  "employeeId": "{{designer.response.body.$.EmployeeId}}"
 }
 
-### 订单开始服务
-POST {{host}}/api/orders/{{timingOrder.response.body.$.}}/servicing
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
 
 ### 订单开始划扣
 POST {{host}}/api/orders/timing/{{timingOrder.response.body.$.}}/consume
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.}}
+Authorization: Bearer {{login.response.body.$.token}}
 {
     "employeeId": {{designer.response.body.*}},
     "days":1

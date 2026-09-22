@@ -48,11 +48,11 @@ internal sealed class OrderEntityTypeConfiguration :
             .HasConversion<HashSetEmployeeId_String_Converter>()
             .Metadata.SetValueComparer(new HashSetEmployeeId_String_Comparer());
 
-        // StateChangeds
-        builder.Property(x => x.StateChangeds)
-            .HasField("_stateChangeds")
-            .HasConversion<SortedSetOrderStateChange_String_Converter>()
-            .Metadata.SetValueComparer(new SortedSetOrderStateChange_String_Comparer());
+        // StateTransitions
+        builder.Property(x => x.StateTransitions)
+            .HasField("_stateTransitions")
+            .HasConversion<SortedSetOrderStateTransition_String_Converter>()
+            .Metadata.SetValueComparer(new SortedSetOrderStateTransition_String_Comparer());
 
         // 派生类
         builder.HasDiscriminator<OrderType>("Type")

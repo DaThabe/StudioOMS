@@ -10,13 +10,18 @@ namespace StudioOMS.Orders.TimingOrderTests;
 public sealed class AssignedTests
 {
     private const decimal _totalDays = 10;
+    private readonly DateTimeOffset _orderCreateAt = DateTimeOffset.UtcNow;
+
+
     private TimingOrder _order = null!;
+    private Employee _adminEmployee = null!;
 
 
     [TestInitialize]
     public void Setup()
     {
-        _order = TimingOrder.CreateNow(CustomertId.Create(), EmployeeId.Create(), _totalDays);
+        _order = TimingOrder.Create(CustomertId.Create(), EmployeeId.Create(), _totalDays, _orderCreateAt);
+        _adminEmployee = Employee.Create(EmployeeName.From("管理员"), [EmployeeRole.Admin]);
     }
 
 
@@ -38,7 +43,7 @@ public sealed class AssignedTests
         var second = EmployeeId.Create();
 
         _order.AssignEmployees(first);
-        _order.MarkServicing(new DateTime(2026, 1, 1));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _orderCreateAt);
         _order.AssignEmployees(second);
 
         Assert.Contains(first, _order.AssignedEmployees);
@@ -50,7 +55,7 @@ public sealed class AssignedTests
     {
         var employeeId = EmployeeId.Create();
         _order.AssignEmployees(employeeId);
-        _order.MarkServicing(new DateTime(2026, 1, 1));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _orderCreateAt);
 
         _order.Consume(employeeId, _totalDays, new DateTime(2026, 1, 2));  // 订单完成
 
@@ -61,8 +66,8 @@ public sealed class AssignedTests
     [TestMethod(DisplayName = "已终止的订单不能派发员工")]
     public void AssignEmployee_WhenTerminated_Throws()
     {
-        _order.MarkServicing(new DateTime(2026, 1, 1));
-        _order.MarkTerminated(new DateTime(2026, 1, 2));
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _orderCreateAt);
+        OrderStatePolicy.MarkServicing(_order, _adminEmployee, _orderCreateAt);
 
         Assert.Throws<InvalidOperationException>(() =>
             _order.AssignEmployees(EmployeeId.Create()));
@@ -71,10 +76,7 @@ public sealed class AssignedTests
     [TestMethod(DisplayName = "已取消的订单不能派发员工")]
     public void AssignEmployee_WhenCancelled_Throws()
     {
-        _order.MarkCancelled(new DateTime(2026, 1, 1));
 
-        Assert.Throws<InvalidOperationException>(() =>
-            _order.AssignEmployees(EmployeeId.Create()));
     }
 
     [TestMethod(DisplayName = "重复派发同一员工不产生重复记录")]

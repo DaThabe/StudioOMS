@@ -1,5 +1,7 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Employees;
+using StudioOMS.Messaging;
 using StudioOMS.Permission;
+using StudioOMS.Session;
 
 namespace StudioOMS.Orders;
 
@@ -8,8 +10,11 @@ internal interface IOrderMarkRequest : IRequest
 {
     OrderId OrderId { get; }
 
-    public abstract class Handler<TRequest>(IOrderRepository orderRepository) :
-        IRequestHandler<TRequest>, IAuthorization
+    public abstract class Handler<TRequest>(
+        ICurrentSession currentSession,
+        IEmployeeRepository employeeRepository,
+        IOrderRepository orderRepository
+    ) : IRequestHandler<TRequest>, IAuthorization
         where TRequest : IOrderMarkRequest
     {
         public IReadOnlySet<PermissionType> RequiredPermissions { get; } =
@@ -18,15 +23,17 @@ internal interface IOrderMarkRequest : IRequest
         public async ValueTask HandleAsync(TRequest request,
             CancellationToken cancellationToken = default)
         {
-            var entity = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
+            var employee = await employeeRepository.FindByIdAsync(currentSession.EmployeeId, cancellationToken)
+                ?? throw new InvalidOperationException($"员工 {request.OrderId} 不存在");
+            var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
                 ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");
 
-            HandleOrder(entity);
+            HandleOrder(order, employee);
 
-            await orderRepository.SaveAsync(entity, cancellationToken);
+            await orderRepository.SaveAsync(order, cancellationToken);
         }
 
-        protected abstract void HandleOrder(Order order);
+        protected abstract void HandleOrder(Order order, Employee employees);
     }
 }
 
@@ -36,11 +43,17 @@ public sealed class OrderMarkServicingRequest : IOrderMarkRequest
 {
     public required OrderId OrderId { get; init; }
 
-    internal sealed class Handler(IOrderRepository orderRepository) :
-        IOrderMarkRequest.Handler<OrderMarkServicingRequest>(orderRepository)
+    internal sealed class Handler(
+        ICurrentSession currentSession,
+        IEmployeeRepository employeeRepository,
+        IOrderRepository orderRepository
+    ) : IOrderMarkRequest.Handler<OrderMarkServicingRequest>(
+            currentSession,
+            employeeRepository,
+            orderRepository)
     {
-        protected override void HandleOrder(Order order) =>
-            order.MarkServicingNow();
+        protected override void HandleOrder(Order order, Employee employees) =>
+            OrderStatePolicy.MarkServicing(order, employees, DateTimeOffset.Now);
     }
 }
 
@@ -49,11 +62,17 @@ public sealed class OrderMarkPausedRequest : IOrderMarkRequest
 {
     public required OrderId OrderId { get; init; }
 
-    internal sealed class Handler(IOrderRepository orderRepository) :
-        IOrderMarkRequest.Handler<OrderMarkPausedRequest>(orderRepository)
+    internal sealed class Handler(
+        ICurrentSession currentSession,
+        IEmployeeRepository employeeRepository,
+        IOrderRepository orderRepository
+    ) : IOrderMarkRequest.Handler<OrderMarkPausedRequest>(
+            currentSession,
+            employeeRepository,
+            orderRepository)
     {
-        protected override void HandleOrder(Order order) =>
-            order.MarkPausedNow();
+        protected override void HandleOrder(Order order, Employee employees) =>
+            OrderStatePolicy.MarkPaused(order, employees, DateTimeOffset.Now);
     }
 }
 
@@ -62,11 +81,17 @@ public sealed class OrderMarkCancelledRequest : IOrderMarkRequest
 {
     public required OrderId OrderId { get; init; }
 
-    internal sealed class Handler(IOrderRepository orderRepository) :
-        IOrderMarkRequest.Handler<OrderMarkCancelledRequest>(orderRepository)
+    internal sealed class Handler(
+        ICurrentSession currentSession,
+        IEmployeeRepository employeeRepository,
+        IOrderRepository orderRepository
+    ) : IOrderMarkRequest.Handler<OrderMarkCancelledRequest>(
+            currentSession,
+            employeeRepository,
+            orderRepository)
     {
-        protected override void HandleOrder(Order order) =>
-            order.MarkCancelledNow();
+        protected override void HandleOrder(Order order, Employee employees) =>
+            OrderStatePolicy.MarkCancelled(order, employees, DateTimeOffset.Now);
     }
 }
 
@@ -75,10 +100,16 @@ public sealed class OrderMarkTerminatedRequest : IOrderMarkRequest
 {
     public required OrderId OrderId { get; init; }
 
-    internal sealed class Handler(IOrderRepository orderRepository) :
-        IOrderMarkRequest.Handler<OrderMarkTerminatedRequest>(orderRepository)
+    internal sealed class Handler(
+         ICurrentSession currentSession,
+         IEmployeeRepository employeeRepository,
+         IOrderRepository orderRepository
+     ) : IOrderMarkRequest.Handler<OrderMarkTerminatedRequest>(
+             currentSession,
+             employeeRepository,
+             orderRepository)
     {
-        protected override void HandleOrder(Order order) =>
-            order.MarkTerminatedNow();
+        protected override void HandleOrder(Order order, Employee employees) =>
+            OrderStatePolicy.MarkTerminated(order, employees, DateTimeOffset.Now);
     }
 }

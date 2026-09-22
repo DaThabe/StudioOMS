@@ -7,7 +7,7 @@ namespace StudioOMS.Orders;
 
 public sealed record class OrderAssignEmployeeRequest : IRequest
 {
-    public required OrderId Id { get; init; }
+    public required OrderId OrderId { get; init; }
     public required EmployeeId EmployeeId { get; init; }
 
 
@@ -20,8 +20,8 @@ public sealed record class OrderAssignEmployeeRequest : IRequest
         public async ValueTask HandleAsync(OrderAssignEmployeeRequest request,
             CancellationToken cancellationToken = default)
         {
-            var entity = await orderRepository.FindByIdAsync(request.Id, cancellationToken)
-                ?? throw new InvalidOperationException($"订单 {request.Id} 不存在");
+            var entity = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken)
+                ?? throw new InvalidOperationException($"订单 {request.OrderId} 不存在");
 
             entity.AssignEmployees(request.EmployeeId);
 

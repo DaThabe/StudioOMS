@@ -1,5 +1,4 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Exceptions;
 
 namespace StudioOMS.Orders;
 

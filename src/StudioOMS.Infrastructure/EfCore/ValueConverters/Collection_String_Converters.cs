@@ -26,12 +26,12 @@ internal sealed class HashSetEmployeeRole_String_Converter : ValueConverter<IRea
     )
     { }
 }
-internal sealed class SortedSetOrderStateChange_String_Converter : ValueConverter<IReadOnlyCollection<OrderStateChange>, string>
+internal sealed class SortedSetOrderStateTransition_String_Converter : ValueConverter<IReadOnlyCollection<OrderStateTransition>, string>
 {
-    public SortedSetOrderStateChange_String_Converter() : base
+    public SortedSetOrderStateTransition_String_Converter() : base
     (
-        values => JsonSerializer.Serialize(values, CollectionValueConverterJsonSerializerContext.Default.SortedSetOrderStateChange),
-        str => JsonSerializer.Deserialize(str, CollectionValueConverterJsonSerializerContext.Default.SortedSetOrderStateChange)!
+        values => JsonSerializer.Serialize(values, CollectionValueConverterJsonSerializerContext.Default.SortedSetOrderStateTransition),
+        str => JsonSerializer.Deserialize(str, CollectionValueConverterJsonSerializerContext.Default.SortedSetOrderStateTransition)!
     )
     { }
 }
@@ -45,7 +45,7 @@ internal sealed class SortedSetOrderStateChange_String_Converter : ValueConverte
         typeof(EmployeeIdConverter),
     ]
 )]
-[JsonSerializable(typeof(SortedSet<OrderStateChange>))]
+[JsonSerializable(typeof(SortedSet<OrderStateTransition>))]
 [JsonSerializable(typeof(HashSet<EmployeeId>))]
 [JsonSerializable(typeof(HashSet<EmployeeRole>))]
 internal partial class CollectionValueConverterJsonSerializerContext : JsonSerializerContext;

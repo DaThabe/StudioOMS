@@ -1,6 +1,5 @@
 ﻿using StudioOMS.Employees;
 using System.Collections.Frozen;
-using System.Diagnostics.CodeAnalysis;
 
 namespace StudioOMS.Orders;
 
@@ -10,8 +9,7 @@ namespace StudioOMS.Orders;
 /// </summary>
 public abstract partial class Order
 {
-    private static readonly Comparer<OrderStateChange> _stateChangedsComparer = Comparer<OrderStateChange>.Create((a, b) => a.Timestamp.CompareTo(b.Timestamp));
-    private readonly SortedSet<OrderStateChange> _stateChangeds = [with(_stateChangedsComparer)];
+    private readonly SortedSet<OrderStateTransition> _stateTransitions = [];
 
 
     /// <summary>
@@ -22,137 +20,106 @@ public abstract partial class Order
     /// <summary>
     /// 状态改变历史
     /// </summary>
-    public IReadOnlyCollection<OrderStateChange> StateChangeds => _stateChangeds.AsReadOnly();
+    public IReadOnlyCollection<OrderStateTransition> StateTransitions => _stateTransitions.AsReadOnly();
 
 
     /// <summary>
     /// 服务订单
     /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkServicing(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Servicing, timestamp);
-    /// <summary>
-    /// 服务订单
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkServicingNow() =>
-        MarkServicing(DateTime.Now);
-
-
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
+    internal void MarkServicing(EmployeeId employeeId, DateTimeOffset timestamp) =>
+        ManualMarkState(employeeId, OrderState.Servicing, timestamp);
     /// <summary>
     /// 暂停订单
     /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkPaused(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Paused, timestamp);
-    /// <summary>
-    /// 暂停订单
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkPausedNow() =>
-        MarkPaused(DateTimeOffset.Now);
-
-
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
+    internal void MarkPaused(EmployeeId employeeId, DateTimeOffset timestamp) =>
+        ManualMarkState(employeeId, OrderState.Paused, timestamp);
     /// <summary>
     /// 取消订单
     /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkCancelled(DateTimeOffset timestamp)
-        => MarkState(OrderState.Cancelled, timestamp);
-    /// <summary>
-    /// 取消订单
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkCancelledNow()
-       => MarkCancelled(DateTimeOffset.Now);
-
-
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
+    internal void MarkCancelled(EmployeeId employeeId, DateTimeOffset timestamp)
+        => ManualMarkState(employeeId, OrderState.Cancelled, timestamp);
     /// <summary>
     /// 终止订单
     /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkTerminated(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Terminated, timestamp);
-    /// <summary>
-    /// 终止订单
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    public void MarkTerminatedNow() =>
-        MarkTerminated(DateTimeOffset.Now);
-
-
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
+    internal void MarkTerminated(EmployeeId employeeId, DateTimeOffset timestamp) =>
+        ManualMarkState(employeeId, OrderState.Terminated, timestamp);
     /// <summary>
     /// 完成订单
     /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
     protected void MarkCompleted(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Completed, timestamp);
-    /// <summary>
-    /// 完成订单
-    /// </summary>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    protected void MarkCompletedNow() =>
-        MarkCompleted(DateTimeOffset.Now);
-
+        AutoMarkState(OrderState.Completed, timestamp);
 
 
     /// <inheritdoc/>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    private void MarkState(OrderState state, DateTimeOffset timestamp, EmployeeId employeeId)
+    /// <exception cref="ArgumentNullException" />
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    /// <exception cref="OrderStateTransitionTimestampInvalidException" />
+    private void ManualMarkState(EmployeeId employeeId, OrderState newState, DateTimeOffset timestamp)
     {
-        //if(timestamp < CreateAt)
-        //    throw new OrderStateChangeTimestampInvalidException(Id, )
+        ArgumentNullException.ThrowIfNull(employeeId);
 
+        if (timestamp < CreateAt)
+            throw new OrderStateTransitionTimestampInvalidException(Id, employeeId, CreateAt, timestamp);
 
-        // 构建
-        var stateChanged = OrderStateChange
-            .Manual(state, employeeId, timestamp);
+        MarkState(OrderStateTransition.Manual(State, newState, employeeId, timestamp));
+    }
+    /// <inheritdoc/>
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    private void AutoMarkState(OrderState state, DateTimeOffset timestamp)
+    {
+        MarkState(OrderStateTransition.Auto(State, state, timestamp));
+    }
+
+    /// <inheritdoc/>
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    private void MarkState(OrderStateTransition stateChanged)
+    {
         // 去重
-        if (_stateChangeds.Contains(stateChanged))
+        if (_stateTransitions.Contains(stateChanged))
             return;
 
         // 回放验证状态
         PlaybackVerification(stateChanged);
 
-        State = stateChanged.State;
-        _stateChangeds.Add(stateChanged);
+        State = stateChanged.From;
+        _stateTransitions.Add(stateChanged);
     }
-    [Obsolete]
-    private void MarkState(OrderState state, DateTimeOffset timestamp) =>
-        MarkState(state, timestamp, EmployeeId.Create());
-
-
-    // 回放验证是否能添加此改变记录
-    private bool PlaybackVerification(OrderStateChange item)
+    /// <summary>回放验证是否能添加此改变记录</summary>
+    /// <exception cref="OrderStateTransitionNotAllowedException" />
+    private bool PlaybackVerification(OrderStateTransition item)
     {
         var currentState = OrderState.Waiting;
-        OrderStateChange[] allChangeds = [.. _stateChangeds, item];
+        OrderStateTransition[] allChangeds = [.. _stateTransitions, item];
 
         foreach (var e in allChangeds.OrderBy(x => x.Timestamp))
         {
-            if (!currentState.CanConvertTo(e.State, out _))
-                return false;
+            if (!currentState.CanConvertTo(e.To, out var alloweds))
+                throw new OrderStateTransitionNotAllowedException(Id, State, item.To, alloweds);
 
-            currentState = e.State;
+            currentState = e.To;
         }
-
         return true;
     }
 }
 
-
-
+/// <summary>
+/// 订单状态转换
+/// </summary>
 file static class OrderStateConverter
 {
     /// <summary>

@@ -1,6 +1,4 @@
-﻿using StudioOMS.Exceptions;
-
-namespace StudioOMS.Employees;
+﻿namespace StudioOMS.Employees;
 
 
 public sealed class Employee : Entity<EmployeeId>
@@ -36,6 +34,11 @@ public sealed class Employee : Entity<EmployeeId>
 
         _roles.Clear();
         foreach (var role in remaining) _roles.Add(role);
+    }
+
+    public bool HasAnyRole(params IEnumerable<EmployeeRole> roles)
+    {
+        return Roles.Overlaps(roles);
     }
 
 

@@ -10,5 +10,5 @@ public readonly record struct UserCreateDto
 
 public readonly record struct UserCreateResult
 {
-    public required string Id { get; init; }
+    public required string UserId { get; init; }
 }
