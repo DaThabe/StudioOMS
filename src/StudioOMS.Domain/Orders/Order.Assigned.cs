@@ -17,13 +17,14 @@ public abstract partial class Order
 
 
     /// <summary>
-    /// 分配服务员工
+    /// 分配员工来服务订单
     /// </summary>
+    /// <exception cref="OrderStateOperationException"></exception>
     public void AssignEmployees(params IEnumerable<EmployeeId> employees)
     {
-        if (State is OrderState.Completed or OrderState.Terminated or OrderState.Cancelled)
-            throw new InvalidOperationException($"订单状态 {State} 不能派发员工");
+        if (State is OrderState.Waiting or OrderState.Servicing or OrderState.Paused)
+            _assignedEmployees.UnionWith(employees);
 
-        _assignedEmployees.UnionWith(employees);
+        throw new OrderStateOperationException(Id, State, "分配员工");
     }
 }

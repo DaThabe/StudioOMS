@@ -42,10 +42,10 @@ internal sealed class OrderId_String_Converter : ValueConverter<OrderId, string>
     { }
 }
 
-internal sealed class ConsumeId_String_Converter : ValueConverter<ConsumeId, string>
+internal sealed class ConsumeId_String_Converter : ValueConverter<OrderConsumeId, string>
 {
     public ConsumeId_String_Converter() : base(
         id => id.ToString(),
-        str => ConsumeId.Parse(str))
+        str => OrderConsumeId.Parse(str))
     { }
 }

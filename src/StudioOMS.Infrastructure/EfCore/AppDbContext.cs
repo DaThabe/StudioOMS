@@ -51,7 +51,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
         configurationBuilder.Properties<OrderId>()
             .HaveConversion<OrderId_String_Converter>();
         // 划扣
-        configurationBuilder.Properties<ConsumeId>()
+        configurationBuilder.Properties<OrderConsumeId>()
             .HaveConversion<ConsumeId_String_Converter>();
 
         // 时间

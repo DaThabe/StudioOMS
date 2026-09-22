@@ -13,17 +13,17 @@ public sealed partial class TimingOrder : Order
     {
         // 状态不允许
         if (State is not OrderState.Servicing)
-            throw new ArgumentException($"无法划扣, 订单 [{consume.Id}] {GetStateName(State)}", nameof(consume));
+            throw new OrderStateOperationException(Id, State, "划扣");
         // 已存在
         if (_consumes.Contains(consume))
-            throw new ArgumentException($"无法划扣, 该划扣 [{consume.Id}] 已存在");
+            throw new OrderConsumeAlreadyExistsException(Id, consume.Id);
         // 不能操作的员工
         if (!AssignedEmployees.Contains(consume.EmployeeId))
-            throw new ArgumentException($"无法划扣, 该员工 [{consume.EmployeeId}] 未服务此订单 [{Id}]");
+            throw new OrderNotAssignedEmployeeException(Id, consume.EmployeeId);
         // 超过订单额度
         var nextUsedDays = UsedDays + consume.Days;
         if (nextUsedDays > TotalDays)
-            throw new ArgumentOutOfRangeException($"无法划扣, 当前消耗 [{nextUsedDays}] 超过订单上线 [{TotalDays}] ");
+            throw new TimingOrderConsumeExceedsLimitException(Id, consume.Id, TotalDays, nextUsedDays);
 
 
         UsedDays = nextUsedDays;
@@ -31,18 +31,6 @@ public sealed partial class TimingOrder : Order
 
         // 消耗完毕
         if (UsedDays == TotalDays) MarkCompleted(consume.Timestamp);
-
-
-        // StateName
-        static string GetStateName(OrderState state) => state switch
-        {
-            OrderState.Waiting => "未开始服务",
-            OrderState.Paused => "已暂停",
-            OrderState.Completed => "已完成",
-            OrderState.Terminated => "已终止",
-            OrderState.Cancelled => "已取消",
-            _ => "当前状态不允许划扣"
-        };
     }
 }
 

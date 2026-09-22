@@ -27,7 +27,7 @@ public sealed class ConsumeTests
         _order.AssignEmployees(employeeId);
         _order.MarkServicingNow();
 
-        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), employeeId, 1);
+        var consume = TimingOrderConsume.CreateNow(OrderConsumeId.Create(), employeeId, 1);
         _order.Consume(consume);
 
         Assert.AreEqual(1m, _order.UsedDays);
@@ -37,7 +37,7 @@ public sealed class ConsumeTests
     [TestMethod(DisplayName = "未标记服务中无法消耗")]
     public void NotMarkServicing()
     {
-        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
+        var consume = TimingOrderConsume.CreateNow(OrderConsumeId.Create(), EmployeeId.Create(), 1);
         _order.Consume(consume);
     }
 
@@ -46,7 +46,7 @@ public sealed class ConsumeTests
     {
         _order.MarkServicingNow();
 
-        var consume = TimingOrderConsume.CreateNow(ConsumeId.Create(), EmployeeId.Create(), 1);
+        var consume = TimingOrderConsume.CreateNow(OrderConsumeId.Create(), EmployeeId.Create(), 1);
         _order.Consume(consume);
     }
 }

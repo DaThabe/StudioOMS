@@ -22,50 +22,89 @@ public abstract partial class Order
 
 
     /// <summary>
-    /// 开始服务
+    /// 服务订单
     /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkServicing(DateTimeOffset timestamp) =>
         MarkState(OrderState.Servicing, timestamp);
+    /// <summary>
+    /// 服务订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkServicingNow() =>
         MarkServicing(DateTime.Now);
 
 
     /// <summary>
-    /// 完成服务
+    /// 暂停订单
     /// </summary>
-    protected void MarkCompleted(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Completed, timestamp);
-    protected void MarkCompletedNow() =>
-        MarkCompleted(DateTimeOffset.Now);
-
-
-    /// <summary>
-    /// 暂停服务
-    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkPaused(DateTimeOffset timestamp) =>
         MarkState(OrderState.Paused, timestamp);
+    /// <summary>
+    /// 暂停订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkPausedNow() =>
         MarkPaused(DateTimeOffset.Now);
 
 
     /// <summary>
-    /// 终止服务
+    /// 取消订单
     /// </summary>
-    public void MarkTerminated(DateTimeOffset timestamp) =>
-        MarkState(OrderState.Terminated, timestamp);
-    public void MarkTerminatedNow() =>
-        MarkTerminated(DateTimeOffset.Now);
-
-    /// <summary>
-    /// 取消服务
-    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkCancelled(DateTimeOffset timestamp)
         => MarkState(OrderState.Cancelled, timestamp);
+    /// <summary>
+    /// 取消订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     public void MarkCancelledNow()
        => MarkCancelled(DateTimeOffset.Now);
 
 
+    /// <summary>
+    /// 终止订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
+    public void MarkTerminated(DateTimeOffset timestamp) =>
+        MarkState(OrderState.Terminated, timestamp);
+    /// <summary>
+    /// 终止订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
+    public void MarkTerminatedNow() =>
+        MarkTerminated(DateTimeOffset.Now);
 
+
+    /// <summary>
+    /// 完成订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
+    protected void MarkCompleted(DateTimeOffset timestamp) =>
+        MarkState(OrderState.Completed, timestamp);
+    /// <summary>
+    /// 完成订单
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
+    protected void MarkCompletedNow() =>
+        MarkCompleted(DateTimeOffset.Now);
+
+
+
+    /// <inheritdoc/>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
     private void MarkState(OrderState state, DateTimeOffset timestamp)
     {
         var newStateChanged = new OrderStateChange(state, timestamp);
@@ -87,14 +126,16 @@ public abstract partial class Order
         State = newStateChanged.State;
         _stateChangeds.Add(newStateChanged);
     }
-
-    private static void AssertStateTransition(OrderState from, OrderState to)
+    /// <inheritdoc/>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="OrderStateChangeException"></exception>
+    private void AssertStateTransition(OrderState from, OrderState to)
     {
         if (!AllowedTransitions.TryGetValue(from, out var allowed))
             throw new InvalidOperationException($"无法识别的状态 {from}");
 
         if (!allowed.Contains(to))
-            throw new ArgumentOutOfRangeException(nameof(to), $"状态 [{to}] 下一个状态只能在 [{string.Join(',', allowed)}] 中");
+            throw new OrderStateChangeException(Id, from, to, allowed.ToHashSet().AsReadOnly());
     }
 
     private static readonly Dictionary<OrderState, OrderState[]> AllowedTransitions = new()
@@ -106,50 +147,4 @@ public abstract partial class Order
         [OrderState.Terminated] = [],
         [OrderState.Cancelled] = [OrderState.Waiting]
     };
-}
-
-
-/// <summary>
-/// 订单状态
-/// </summary>
-public enum OrderState
-{
-    /// <summary>
-    /// 等待开始
-    /// </summary>
-    Waiting,
-
-    /// <summary>
-    /// 服务中
-    /// </summary>
-    Servicing,
-
-    /// <summary>
-    /// 已暂停
-    /// </summary>
-    Paused,
-
-    /// <summary>
-    /// 已完成
-    /// </summary>
-    Completed,
-
-    /// <summary>
-    /// 已终止
-    /// </summary>
-    Terminated,
-
-    /// <summary>
-    /// 已取消
-    /// </summary>
-    Cancelled
-}
-
-/// <summary>
-/// 订单状态改变
-/// </summary>
-public record class OrderStateChange(OrderState State, DateTimeOffset Timestamp) : IComparable<OrderStateChange>
-{
-    public int CompareTo(OrderStateChange? other) =>
-        other is null ? 1 : Timestamp.CompareTo(other.Timestamp);
 }

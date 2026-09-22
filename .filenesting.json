@@ -1,0 +1,27 @@
+{
+  "help": "https://go.microsoft.com/fwlink/?linkid=866610",
+  "root": true,
+  "dependentFileProviders": {
+    "add": {
+      "fileToFile": {
+
+        // Order
+        "add": {
+          "OrderId.cs": [ "Order.cs" ],
+          // State
+          "OrderState.cs": [ "Order.State.cs" ],
+          "OrderStateChange.cs": [ "Order.State.cs" ],
+          "OrderStateChangeException.cs": [ "Order.State.cs" ],
+          "OrderStateOperationException.cs": [ "Order.State.cs" ],
+          // Assigned
+          "OrderNotAssignedEmployeeException.cs": [ "Order.Assigned.cs" ],
+          // Consume
+          "OrderConsumeId.cs": [ "OrderConsume.cs" ],
+          "OrderConsumeException.cs": [ "OrderConsume.cs" ],
+          "OrderConsumeAlreadyExistsException.cs": [ "OrderConsume.cs" ],
+          "OrderConsumeExceedsLimitException.cs": [ "OrderConsume.cs" ]
+        }
+      }
+    }
+  }
+}
