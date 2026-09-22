@@ -29,6 +29,8 @@ public sealed record class EmployeeName : IEquatable<EmployeeName>
     public bool IsExactlySameAs(EmployeeName? other) =>
         other is not null && string.Equals(_value, other._value, StringComparison.Ordinal);
 
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentException"></exception>
     public static EmployeeName From(ReadOnlySpan<char> value)
     {
         var trimmed = value.Trim();

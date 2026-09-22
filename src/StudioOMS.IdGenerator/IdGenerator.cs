@@ -55,7 +55,8 @@ public sealed partial record class {{typeName}} : ISpanParsable<{{typeName}}>
     public override string ToString() => _value.ToString("N");
 
 
-
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentException"></exception>
     public static {{typeName}} From(Guid id)
     {
         if (id == Guid.Empty)
@@ -78,11 +79,18 @@ public sealed partial record class {{typeName}} : ISpanParsable<{{typeName}}>
         new(Guid.CreateVersion7());
 
 
-
+    /// <inheritdoc/>
+    /// <exception cref="FormatException"></exception>
     public static {{typeName}} Parse(string guid) =>
         Parse(guid.AsSpan(), null);
+
+    /// <inheritdoc/>
+    /// <exception cref="FormatException"></exception>
     public static {{typeName}} Parse(string guid, IFormatProvider? provider) =>
         Parse(guid.AsSpan(), provider);
+    
+    /// <inheritdoc/>
+    /// <exception cref="FormatException"></exception>
     public static {{typeName}} Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
     {
         if (!TryParse(s, provider, out var result))

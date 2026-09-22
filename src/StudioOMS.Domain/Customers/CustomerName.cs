@@ -29,6 +29,8 @@ public sealed record class CustomerName : IEquatable<CustomerName>
         other is not null && string.Equals(_value, other._value, StringComparison.Ordinal);
 
 
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentException"></exception>
     public static CustomerName From(ReadOnlySpan<char> value)
     {
         var trimmed = value.Trim();

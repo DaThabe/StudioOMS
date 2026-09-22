@@ -24,6 +24,9 @@ public sealed class Employee : Entity<EmployeeId>
     {
         _roles.UnionWith(roles);
     }
+
+    /// <inheritdoc/>
+    /// <exception cref="EmployeeMustHaveRoleException"></exception>
     public void RemoveRoles(params IEnumerable<EmployeeRole> roles)
     {
         var remaining = _roles.Except(roles).ToHashSet();
@@ -38,6 +41,9 @@ public sealed class Employee : Entity<EmployeeId>
 
 
     private Employee(EmployeeName name) => Name = name;
+
+    /// <inheritdoc/>
+    /// <exception cref="EmployeeMustHaveRoleException"></exception>
     public static Employee Create(EmployeeId employeeId, EmployeeName name, IEnumerable<EmployeeRole> roles)
     {
         var roleSet = roles.ToHashSet();
@@ -50,6 +56,8 @@ public sealed class Employee : Entity<EmployeeId>
             Id = employeeId
         };
     }
+    /// <inheritdoc/>
+    /// <exception cref="EmployeeMustHaveRoleException"></exception>
     public static Employee Create(EmployeeName name, IEnumerable<EmployeeRole> roles) =>
         Create(EmployeeId.Create(), name, roles);
 }

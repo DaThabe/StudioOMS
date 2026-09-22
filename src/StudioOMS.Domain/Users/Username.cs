@@ -13,6 +13,8 @@ public sealed record class Username : IEquatable<Username>
     public override int GetHashCode() => string.GetHashCode(_value, StringComparison.OrdinalIgnoreCase);
 
 
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentException"></exception>
     public static Username From(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

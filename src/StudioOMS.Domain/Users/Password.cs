@@ -23,7 +23,8 @@ public sealed record class Password
     public override string ToString() => "***";
 
 
-
+    /// <inheritdoc/>
+    /// <exception cref="ArgumentException"></exception>
     public static Password From(ReadOnlySpan<char> value)
     {
         foreach (var c in value)
