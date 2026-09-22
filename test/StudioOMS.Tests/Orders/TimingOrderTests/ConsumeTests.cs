@@ -3,7 +3,7 @@ using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 
-namespace StudioOM.Orders.TimingOrderTests;
+namespace StudioOMS.Orders.TimingOrderTests;
 
 
 [TestClass]

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace StudioOMS.Customers;
+﻿namespace StudioOMS.Customers;
 
 
 [Id]

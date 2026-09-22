@@ -1,6 +1,6 @@
 using StudioOMS.Users;
 
-namespace StudioOM.Users;
+namespace StudioOMS.Users;
 
 
 [TestClass]

@@ -16,6 +16,6 @@
     <Project Path="src/StudioOMS.WebApi/StudioOMS.WebApi.csproj" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="test/StudioOM.Tests/StudioOM.Tests.csproj" Id="c98b6245-4cee-4e8d-a10f-2fb48b5c6c18" />
+    <Project Path="test/StudioOMS.Tests/StudioOMS.Tests.csproj" />
   </Folder>
 </Solution>

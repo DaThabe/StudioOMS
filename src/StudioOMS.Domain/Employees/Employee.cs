@@ -1,4 +1,6 @@
-﻿namespace StudioOMS.Employees;
+﻿using StudioOMS.Exceptions;
+
+namespace StudioOMS.Employees;
 
 
 public sealed class Employee : Entity<EmployeeId>
@@ -27,7 +29,7 @@ public sealed class Employee : Entity<EmployeeId>
         var remaining = _roles.Except(roles).ToHashSet();
 
         if (remaining.Count == 0)
-            throw new InvalidOperationException("员工至少保留一个角色");
+            throw new EmployeeMustHaveRoleException(Id);
 
         _roles.Clear();
         foreach (var role in remaining) _roles.Add(role);
@@ -40,8 +42,7 @@ public sealed class Employee : Entity<EmployeeId>
     {
         var roleSet = roles.ToHashSet();
         if (roleSet.Count == 0)
-            throw new ArgumentException("员工 职位 不可为空", nameof(roles));
-
+            throw new EmployeeMustHaveRoleException(employeeId);
 
         return new(name)
         {
@@ -51,4 +52,18 @@ public sealed class Employee : Entity<EmployeeId>
     }
     public static Employee Create(EmployeeName name, IEnumerable<EmployeeRole> roles) =>
         Create(EmployeeId.Create(), name, roles);
+}
+
+
+/// <summary>
+/// 员工至少有一个职位
+/// </summary>
+public sealed class EmployeeMustHaveRoleException : StudioOMSException
+{
+    public EmployeeId EmployeeId { get; }
+
+    internal EmployeeMustHaveRoleException(EmployeeId employeeId) : base($"员工 {employeeId} 至少需要保留一个职位")
+    {
+        EmployeeId = employeeId;
+    }
 }
