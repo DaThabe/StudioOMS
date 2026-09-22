@@ -1,4 +1,8 @@
-﻿namespace StudioOMS.Orders;
+﻿using StudioOMS.Employees;
+using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
+
+namespace StudioOMS.Orders;
 
 
 /// <summary>
@@ -105,48 +109,91 @@ public abstract partial class Order
     /// <inheritdoc/>
     /// <exception cref="InvalidOperationException"></exception>
     /// <exception cref="OrderStateChangeException"></exception>
-    private void MarkState(OrderState state, DateTimeOffset timestamp)
+    private void MarkState(OrderState state, DateTimeOffset timestamp, EmployeeId employeeId)
     {
-        ArgumentException.ThrowIfNotDefined(state);
+        //if(timestamp < CreateAt)
+        //    throw new OrderStateChangeTimestampInvalidException(Id, )
 
-        var newStateChanged = new OrderStateChange(state, timestamp);
 
-        // 已存在的状态变化
-        if (_stateChangeds.Contains(newStateChanged))
+        // 构建
+        var stateChanged = OrderStateChange
+            .Manual(state, employeeId, timestamp);
+        // 去重
+        if (_stateChangeds.Contains(stateChanged))
             return;
 
-        // 回放验证
+        // 回放验证状态
+        PlaybackVerification(stateChanged);
+
+        State = stateChanged.State;
+        _stateChangeds.Add(stateChanged);
+    }
+    [Obsolete]
+    private void MarkState(OrderState state, DateTimeOffset timestamp) =>
+        MarkState(state, timestamp, EmployeeId.Create());
+
+
+    // 回放验证是否能添加此改变记录
+    private bool PlaybackVerification(OrderStateChange item)
+    {
         var currentState = OrderState.Waiting;
-        OrderStateChange[] allChangeds = [.. _stateChangeds, newStateChanged];
+        OrderStateChange[] allChangeds = [.. _stateChangeds, item];
 
         foreach (var e in allChangeds.OrderBy(x => x.Timestamp))
         {
-            AssertStateTransition(currentState, e.State);
+            if (!currentState.CanConvertTo(e.State, out _))
+                return false;
+
             currentState = e.State;
         }
 
-        State = newStateChanged.State;
-        _stateChangeds.Add(newStateChanged);
+        return true;
     }
-    /// <inheritdoc/>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="OrderStateChangeException"></exception>
-    private void AssertStateTransition(OrderState from, OrderState to)
+}
+
+
+
+file static class OrderStateConverter
+{
+    /// <summary>
+    /// 是可以转换到下一个状态
+    /// </summary>
+    /// <param name="state">当前状态</param>
+    /// <param name="target">目标状态</param>
+    /// <param name="alloweds">当前状态可接受的所有下一个状态</param>
+    public static bool CanConvertTo(this OrderState state, OrderState target, out IReadOnlySet<OrderState> alloweds)
     {
-        if (!AllowedTransitions.TryGetValue(from, out var allowed))
-            throw new InvalidOperationException($"无法识别的状态 {from}");
+        alloweds = FrozenSet<OrderState>.Empty;
 
-        if (!allowed.Contains(to))
-            throw new OrderStateChangeException(Id, from, to, allowed.ToHashSet().AsReadOnly());
+        if (!Enum.IsDefined(state))
+            return false;
+
+        if (!AllowedTransitions.TryGetValue(state, out var nextStates))
+            return false;
+
+        if (!nextStates.Contains(target))
+            return false;
+
+        alloweds = nextStates.AsReadOnly();
+        return true;
     }
 
-    private static readonly Dictionary<OrderState, OrderState[]> AllowedTransitions = new()
+    public static IReadOnlySet<OrderState> GetNextStates(this OrderState state)
+    {
+        ArgumentException.ThrowIfNotDefined(state);
+        return AllowedTransitions[state].ToHashSet().AsReadOnly();
+    }
+
+    /// <summary>
+    /// 各个状态可以转换的状态
+    /// </summary>
+    private static readonly Dictionary<OrderState, HashSet<OrderState>> AllowedTransitions = new()
     {
         [OrderState.Waiting] = [OrderState.Servicing, OrderState.Cancelled],
         [OrderState.Servicing] = [OrderState.Paused, OrderState.Completed, OrderState.Terminated],
         [OrderState.Paused] = [OrderState.Servicing, OrderState.Terminated],
         [OrderState.Completed] = [],
         [OrderState.Terminated] = [],
-        [OrderState.Cancelled] = [OrderState.Waiting]
+        [OrderState.Cancelled] = []
     };
 }

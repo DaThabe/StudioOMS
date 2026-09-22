@@ -1,4 +1,5 @@
-﻿using StudioOMS.Exceptions;
+﻿using StudioOMS.Employees;
+using StudioOMS.Exceptions;
 using System.Text;
 
 namespace StudioOMS.Orders;
@@ -35,5 +36,32 @@ public sealed class OrderStateChangeException : StudioOMSException
         }
 
         return sb.ToString();
+    }
+}
+
+
+/// <summary>
+/// 订单状态改变时间异常
+/// </summary>
+public sealed class OrderStateChangeTimestampInvalidException : OrderConsumeException
+{
+    public DateTimeOffset CreateAt { get; }
+    public DateTimeOffset ChangeAt { get; }
+
+    internal OrderStateChangeTimestampInvalidException(
+        OrderId orderId,
+        EmployeeId employeeId,
+        DateTimeOffset createAt,
+        DateTimeOffset changeAt
+    ) : base(FormatMessage(orderId, createAt, changeAt), orderId, employeeId)
+    {
+        CreateAt = createAt;
+        ChangeAt = changeAt;
+    }
+
+    private static string FormatMessage(OrderId orderId, DateTimeOffset createAt, DateTimeOffset consumeAt)
+    {
+        return $"订单 {orderId} 的划扣时间 {consumeAt:yyyy-MM-dd HH:mm:ss} " +
+              $"不能早于订单开始时间 {createAt:yyyy-MM-dd HH:mm:ss}";
     }
 }
