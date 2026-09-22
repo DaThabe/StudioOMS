@@ -22,7 +22,7 @@ public static class DependencyInjectionExtensions
         {
             // Me
             services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
-            services.AddRequestHandler<MineInfoRequest.Handler, MineInfoRequest, MeInfoResponse>();
+            services.AddRequestHandler<MineInfoRequest.Handler, MineInfoRequest, MeInfoResponse?>();
             services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
 
             // User
@@ -34,10 +34,15 @@ public static class DependencyInjectionExtensions
             // Customer
             services.AddRequestHandler<CustomerCreateRequest.Handler, CustomerCreateRequest, CustomertId>();
 
+
             // Order
             services.AddRequestHandler<OrderAssignEmployeeRequest.Handler, OrderAssignEmployeeRequest>();
-            services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest>();
             services.AddRequestHandler<OrderListRequest.Handler, OrderListRequest, OrderListResponse>();
+            // Order-State
+            services.AddRequestHandler<OrderMarkServicingRequest.Handler, OrderMarkServicingRequest>();
+            services.AddRequestHandler<OrderMarkPausedRequest.Handler, OrderMarkPausedRequest>();
+            services.AddRequestHandler<OrderMarkCancelledRequest.Handler, OrderMarkCancelledRequest>();
+            services.AddRequestHandler<OrderMarkTerminatedRequest.Handler, OrderMarkTerminatedRequest>();
             //Order-Timing
             services.AddRequestHandler<TimingOrderCreateRequest.Handler, TimingOrderCreateRequest, OrderId>();
             services.AddRequestHandler<TimingOrderConsumeRequest.Handler, TimingOrderConsumeRequest>();

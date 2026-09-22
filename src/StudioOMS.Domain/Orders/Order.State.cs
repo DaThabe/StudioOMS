@@ -35,7 +35,7 @@ public abstract partial class Order
     /// </summary>
     protected void MarkCompleted(DateTimeOffset timestamp) =>
         MarkState(OrderState.Completed, timestamp);
-    public void MarkCompletedNow() =>
+    protected void MarkCompletedNow() =>
         MarkCompleted(DateTimeOffset.Now);
 
 
