@@ -16,7 +16,7 @@ internal sealed class MeClient(MeRoutes routes, HttpClient client, Action<HttpRe
 {
     public Task<MeInfoResult> GetInfoAsync(CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.Get(routes.Info);
+        var request = HttpRequestMessage.Get(routes.Me);
         messageOptionsAction?.Invoke(request);
 
         return client.GetJsonAsync(request, DtoJsonSerializerContext.Default.MeInfoResult, cancellationToken);

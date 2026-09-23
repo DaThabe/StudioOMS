@@ -15,7 +15,7 @@ internal sealed class CustomerClient(CustomerRoutes routes, HttpClient client, A
 {
     public async Task<CustomerCreateResult> CreateAsync(CustomerCreateDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.PostJson(routes.Create, dto, DtoJsonSerializerContext.Default.CustomerCreateDto);
+        var request = HttpRequestMessage.PostJson(routes.Customers, dto, DtoJsonSerializerContext.Default.CustomerCreateDto);
         messageOptionsAction?.Invoke(request);
 
         return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.CustomerCreateResult, cancellationToken);

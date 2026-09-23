@@ -34,7 +34,7 @@ internal sealed class OrderClient(OrderRoutes routes, HttpClient client, Action<
     }
     public async Task<OrderListResult?> ListAsync(OrderListDto dto, CancellationToken cancellationToken = default)
     {
-        var request = HttpRequestMessage.Get(routes.List(dto));
+        var request = HttpRequestMessage.Get(routes.Orders(dto));
         messageOptionsAction?.Invoke(request);
 
         return await client.GetJsonAsync(request, DtoJsonSerializerContext.Default.OrderListResult, cancellationToken);

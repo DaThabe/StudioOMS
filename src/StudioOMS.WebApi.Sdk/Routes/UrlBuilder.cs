@@ -53,13 +53,24 @@ public sealed class UrlBuilder
     public UrlBuilder AddPath(string segment)
     {
         if (string.IsNullOrEmpty(segment)) return this;
-        _segments.Add(segment);
+        _segments.Add(Uri.EscapeDataString(segment));
         return this;
     }
     /// <summary>添加一些路径段，会自动做 URL 转义</summary>
     public UrlBuilder AddPaths(params IEnumerable<string> segments)
     {
         foreach (var i in segments) AddPath(i);
+        return this;
+    }
+    /// <summary>添加一个路径段，会按 / 拆分成多个段落，并自动 URL 转义</summary>
+    public UrlBuilder AddSegment(string segment)
+    {
+        if (string.IsNullOrEmpty(segment)) return this;
+
+        // 按 / 拆分，去掉空段（处理开头/结尾/连续斜杠）
+        foreach (var part in segment.Split('/', StringSplitOptions.RemoveEmptyEntries))
+            _segments.Add(Uri.EscapeDataString(part));
+
         return this;
     }
 
