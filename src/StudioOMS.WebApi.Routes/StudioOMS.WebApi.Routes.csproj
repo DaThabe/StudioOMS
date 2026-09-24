@@ -5,12 +5,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+		<ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
 	</ItemGroup>
-
 
 </Project>
