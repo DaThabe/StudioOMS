@@ -9,35 +9,36 @@ public sealed partial class TimingOrder : Order
     private TimingOrder() { }
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentException"></exception>
-    public static TimingOrder Create(OrderId orderId, CustomertId customerId, EmployeeId salespersonId, decimal totalDays, DateTimeOffset createTime)
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static TimingOrder Create(OrderId orderId, CustomertId customerId, EmployeeId salespersonId, Money price, decimal totalDays, DateTimeOffset createTime)
     {
-        if (totalDays <= 0)
-            throw new ArgumentException("总天数必须大于零", nameof(totalDays));
-
+        ArgumentNullException.ThrowIfNull(orderId);
+        ArgumentNullException.ThrowIfNull(customerId);
+        ArgumentNullException.ThrowIfNull(salespersonId);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(price.Amount);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(totalDays);
 
         return new()
         {
             Id = orderId,
             CustomerId = customerId,
             SalespersonId = salespersonId,
+            Price = price,
             TotalDays = totalDays,
             CreateAt = createTime
         };
     }
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentException"></exception>
-    public static TimingOrder Create(CustomertId customerId, EmployeeId salespersonId, decimal totalDays, DateTimeOffset createTime) =>
-        Create(OrderId.Create(), customerId, salespersonId, totalDays, createTime);
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static TimingOrder Create(CustomertId customerId, EmployeeId salespersonId, Money price, decimal totalDays, DateTimeOffset createTime) =>
+        Create(OrderId.Create(), customerId, salespersonId, price, totalDays, createTime);
 
     /// <inheritdoc/>
-    /// <exception cref="ArgumentException"></exception>
-    public static TimingOrder CreateNow(OrderId orderId, CustomertId customerId, EmployeeId salespersonId, decimal totalDays) =>
-        Create(orderId, customerId, salespersonId, totalDays, DateTimeOffset.UtcNow);
-
-    /// <inheritdoc/>
-    /// <exception cref="ArgumentException"></exception>
-    public static TimingOrder CreateNow(CustomertId customerId, EmployeeId salespersonId, decimal totalDays) =>
-        Create(customerId, salespersonId, totalDays, DateTimeOffset.UtcNow);
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static TimingOrder CreateNow(CustomertId customerId, EmployeeId salespersonId, Money price, decimal totalDays) =>
+        Create(customerId, salespersonId, price, totalDays, DateTimeOffset.UtcNow);
 }

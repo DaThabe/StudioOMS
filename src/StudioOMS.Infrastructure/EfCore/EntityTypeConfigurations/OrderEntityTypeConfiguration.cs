@@ -41,6 +41,19 @@ internal sealed class OrderEntityTypeConfiguration :
         // CreateAt
         builder.Property(x => x.CreateAt)
             .IsRequired();
+        // Price
+        builder.ComplexProperty(o => o.Price, price =>
+        {
+            price.Property(p => p.Amount)
+                .HasColumnName("price_amount")
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            price.Property(p => p.Currency)
+                .HasColumnName("price_currency")
+                .HasMaxLength(3)
+                .IsRequired();
+        });
 
         // AssignedEmployees
         builder.Property(x => x.AssignedEmployees)

@@ -7,6 +7,7 @@ public sealed class Employee : Entity<EmployeeId>
 
     public EmployeeName Name { get; private set; }
     public IReadOnlySet<EmployeeRole> Roles => _roles.AsReadOnly();
+    public CommissionRate CommissionRate { get; private set; } = CommissionRate.Zero;
 
 
 
@@ -17,6 +18,16 @@ public sealed class Employee : Entity<EmployeeId>
         // 更新
         Name = value;
     }
+
+    /// <summary>
+    /// 调整提成比率
+    /// </summary>
+    public void ChangeCommissionRate(CommissionRate value)
+    {
+        if (CommissionRate == value) return;
+        CommissionRate = value;
+    }
+
 
     public void AddRoles(params IEnumerable<EmployeeRole> roles)
     {
@@ -40,6 +51,8 @@ public sealed class Employee : Entity<EmployeeId>
     {
         return Roles.Overlaps(roles);
     }
+
+
 
 
 

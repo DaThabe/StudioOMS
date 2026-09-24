@@ -82,6 +82,7 @@ public static class OrderMapper
     {
         CustomerId = CustomertId.Parse(dto.CustomerId),
         SalespersonId = EmployeeId.Parse(dto.SalespersonId),
+        Price = Money.From(dto.Price, dto.Currency),
         TotalDays = dto.TotalDays,
         Title = dto.Title
     };

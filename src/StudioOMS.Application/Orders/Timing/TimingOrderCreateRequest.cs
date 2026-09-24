@@ -10,6 +10,7 @@ public sealed record class TimingOrderCreateRequest : IRequest<OrderId>
 {
     public required CustomertId CustomerId { get; init; }
     public required EmployeeId SalespersonId { get; init; }
+    public required Money Price { get; init; }
     public required decimal TotalDays { get; init; }
     public string Title { get; init; } = "未命名的订单";
 
@@ -25,7 +26,7 @@ public sealed record class TimingOrderCreateRequest : IRequest<OrderId>
         public async ValueTask<OrderId> HandleAsync(TimingOrderCreateRequest request,
             CancellationToken cancellationToken = default)
         {
-            var entity = TimingOrder.CreateNow(request.CustomerId, request.SalespersonId, request.TotalDays);
+            var entity = TimingOrder.CreateNow(request.CustomerId, request.SalespersonId, request.Price, request.TotalDays);
             await orderRepository.SaveAsync(entity, cancellationToken);
 
             return entity.Id;
