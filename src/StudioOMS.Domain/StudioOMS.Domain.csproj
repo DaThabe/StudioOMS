@@ -13,4 +13,9 @@
 		<ProjectReference Include="..\StudioOMS.IdGenerator\StudioOMS.IdGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
+
 </Project>

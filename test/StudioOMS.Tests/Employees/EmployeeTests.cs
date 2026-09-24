@@ -4,8 +4,8 @@ namespace StudioOMS.Employees;
 [TestClass]
 public class EmployeeTests
 {
-    [TestMethod]
-    public void TestMethod1()
+    [TestMethod(DisplayName = "创建员工至少包含一个职位, 缺少则抛出(EmployeeMustHaveRoleException)")]
+    public void Create_MissingRole_ThrowEmployeeMustHaveRoleException()
     {
         EmployeeId.From(Guid.NewGuid());
 

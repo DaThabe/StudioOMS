@@ -8,4 +8,9 @@
 		<ProjectReference Include="..\StudioOMS.Domain\StudioOMS.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
+
 </Project>

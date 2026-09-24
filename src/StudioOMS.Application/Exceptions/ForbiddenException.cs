@@ -1,25 +1,23 @@
-﻿namespace StudioOMS.Exceptions;
+﻿using StudioOMS.Employees;
+using StudioOMS.Permission;
+using StudioOMS.Users;
+
+namespace StudioOMS.Exceptions;
 
 
 /// <summary>
 /// 权限不足异常
 /// </summary>
-public sealed class ForbiddenException : Exception
+#pragma warning disable RCS1194 // Implement exception constructors
+public sealed class ForbiddenException(
+#pragma warning restore RCS1194 // Implement exception constructors
+    UserId userId,
+    EmployeeId employeeId,
+    IReadOnlySet<PermissionType> allowPermissions
+) : AppException("权限不足")
 {
-    public ForbiddenException() : base("权限不足") { }
-    public ForbiddenException(string? message) : base(message) { }
-    public ForbiddenException(string? message, Exception? innerException) : base(message, innerException) { }
-
-
-
-    public static void ThrowIf(bool condition)
-    {
-        if (condition)
-            throw new ForbiddenException();
-    }
-    public static void ThrowIf(bool condition, string message)
-    {
-        if (condition)
-            throw new ForbiddenException();
-    }
+    public UserId UserId { get; } = userId;
+    public EmployeeId EmployeeId { get; } = employeeId;
+    public IReadOnlySet<PermissionType> Permissions { get; } = allowPermissions;
 }
+#pragma warning restore RCS1194 // Implement exception constructors

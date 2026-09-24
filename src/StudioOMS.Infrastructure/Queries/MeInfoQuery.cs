@@ -6,7 +6,7 @@ using StudioOMS.Users;
 namespace StudioOMS.Queries;
 
 
-internal sealed class MineInfoQuery(AppDbContext appDbContext) : IMineInfoQuery
+internal sealed class MineInfoQuery(AppDbContext appDbContext) : IMeInfoQuery
 {
     public async ValueTask<MeInfoResponse?> QueryAsync(UserId id, CancellationToken cancellationToken = default)
     {

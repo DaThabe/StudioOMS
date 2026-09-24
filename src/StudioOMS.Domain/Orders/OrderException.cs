@@ -1,6 +1,6 @@
 ﻿namespace StudioOMS.Orders;
 
-public abstract class OrderException : StudioOMSException
+public abstract class OrderException : DomainException
 {
     public OrderId OrderId { get; }
 

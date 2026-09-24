@@ -19,6 +19,8 @@ internal sealed class CurrentSession : ICurrentSession
         private set;
     }
 
+    public bool IsAuthenticated { get; private set; }
+
 
     public void Set(UserId userId, EmployeeId employeeId)
     {
@@ -28,5 +30,6 @@ internal sealed class CurrentSession : ICurrentSession
 
         UserId = userId;
         EmployeeId = employeeId;
+        IsAuthenticated = true;
     }
 }

@@ -14,8 +14,14 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+		<ProjectReference Include="..\StudioOMS.ErrorCodes\StudioOMS.WebApi.Response.csproj" />
 		<ProjectReference Include="..\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
 		<ProjectReference Include="..\StudioOMS.WebApi.Routes\StudioOMS.WebApi.Routes.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
 
 </Project>

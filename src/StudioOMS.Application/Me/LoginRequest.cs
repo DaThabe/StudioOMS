@@ -1,4 +1,5 @@
-﻿using StudioOMS.Messaging;
+﻿using StudioOMS.Exceptions;
+using StudioOMS.Messaging;
 using StudioOMS.Session;
 using StudioOMS.Users;
 
@@ -21,10 +22,10 @@ public sealed class LoginRequest : IRequest<SessionToken>
             CancellationToken cancellationToken = default)
         {
             var entity = await userRepository.FindByUsername(request.Username, cancellationToken)
-                ?? throw new InvalidOperationException("用户名或密码错误");
+                ?? throw new AuthenticationFailedException();
 
             var pass = await passwordHasher.VerifyAsync(request.Password, entity.PasswordHash, cancellationToken);
-            if (!pass) throw new InvalidOperationException("用户名或密码错误");
+            if (!pass) throw new AuthenticationFailedException();
 
             return await sessionService.SignInAsync(entity.Id, cancellationToken);
         }

@@ -20,18 +20,16 @@ public abstract partial class Order
     /// <summary>
     /// 更改标题
     /// </summary>
-    public PropertyChangedResult ChangeTitle(string title)
+    /// <exception cref="ArgumentException" />
+    public void ChangeTitle(string title)
     {
-        // 空字符串
-        if (string.IsNullOrWhiteSpace(title))
-            return PropertyChangedResult.InvalidValue("标题不可为空");
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+
         // 没变化
         var trimmed = title.Trim();
-        if (string.Equals(Title, trimmed))
-            return PropertyChangedResult.Success;
+        if (string.Equals(Title, trimmed)) return;
 
-
+        // 更新
         Title = trimmed;
-        return PropertyChangedResult.Success;
     }
 }

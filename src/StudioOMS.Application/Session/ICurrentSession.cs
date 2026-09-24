@@ -11,16 +11,8 @@ public interface ICurrentSession
 {
     UserId UserId { get; }
     EmployeeId EmployeeId { get; }
+    bool IsAuthenticated { get; }
 
 
     void Set(UserId userId, EmployeeId employeeId);
-}
-
-
-public static class CurrentSessionExtensions
-{
-    extension(ICurrentSession session)
-    {
-        public bool IsAuthenticated => session.UserId is not null && session.EmployeeId is not null;
-    }
 }

@@ -1,4 +1,6 @@
-﻿using StudioOMS.Routes;
+﻿using StudioOMS.Exceptions;
+using StudioOMS.Responses;
+using StudioOMS.Routes;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -17,17 +19,25 @@ internal static class HttpExtensions
             response.EnsureSuccessStatusCode();
         }
 
-
         public async Task<TResponse?> GetJsonAsync<TResponse>(
             HttpRequestMessage requestMessage,
             JsonTypeInfo<TResponse> jsonTypeInfo,
             CancellationToken cancellationToken = default)
+            where TResponse : notnull
         {
             var response = await httpClient.SendAsync(requestMessage, cancellationToken);
-            response.EnsureSuccessStatusCode();
-
             return await response.Content.ReadFromJsonAsync(jsonTypeInfo, cancellationToken);
         }
+
+        public async Task<Response<TData>> GetResponseAsync<TData>(
+            HttpRequestMessage requestMessage,
+            JsonTypeInfo<Response<TData>> jsonTypeInfo,
+            CancellationToken cancellationToken = default)
+            where TData : notnull
+        {
+            return await httpClient.GetJsonAsync(requestMessage, jsonTypeInfo, cancellationToken);
+        }
+
 
 
         public ServerRoutes GetServerRoutes()

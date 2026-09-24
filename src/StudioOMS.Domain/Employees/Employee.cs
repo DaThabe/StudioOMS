@@ -69,7 +69,7 @@ public sealed class Employee : Entity<EmployeeId>
 /// <summary>
 /// 员工至少有一个职位
 /// </summary>
-public sealed class EmployeeMustHaveRoleException : StudioOMSException
+public sealed class EmployeeMustHaveRoleException : DomainException
 {
     public EmployeeId EmployeeId { get; }
 

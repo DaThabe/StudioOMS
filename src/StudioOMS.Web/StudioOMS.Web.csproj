@@ -17,4 +17,13 @@
 		<ProjectReference Include="..\StudioOMS.WebApi.Sdk\StudioOMS.WebApi.Sdk.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Pages\Admin\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
+
 </Project>

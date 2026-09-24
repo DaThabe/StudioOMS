@@ -4,4 +4,9 @@
 		<RootNamespace>StudioOMS</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
+
 </Project>

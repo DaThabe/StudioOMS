@@ -42,8 +42,8 @@ internal sealed class MessageSender(IServiceProvider services, ICurrentSession c
             if (handler is IAuthorization authorization)
             {
                 // 检查授权
-                var pass = await permissionChecker.HasAllPermissionsAsync(currentSession.EmployeeId!, authorization.RequiredPermissions);
-                ForbiddenException.ThrowIf(!pass);
+                var pass = await permissionChecker.HasAllPermissionsAsync(currentSession.EmployeeId, authorization.RequiredPermissions);
+                if (!pass) throw new ForbiddenException(currentSession.UserId, currentSession.EmployeeId, authorization.RequiredPermissions);
             }
 
             return;

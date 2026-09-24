@@ -52,8 +52,14 @@
 
         try
         {
-            var result = await Authentication.LoginAsync(loginForm.ToDto());
-            await Session.SignInAsync(result.Token);
+            var resp = await Authentication.LoginAsync(loginForm.ToDto());
+            if(!resp.IsSuccess)
+            {
+                errorMessage = resp.Message ?? "登录失败";
+                return;
+            }
+
+            await Session.SignInAsync(resp.GetRequiredData().Token);
             Nav.NavigateTo("/");
         }
         catch (HttpRequestException ex)

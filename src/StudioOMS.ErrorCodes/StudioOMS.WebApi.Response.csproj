@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>StudioOMS</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\StudioOMS.Application\StudioOMS.Application.csproj" />
+	  <ProjectReference Include="..\StudioOMS.Domain\StudioOMS.Domain.csproj" />
+	  <ProjectReference Include="..\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="StudioOMS.UnitTests" />
+	</ItemGroup>
+
+
+</Project>

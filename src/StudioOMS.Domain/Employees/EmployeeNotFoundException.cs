@@ -1,7 +1,7 @@
 ﻿namespace StudioOMS.Employees;
 
 
-public abstract class EmployeeException : StudioOMSException
+public abstract class EmployeeException : DomainException
 {
     public EmployeeId EmployeeId { get; }
 

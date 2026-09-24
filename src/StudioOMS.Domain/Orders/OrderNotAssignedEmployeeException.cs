@@ -2,7 +2,7 @@
 
 namespace StudioOMS.Orders;
 
-public sealed class OrderNotAssignedEmployeeException : StudioOMSException
+public sealed class OrderNotAssignedEmployeeException : DomainException
 {
     public OrderId OrderId { get; }
     public EmployeeId EmployeeId { get; }

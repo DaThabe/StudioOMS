@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using StudioOMS;
+using StudioOMS.Endpoints;
+using StudioOMS.Middlewares;
 using StudioOMS.Serializer;
 using StudioOMS.Serializer.Converters;
-using StudioOMS.Session;
+
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new DateTimeOffsetConverter());
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, DtoJsonSerializerContext.Default);
+    options.SerializerOptions.TypeInfoResolverChain.Insert(1, ResponseJsonSerializerContext.Default);
 });
 
 // WebApi
@@ -27,16 +29,19 @@ builder.Services.AddCors(options =>
 
 // StudioOMS
 builder.Services.AddStudioOMSHandlers();
-var connectString = builder.Configuration.GetConnectionString("sqlite");
-builder.Services.AddInfrastructure(x => x.UseSqlite(connectString));
+builder.Services.AddInfrastructure(x => x.UseSqlite(builder.Configuration.GetConnectionString("sqlite")));
+builder.Services.AddStudioOMSExceptionConverters();
 
 
 // Build
 var app = builder.Build();
 
-app.UseCors("Blazor");
-app.MapStudioOMS();
+app.UseMiddleware<ExceptionConverterMiddleware>();
 app.UseMiddleware<CurrentSessionMiddleware>();
+app.MapStudioOMS();
+
+
+app.UseCors("Blazor");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

@@ -62,7 +62,7 @@ public static class DependencyInjectionExtensions
         public IServiceCollection AddQueries()
         {
             services.AddScoped<IOrderQuery, OrderQuery>();
-            services.AddScoped<IMineInfoQuery, MineInfoQuery>();
+            services.AddScoped<IMeInfoQuery, MineInfoQuery>();
 
             return services;
         }
