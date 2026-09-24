@@ -17,7 +17,7 @@
     <Project Path="src/StudioOMS.WebApi.Sdk/StudioOMS.WebApi.Sdk.csproj" />
     <Project Path="src/StudioOMS.WebApi/StudioOMS.WebApi.csproj" />
   </Folder>
-  <Folder Name="/Tests/">
+  <Folder Name="/Test/">
     <Project Path="test/StudioOMS.UnitTests/StudioOMS.UnitTests.csproj" />
   </Folder>
 </Solution>

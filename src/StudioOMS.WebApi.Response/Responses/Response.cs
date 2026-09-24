@@ -1,4 +1,4 @@
-﻿namespace StudioOMS.Responses;
+﻿namespace StudioOMS.WebApi.Responses;
 
 
 public readonly record struct Response<T>

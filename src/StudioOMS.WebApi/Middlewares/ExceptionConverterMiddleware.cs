@@ -1,8 +1,9 @@
 ﻿using StudioOMS.Exceptions;
-using StudioOMS.Responses;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Serializer;
 
-namespace StudioOMS.Middlewares;
+namespace StudioOMS.WebApi.Middlewares;
 
 
 internal sealed class ExceptionConverterMiddleware(

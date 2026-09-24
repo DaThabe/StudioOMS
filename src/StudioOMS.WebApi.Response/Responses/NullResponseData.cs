@@ -1,4 +1,4 @@
-﻿namespace StudioOMS.Responses;
+﻿namespace StudioOMS.WebApi.Responses;
 
 
 public sealed record class NullResponseData

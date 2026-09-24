@@ -1,5 +1,6 @@
 using StudioOMS.Me;
-using StudioOMS.Responses;
+using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Serializer;
 using System.Text.Json;
 
 namespace StudioOMS.Serializer;

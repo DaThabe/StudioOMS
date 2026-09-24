@@ -1,4 +1,4 @@
-﻿namespace StudioOMS.Endpoints;
+﻿namespace StudioOMS.WebApi.Endpoints;
 
 
 internal static class EndpointExtensions

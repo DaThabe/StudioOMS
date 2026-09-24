@@ -1,9 +1,9 @@
 using Moq;
 using RichardSzalay.MockHttp;
 using StudioOMS.Me;
-using StudioOMS.Messaging;
-using StudioOMS.Responses;
-using StudioOMS.Serializer;
+using StudioOMS.WebApi;
+using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Serializer;
 using System.Text.Json;
 
 namespace StudioOMS;

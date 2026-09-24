@@ -1,7 +1,7 @@
 ﻿using StudioOMS.Customers;
 using StudioOMS.Employees;
 
-namespace StudioOMS.Mappers;
+namespace StudioOMS.WebApi.Mappers;
 
 public static class EmployeeMapper
 {

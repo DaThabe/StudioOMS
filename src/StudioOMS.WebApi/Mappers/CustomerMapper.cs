@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Customers;
 
-namespace StudioOMS.Mappers;
+namespace StudioOMS.WebApi.Mappers;
 
 public static class CustomerMapper
 {

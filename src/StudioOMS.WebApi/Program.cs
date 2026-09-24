@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using StudioOMS.Endpoints;
-using StudioOMS.Middlewares;
 using StudioOMS.Serializer;
 using StudioOMS.Serializer.Converters;
-
+using StudioOMS.WebApi.Endpoints;
+using StudioOMS.WebApi.Middlewares;
+using StudioOMS.WebApi.Serializer;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 

@@ -1,9 +1,9 @@
 using StudioOMS.Customers;
 using StudioOMS.Me;
-using StudioOMS.Responses;
+using StudioOMS.WebApi.Responses;
 using System.Text.Json.Serialization;
 
-namespace StudioOMS.Serializer;
+namespace StudioOMS.WebApi.Serializer;
 
 
 [JsonSourceGenerationOptions(

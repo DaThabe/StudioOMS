@@ -9,44 +9,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Moq" />
-	  <PackageReference Include="RichardSzalay.MockHttp" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="RichardSzalay.MockHttp" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\StudioOMS.Application\StudioOMS.Application.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.Domain\StudioOMS.Domain.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.ErrorCodes\StudioOMS.WebApi.Response.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.WebApi.Routes\StudioOMS.WebApi.Routes.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.WebApi.Sdk\StudioOMS.WebApi.Sdk.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.WebApi\StudioOMS.WebApi.csproj" />
-	  <ProjectReference Include="..\..\src\StudioOMS.Web\StudioOMS.Web.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Microsoft.Testing.Extensions.CodeCoverage">
-	    <VersionOverride>18.11.2</VersionOverride>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Microsoft.Testing.Extensions.TrxReport">
-	    <VersionOverride>2.4.1</VersionOverride>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="MSTest.TestAdapter">
-	    <VersionOverride>4.4.1</VersionOverride>
-	  </PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="MSTest.TestFramework">
-	    <VersionOverride>4.4.1</VersionOverride>
-	  </PackageReference>
+		<ProjectReference Include="..\..\src\StudioOMS.Domain\StudioOMS.Domain.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.Application\StudioOMS.Application.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.Infrastructure\StudioOMS.Infrastructure.csproj" />
+		
+		<ProjectReference Include="..\..\src\StudioOMS.Dtos\StudioOMS.Dtos.csproj" />
+		
+		<ProjectReference Include="..\..\src\StudioOMS.WebApi\StudioOMS.WebApi.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.WebApi.Response\StudioOMS.WebApi.Response.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.WebApi.Routes\StudioOMS.WebApi.Routes.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.WebApi.Response\StudioOMS.WebApi.Response.csproj" />
+		
+		<ProjectReference Include="..\..\src\StudioOMS.WebApi.Sdk\StudioOMS.WebApi.Sdk.csproj" />
+		<ProjectReference Include="..\..\src\StudioOMS.Web\StudioOMS.Web.csproj" />
 	</ItemGroup>
 
 </Project>

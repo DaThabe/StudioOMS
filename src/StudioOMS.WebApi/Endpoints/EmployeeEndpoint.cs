@@ -1,8 +1,8 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Mappers;
 using StudioOMS.Messaging;
+using StudioOMS.WebApi.Mappers;
 
-namespace StudioOMS.Endpoints;
+namespace StudioOMS.WebApi.Endpoints;
 
 
 public static class EmployeeEndpoint

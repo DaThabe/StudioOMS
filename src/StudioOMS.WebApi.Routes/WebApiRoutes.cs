@@ -1,4 +1,5 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.WebApi;
+
 
 public static class WebApiRoutes
 {

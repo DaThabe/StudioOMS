@@ -1,11 +1,11 @@
-﻿using StudioOMS.Responses;
+﻿using StudioOMS.WebApi.Responses;
 
-namespace StudioOMS;
+namespace StudioOMS.WebApi;
 
 
 internal static class ResponseResults
 {
-    public static IResult Ok<T>(T data) =>
+    public static IResult Ok<T>(T data) where T : notnull =>
         Results.Ok(Response.Success(data));
 
     public static IResult Ok() =>

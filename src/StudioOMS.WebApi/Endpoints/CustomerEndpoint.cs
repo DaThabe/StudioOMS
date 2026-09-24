@@ -1,8 +1,8 @@
 ﻿using StudioOMS.Customers;
-using StudioOMS.Mappers;
 using StudioOMS.Messaging;
+using StudioOMS.WebApi.Mappers;
 
-namespace StudioOMS.Endpoints;
+namespace StudioOMS.WebApi.Endpoints;
 
 
 internal static class CustomerEndpoint

@@ -2,7 +2,7 @@
 using StudioOMS.Session;
 using StudioOMS.Users;
 
-namespace StudioOMS.Mappers;
+namespace StudioOMS.WebApi.Mappers;
 
 
 public static class SessionMapper

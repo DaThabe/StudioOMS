@@ -22,7 +22,7 @@ public static class DependencyInjectionExtensions
         {
             // Me
             services.AddRequestHandler<LoginRequest.Handler, LoginRequest, SessionToken>();
-            services.AddRequestHandler<MeInfoRequest.Handler, MeInfoRequest, MeInfoResponse?>();
+            services.AddRequestHandler<MeInfoRequest.Handler, MeInfoRequest, MeInfoResponse>();
             services.AddRequestHandler<ChangePasswordRequest.Handler, ChangePasswordRequest>();
 
             // User

@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Orders;
 
-namespace StudioOMS.Routes;
+namespace StudioOMS.WebApi.Routes;
 
 
 internal sealed class ServerRoutes(Uri baseUrl)

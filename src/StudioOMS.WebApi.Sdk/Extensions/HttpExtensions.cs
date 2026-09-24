@@ -1,10 +1,11 @@
-﻿using StudioOMS.Exceptions;
-using StudioOMS.Responses;
-using StudioOMS.Routes;
+﻿using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Routes;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace StudioOMS.Http;
+#pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
+namespace System.Net.Http;
+#pragma warning restore IDE0130 // 命名空间与文件夹结构不匹配
 
 
 internal static class HttpExtensions

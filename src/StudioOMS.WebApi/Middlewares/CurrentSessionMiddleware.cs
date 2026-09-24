@@ -1,6 +1,6 @@
 ﻿using StudioOMS.Session;
 
-namespace StudioOMS.Middlewares;
+namespace StudioOMS.WebApi.Middlewares;
 
 
 internal sealed class CurrentSessionMiddleware(

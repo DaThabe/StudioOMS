@@ -1,4 +1,4 @@
-﻿namespace StudioOMS;
+﻿namespace StudioOMS.WebApi;
 
 
 internal sealed class StudioOMSClientNames

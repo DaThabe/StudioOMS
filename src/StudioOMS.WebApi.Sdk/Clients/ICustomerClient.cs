@@ -1,10 +1,10 @@
 ﻿using StudioOMS.Customers;
-using StudioOMS.Http;
-using StudioOMS.Responses;
-using StudioOMS.Routes;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Routes;
+using StudioOMS.WebApi.Serializer;
 
-namespace StudioOMS.Clients;
+namespace StudioOMS.WebApi.Clients;
 
 
 public interface ICustomerClient

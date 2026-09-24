@@ -1,10 +1,10 @@
-﻿using StudioOMS.Http;
-using StudioOMS.Me;
-using StudioOMS.Responses;
-using StudioOMS.Routes;
+﻿using StudioOMS.Me;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Responses;
+using StudioOMS.WebApi.Routes;
+using StudioOMS.WebApi.Serializer;
 
-namespace StudioOMS;
+namespace StudioOMS.WebApi;
 
 public interface IStudioOMSAuthentication
 {

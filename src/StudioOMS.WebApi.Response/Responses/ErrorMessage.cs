@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace StudioOMS.Responses;
+namespace StudioOMS.WebApi.Responses;
 
 
 public readonly record struct ErrorMessage

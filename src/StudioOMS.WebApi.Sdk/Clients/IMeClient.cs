@@ -1,9 +1,8 @@
-﻿using StudioOMS.Http;
-using StudioOMS.Me;
-using StudioOMS.Routes;
+﻿using StudioOMS.Me;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Routes;
 
-namespace StudioOMS.Clients;
+namespace StudioOMS.WebApi.Clients;
 
 
 public interface IMeClient

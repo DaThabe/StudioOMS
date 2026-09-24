@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<RootNamespace>StudioOMS</RootNamespace>
 		<EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator>
 		<PublishAot>false</PublishAot>
 		<IsAotCompatible>false</IsAotCompatible>

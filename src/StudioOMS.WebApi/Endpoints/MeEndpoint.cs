@@ -1,8 +1,8 @@
-﻿using StudioOMS.Mappers;
-using StudioOMS.Me;
+﻿using StudioOMS.Me;
 using StudioOMS.Messaging;
+using StudioOMS.WebApi.Mappers;
 
-namespace StudioOMS.Endpoints;
+namespace StudioOMS.WebApi.Endpoints;
 
 
 public static class MeEndpoint
@@ -11,8 +11,8 @@ public static class MeEndpoint
         ISender sender,
         CancellationToken ct)
     {
-        var response = await sender.SendAsync<MeInfoRequest, MeInfoResponse?>(new MeInfoRequest(), ct);
-        return ResponseResults.Ok(response?.ToInfoResult());
+        var response = await sender.SendAsync<MeInfoRequest, MeInfoResponse>(new MeInfoRequest(), ct);
+        return ResponseResults.Ok(response.ToInfoResult());
     }
 
     public static async Task<IResult> ChangePasswordAsync(ChangePasswordDto dto,

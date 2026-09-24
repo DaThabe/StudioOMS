@@ -3,7 +3,7 @@ using StudioOMS.Employees;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
 
-namespace StudioOMS.Mappers;
+namespace StudioOMS.WebApi.Mappers;
 
 public static class OrderMapper
 {

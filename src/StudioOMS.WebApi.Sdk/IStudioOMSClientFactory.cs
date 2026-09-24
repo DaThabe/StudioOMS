@@ -1,7 +1,8 @@
-﻿using StudioOMS.Routes;
+﻿using StudioOMS.WebApi.Routes;
 using System.Net.Http.Headers;
 
-namespace StudioOMS;
+namespace StudioOMS.WebApi;
+
 
 public interface IStudioOMSClientFactory
 {

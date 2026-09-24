@@ -1,9 +1,9 @@
-﻿using StudioOMS.Mappers;
-using StudioOMS.Me;
+﻿using StudioOMS.Me;
 using StudioOMS.Messaging;
 using StudioOMS.Session;
+using StudioOMS.WebApi.Mappers;
 
-namespace StudioOMS.Endpoints;
+namespace StudioOMS.WebApi.Endpoints;
 
 
 public static class LoginEndpoint

@@ -1,7 +1,7 @@
 ﻿using StudioOMS.Exceptions;
 using StudioOMS.Orders;
 
-namespace StudioOMS.Responses;
+namespace StudioOMS.WebApi.Responses;
 
 
 public interface IExceptionConverter

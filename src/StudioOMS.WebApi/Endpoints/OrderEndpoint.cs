@@ -1,9 +1,9 @@
-﻿using StudioOMS.Mappers;
-using StudioOMS.Messaging;
+﻿using StudioOMS.Messaging;
 using StudioOMS.Orders;
 using StudioOMS.Orders.Timing;
+using StudioOMS.WebApi.Mappers;
 
-namespace StudioOMS.Endpoints;
+namespace StudioOMS.WebApi.Endpoints;
 
 
 public static class OrderEndpoint

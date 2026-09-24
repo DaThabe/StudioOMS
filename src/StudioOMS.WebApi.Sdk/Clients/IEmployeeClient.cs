@@ -1,9 +1,8 @@
 ﻿using StudioOMS.Employees;
-using StudioOMS.Http;
-using StudioOMS.Routes;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Routes;
 
-namespace StudioOMS.Clients;
+namespace StudioOMS.WebApi.Clients;
 
 public interface IEmployeeClient
 {

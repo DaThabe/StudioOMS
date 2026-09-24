@@ -1,9 +1,8 @@
-﻿using StudioOMS.Http;
-using StudioOMS.Orders;
-using StudioOMS.Routes;
+﻿using StudioOMS.Orders;
 using StudioOMS.Serializer;
+using StudioOMS.WebApi.Routes;
 
-namespace StudioOMS.Clients;
+namespace StudioOMS.WebApi.Clients;
 
 
 public interface IOrderClient

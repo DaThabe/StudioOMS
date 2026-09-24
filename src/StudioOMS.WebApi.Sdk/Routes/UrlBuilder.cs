@@ -1,8 +1,9 @@
 ﻿using System.Text;
 
-namespace StudioOMS.Routes;
+namespace StudioOMS.WebApi.Routes;
 
-public sealed class UrlBuilder
+
+internal sealed class UrlBuilder
 {
     private readonly string _baseUrl;
     private readonly List<string> _segments = [];
